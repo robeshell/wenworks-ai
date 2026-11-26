@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SITES, esc, issueHtml, issueSummary, issueTitle, issueUrl, thread } from './lib/render.mjs';
+import { SITES, esc, issueFacts, issueHtml, issueSummary, issueTitle, issueUrl, thread } from './lib/render.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'out');
@@ -109,22 +109,39 @@ ${PRODUCTION ? BEACON : ''}
 `;
 }
 
-function issueBlock(issue, { heading = 'h1', linkTitle = false } = {}) {
-  const title = linkTitle ? `<a href="/weekly/${issue.number}/">${esc(issueTitle(issue))}</a>` : esc(issueTitle(issue));
-  return `<div class="page-head"><${heading}>${title}</${heading}><p>${esc(issue.week.label)}</p></div>
-<article class="issue">
+/** Masthead of an issue: number, dates and a one-line summary. */
+function hero(issue, { linkTitle = false } = {}) {
+  const title = `Wenworks AI 周报 <em>第 ${issue.number} 期</em>`;
+  return `<section class="hero">
+<p class="eyebrow num"><b>WEEKLY</b><span>${esc(issue.week.isoWeek)}</span><span>${esc(issue.week.label)}</span></p>
+<h1>${linkTitle ? `<a href="/weekly/${issue.number}/">${title}</a>` : title}</h1>
+<p class="lede">${esc(issueSummary(issue))}</p>
+</section>`;
+}
+
+function emptyHero() {
+  return `<section class="hero">
+<p class="eyebrow num"><b>WEEKLY</b><span>每周一更新</span></p>
+<h1>模型、Agent、工具，<em>每周一份简报</em></h1>
+<p class="lede">Wenworks AI 把三个站这一周的变化汇总成一期：梯队榜谁升谁降、官方文档改了什么、新收了哪些工具。第 1 期还没有发布。</p>
+</section>`;
+}
+
+function issueArticle(issue) {
+  return `<article class="issue">
 ${issueHtml(issue, loadNote(issue))}
 </article>`;
 }
 
 function siteCards(stats) {
-  const card = (href, name, text, stat) => `<a class="site-card" href="${href}"><b>${name}</b><span>${text}</span>${stat ? `<span class="stat">${stat}</span>` : ''}</a>`;
-  return `<section class="sites">
-<h2>三个站</h2>
-${card(SITES.models, '模型', '大模型梯队榜、选型、价格', stats.leader ? `当前榜首 ${esc(stats.leader.family)} <span class="num">${Number(stats.leader.score).toFixed(1)}</span>` : '')}
-${card(SITES.agents, 'Agent 导航', 'Claude Code、Codex 等官方文档的导航', stats.docs ? `收录文档 <span class="num">${stats.docs}</span> 篇` : '')}
-${card(SITES.tools, '工具精选', 'AI 工具和资源精选', stats.tools ? `收录 <span class="num">${stats.tools}</span> 条` : '')}
-</section>`;
+  const host = (url) => new URL(url).host;
+  const card = (href, name, text, value, label) => `<a class="site-card" href="${href}"><span class="site-name">${name}<i aria-hidden="true">→</i></span><span class="site-desc">${text}</span>${value ? `<span class="site-stat"><b class="num">${value}</b><em>${label}</em></span>` : '<span class="site-stat"></span>'}<span class="site-host num">${host(href)}</span></a>`;
+  return `<div class="band"><h2>三个站</h2></div>
+<nav class="sites" aria-label="三个站">
+${card(SITES.models, '模型', '大模型梯队榜、选型、价格', stats.leader ? Number(stats.leader.score).toFixed(1) : '', stats.leader ? `当前榜首 ${esc(stats.leader.family)}` : '')}
+${card(SITES.agents, 'Agent 导航', 'Claude Code、Codex 等官方文档的导航', stats.docs || '', '篇官方文档')}
+${card(SITES.tools, '工具精选', 'AI 工具和资源精选', stats.tools || '', '条精选收录')}
+</nav>`;
 }
 
 const rfc822 = (iso) => new Date(iso).toUTCString();
@@ -175,14 +192,16 @@ async function main() {
     title: latest ? `${SITE_NAME} · 周报第 ${latest.number} 期` : SITE_NAME,
     description: latest ? `${latest.week.label}：${issueSummary(latest)}` : DESCRIPTION,
     pathName: '/',
-    body: `${latest ? issueBlock(latest, { linkTitle: true }) : '<div class="page-head"><h1>Wenworks AI 周报</h1><p>第 1 期还没有发布。</p></div>'}\n${siteCards(stats)}`,
+    body: latest
+      ? `${hero(latest, { linkTitle: true })}\n${issueFacts(latest)}\n${siteCards(stats)}\n<div class="band"><h2>本期简报</h2><a href="/weekly/">往期周报 →</a></div>\n${issueArticle(latest)}`
+      : `${emptyHero()}\n${siteCards(stats)}`,
   }));
 
   write('weekly/index.html', page({
     title: `${SITE_NAME} · 往期周报`,
     description: DESCRIPTION,
     pathName: '/weekly/',
-    body: `<div class="page-head"><h1>往期周报</h1><p>每周一更新 · <a href="/feed.xml">RSS</a></p></div>
+    body: `<section class="hero"><p class="eyebrow num"><b>WEEKLY</b><span>每周一更新</span></p><h1>往期周报</h1><p class="lede">共 ${issues.length} 期 · <a href="/feed.xml">RSS 订阅</a></p></section>
 ${issues.length ? `<ol class="archive">${issues.map((issue) => `<li><a href="/weekly/${issue.number}/"><b class="num n">第 ${issue.number} 期</b><b>${esc(issue.week.label)}</b><span>${esc(issueSummary(issue))}</span></a></li>`).join('')}</ol>` : '<p class="quiet">还没有发布过。</p>'}`,
   }));
 
@@ -192,13 +211,13 @@ ${issues.length ? `<ol class="archive">${issues.map((issue) => `<li><a href="/we
       description: `${issue.week.label}：${issueSummary(issue)}`,
       pathName: `/weekly/${issue.number}/`,
       ogType: 'article',
-      body: `${issueBlock(issue)}\n<p class="quiet" style="margin-top:1.5rem;font-size:.875rem">${issue.number > 1 ? `<a href="/weekly/${issue.number - 1}/">← 上一期</a> · ` : ''}<a href="/weekly/">往期列表</a>${issue.number < (latest?.number ?? 0) ? ` · <a href="/weekly/${issue.number + 1}/">下一期 →</a>` : ''}</p>`,
+      body: `${hero(issue)}\n${issueFacts(issue)}\n<div class="band"><h2>本期简报</h2></div>\n${issueArticle(issue)}\n<p class="pager">${issue.number > 1 ? `<a href="/weekly/${issue.number - 1}/">← 上一期</a>` : ''}<a href="/weekly/">往期列表</a>${issue.number < (latest?.number ?? 0) ? `<a href="/weekly/${issue.number + 1}/">下一期 →</a>` : ''}</p>`,
     }));
     write(`x/${issue.number}.txt`, thread(issue).join('\n\n') + '\n');
   }
 
   write('feed.xml', feed(issues));
-  write('404.html', page({ title: `${SITE_NAME} · 没有这个页面`, description: DESCRIPTION, pathName: '/404.html', body: '<div class="page-head"><h1>没有这个页面</h1><p><a href="/">回到首页</a> · <a href="/weekly/">往期周报</a></p></div>' }));
+  write('404.html', page({ title: `${SITE_NAME} · 没有这个页面`, description: DESCRIPTION, pathName: '/404.html', body: '<section class="hero"><p class="eyebrow num"><b>404</b></p><h1>没有这个页面</h1><p class="lede"><a href="/">回到首页</a> · <a href="/weekly/">往期周报</a></p></section>' }));
   write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITES.home}/sitemap.xml\n`);
   write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${['/', '/weekly/', ...issues.map((i) => `/weekly/${i.number}/`)].map((p) => `<url><loc>${SITES.home}${p}</loc></url>`).join('\n')}\n</urlset>\n`);
 

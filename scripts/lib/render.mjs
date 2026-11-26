@@ -48,22 +48,24 @@ export function noteHtml(markdown) {
     .join('\n');
 }
 
+const tierChip = (tier) => `<span class="chip" data-tier="${esc(tier)}">${esc(TIER_LABEL[tier] ?? tier)}</span>`;
+
 function modelsHtml(m) {
   if (m.status !== 'ok') return `<p class="quiet">${FAILED}</p>`;
   const quiet = !m.leaderChanged && !m.newEntries.length && !m.promoted.length && !m.demoted.length;
   const leader = m.leaderChanged
-    ? `<p><span class="mark">榜首更换</span>${esc(m.leader.family)}（<span class="num">${score(m.leader.score)}</span>）成为新的榜首，上一期是 ${esc(m.previousLeader.family)}。</p>`
-    : `<p>榜首没有变化：${esc(m.leader.family)}（<span class="num">${score(m.leader.score)}</span>）。</p>`;
-  const list = (title, items, row) => `<h3>${title}</h3>${items.length ? `<ul>${items.map((item) => `<li>${row(item)}</li>`).join('')}</ul>` : `<p class="quiet">${NO_CHANGE}</p>`}`;
-  const move = (item) => `${esc(item.family)}：${TIER_LABEL[item.from] ?? item.from} → ${TIER_LABEL[item.to] ?? item.to}（<span class="num">${score(item.score)}</span>）`;
+    ? `<p class="lead"><span class="mark">榜首更换</span>${esc(m.leader.family)}（<span class="num">${score(m.leader.score)}</span>）成为新的榜首，上一期是 ${esc(m.previousLeader.family)}。</p>`
+    : `<p class="lead">榜首没有变化：${esc(m.leader.family)}（<span class="num">${score(m.leader.score)}</span>）。</p>`;
+  const list = (title, items, row) => `<h3>${title}</h3>${items.length ? `<ul class="rows">${items.map((item) => `<li>${row(item)}</li>`).join('')}</ul>` : `<p class="quiet">${NO_CHANGE}</p>`}`;
+  const move = (item) => `<span>${esc(item.family)}</span><span class="side">${tierChip(item.from)} → ${tierChip(item.to)} <span class="num">${score(item.score)}</span></span>`;
   return [
     leader,
     quiet ? `<p class="quiet">梯队${NO_CHANGE}</p>` : '',
-    `<h3>第一梯队</h3><ul>${m.tier1.map((e) => `<li>${esc(e.family)} <span class="num">${score(e.score)}</span></li>`).join('')}</ul>`,
-    quiet ? '' : list('新进前五档', m.newEntries, (e) => `${esc(e.family)}：${TIER_LABEL[e.tier] ?? e.tier}（<span class="num">${score(e.score)}</span>）`),
+    `<h3>第一梯队</h3><ul class="chips">${m.tier1.map((e) => `<li><span>${esc(e.family)}</span> <span class="num">${score(e.score)}</span></li>`).join('')}</ul>`,
+    quiet ? '' : list('新进前五档', m.newEntries, (e) => `<span>${esc(e.family)}</span><span class="side">${tierChip(e.tier)} <span class="num">${score(e.score)}</span></span>`),
     quiet ? '' : list('升档', m.promoted, move),
     quiet ? '' : list('降档', m.demoted, move),
-    m.popular.length ? `<h3>使用量前五（OpenRouter 近 7 天）</h3><ol>${m.popular.map((p) => `<li>${esc(p.name)} <span class="quiet">${esc(p.provider || '')}</span></li>`).join('')}</ol>` : '',
+    m.popular.length ? `<h3>使用量前五（OpenRouter 近 7 天）</h3><ol class="rank">${m.popular.map((p) => `<li><span>${esc(p.name)}</span> <span class="quiet">${esc(p.provider || '')}</span></li>`).join('')}</ol>` : '',
     `<p class="more">${link(SITES.models, '看完整梯队榜 →')}</p>`,
   ].join('\n');
 }
@@ -73,31 +75,51 @@ function docsHtml(d) {
   if (!d.items.length) return `<p class="quiet">${NO_CHANGE}</p>\n<p class="more">${link(`${SITES.agents}updates/`, '看文档更新记录 →')}</p>`;
   const groups = new Map();
   for (const item of d.items) groups.set(item.agent, [...(groups.get(item.agent) ?? []), item]);
-  return [...groups].map(([agent, items]) => `<h3>${esc(agent)}</h3><ul>${items.map((i) => `<li><span class="quiet">${esc(KIND_LABEL[i.type] ?? i.type)}</span> ${link(i.url, i.title)}</li>`).join('')}</ul>`).join('\n') + `\n<p class="more">${link(`${SITES.agents}updates/`, '看文档更新记录 →')}</p>`;
+  return [...groups].map(([agent, items]) => `<h3>${esc(agent)}</h3><ul class="rows">${items.map((i) => `<li><span>${link(i.url, i.title)}</span><span class="side quiet">${esc(KIND_LABEL[i.type] ?? i.type)} · <span class="num">${esc(i.date)}</span></span></li>`).join('')}</ul>`).join('\n') + `\n<p class="more">${link(`${SITES.agents}updates/`, '看文档更新记录 →')}</p>`;
 }
 
 function articlesHtml(a) {
   if (a.status !== 'ok') return `<p class="quiet">${FAILED}</p>`;
   if (!a.items.length) return `<p class="quiet">${NO_CHANGE}</p>`;
-  return `<ul>${a.items.map((i) => `<li>${link(i.url, i.title)} <span class="quiet">${esc(i.src)}${i.date ? ` · <span class="num">${esc(i.date)}</span>` : ''}</span></li>`).join('')}</ul>\n<p class="more">${link(`${SITES.agents}articles/`, '看全部文章 →')}</p>`;
+  return `<ul class="rows">${a.items.map((i) => `<li><span>${link(i.url, i.title)}</span><span class="side quiet">${esc(i.src)}${i.date ? ` · <span class="num">${esc(i.date)}</span>` : ''}</span></li>`).join('')}</ul>\n<p class="more">${link(`${SITES.agents}articles/`, '看全部文章 →')}</p>`;
 }
 
 function toolsHtml(t) {
   if (t.baseline) return `<p class="quiet">从这一期开始记录，下期起列出新收录的条目。目前共收录 <span class="num">${t.total}</span> 条。</p>\n<p class="more">${link(SITES.tools, '看全部收录 →')}</p>`;
   if (!t.items.length) return `<p class="quiet">${NO_CHANGE}</p>\n<p class="more">${link(SITES.tools, '看全部收录 →')}</p>`;
-  return `<ul>${t.items.map((i) => `<li><span class="mark">新</span>${link(i.url, i.title)} <span class="quiet">${esc(TOOL_KIND[i.kind] ?? i.kind)}</span>${i.summary ? `<br><span class="quiet">${esc(i.summary)}</span>` : ''}</li>`).join('')}</ul>\n<p class="more">${link(SITES.tools, '看全部收录 →')}</p>`;
+  return `<ul class="rows">${t.items.map((i) => `<li><span><span class="mark">新</span>${link(i.url, i.title)}${i.summary ? `<br><span class="quiet">${esc(i.summary)}</span>` : ''}</span><span class="side quiet">${esc(TOOL_KIND[i.kind] ?? i.kind)}</span></li>`).join('')}</ul>\n<p class="more">${link(SITES.tools, '看全部收录 →')}</p>`;
 }
+
+const count = (n, unit) => `<span class="count num">${n} ${unit}</span>`;
 
 /** The body of one issue. `note` is the editor's note in Markdown, or null. */
 export function issueHtml(issue, note = null) {
+  const sec = (title, side, body, cls = '') => `<section${cls ? ` class="${cls}"` : ''}><div class="sec-head"><h2>${title}</h2>${side}</div><div class="sec-body">\n${body}\n</div></section>`;
+  const m = issue.models;
   const parts = [];
-  if (note) parts.push(`<section class="note"><h2>编辑手记</h2>\n${noteHtml(note)}</section>`);
-  parts.push(`<section><h2>模型梯队</h2>\n${modelsHtml(issue.models)}</section>`);
-  parts.push(`<section><h2>Agent 文档</h2>\n${docsHtml(issue.docs)}</section>`);
-  parts.push(`<section><h2>官方文章</h2>\n${articlesHtml(issue.articles)}</section>`);
+  if (note) parts.push(sec('编辑手记', '', noteHtml(note), 'note'));
+  parts.push(sec('模型梯队', m.status === 'ok' ? count(m.newEntries.length + m.promoted.length + m.demoted.length, '项变动') : '', modelsHtml(m)));
+  parts.push(sec('Agent 文档', issue.docs.status === 'ok' ? count(issue.docs.items.length, '条变化') : '', docsHtml(issue.docs)));
+  parts.push(sec('官方文章', issue.articles.status === 'ok' ? count(issue.articles.items.length, '篇') : '', articlesHtml(issue.articles)));
   // The tools list is the one section that is left out when its source cannot be read.
-  if (issue.tools.status === 'ok') parts.push(`<section><h2>新收录工具</h2>\n${toolsHtml(issue.tools)}</section>`);
+  if (issue.tools.status === 'ok') parts.push(sec('新收录工具', issue.tools.baseline ? '' : count(issue.tools.items.length, '条'), toolsHtml(issue.tools)));
   return parts.join('\n');
+}
+
+/** The row of headline numbers above an issue. */
+export function issueFacts(issue) {
+  const m = issue.models;
+  const tile = (label, value, noteText, cls = '') => `<div class="fact${cls ? ` ${cls}` : ''}"><dt>${label}</dt><dd>${value}</dd>${noteText ? `<dd class="fact-note">${noteText}</dd>` : ''}</div>`;
+  const tiles = [];
+  if (m.status === 'ok') {
+    tiles.push(tile('榜首', esc(m.leader.family), `<span class="num">${score(m.leader.score)}</span> · ${m.leaderChanged ? '本周更换' : '没有变化'}`, 'fact-lead'));
+    const moves = m.newEntries.length + m.promoted.length + m.demoted.length;
+    tiles.push(tile('梯队变动', `<span class="num big">${moves}</span>`, `新进 ${m.newEntries.length} · 升档 ${m.promoted.length} · 降档 ${m.demoted.length}`));
+  }
+  if (issue.docs.status === 'ok') tiles.push(tile('文档变化', `<span class="num big">${issue.docs.items.length}</span>`, 'Agent 官方文档'));
+  if (issue.articles.status === 'ok') tiles.push(tile('官方文章', `<span class="num big">${issue.articles.items.length}</span>`, '本周发布'));
+  if (issue.tools.status === 'ok') tiles.push(issue.tools.baseline ? tile('工具收录', `<span class="num big">${issue.tools.total}</span>`, '下期起列出新收录') : tile('新收录', `<span class="num big">${issue.tools.items.length}</span>`, `共收录 ${issue.tools.total} 条`));
+  return tiles.length ? `<dl class="facts">${tiles.join('')}</dl>` : '';
 }
 
 /** One sentence for lists, the feed description and og:description. */
