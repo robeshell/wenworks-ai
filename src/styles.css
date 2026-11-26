@@ -468,10 +468,9 @@ a {
 
 .band h2 {
   margin: 0;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--mute);
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .band a {
@@ -493,29 +492,22 @@ a {
 }
 
 .site-card {
-  position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 13rem;
   padding: 1.25rem 1.25rem 1rem;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  color: var(--ink);
-  text-decoration: none;
-  transition: background-color 180ms ease;
-}
-
-.site-card:hover {
-  background: var(--soft);
 }
 
 .site-name {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  color: var(--ink);
   font-size: 1.375rem;
   font-weight: 600;
   letter-spacing: -0.02em;
+  text-decoration: none;
 }
 
 .site-name i {
@@ -525,27 +517,66 @@ a {
   transition: transform 180ms var(--ease), color 180ms ease;
 }
 
-.site-card:hover .site-name i {
+.site-name:hover i {
   color: var(--accent);
   transform: translateX(3px);
 }
 
 .site-desc {
-  margin-top: 0.25rem;
+  margin: 0.375rem 0 0;
   color: var(--mute);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+}
+
+.site-links {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.site-links li {
+  border-bottom: 1px solid var(--line);
+}
+
+.site-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.75rem;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background-color 180ms ease, padding 180ms var(--ease);
+}
+
+.site-links a::after {
+  color: var(--mute);
+  content: "→";
+  transition: color 180ms ease;
+}
+
+.site-links a:hover {
+  padding: 0 0.5rem;
+  background: var(--soft);
+}
+
+.site-links a:hover::after {
+  color: var(--accent);
 }
 
 .site-stat {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.625rem;
-  margin-top: auto;
+  gap: 0.25rem 0.625rem;
+  min-height: 2.5rem;
+  margin: auto 0 0;
   padding-top: 1.5rem;
 }
 
 .site-stat b {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -563,6 +594,22 @@ a {
   border-top: 1px solid var(--line);
   color: var(--mute);
   font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.site-host:hover {
+  color: var(--ink);
+}
+
+.band-lede {
+  max-width: 46rem;
+  margin: 0 0 1.25rem;
+  color: var(--mute);
+}
+
+.band-lede a {
+  color: var(--ink);
+  text-underline-offset: 3px;
 }
 
 @media (max-width: 46rem) {
@@ -570,9 +617,6 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .site-card {
-    min-height: 0;
-  }
 }
 
 /* 一期简报：左边栏目名，右边内容 */
@@ -869,7 +913,7 @@ a {
   }
 
   .site-header nav a:hover,
-  .site-card:hover .site-name i {
+  .site-name:hover i {
     transform: none !important;
   }
 }

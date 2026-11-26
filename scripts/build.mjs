@@ -14,6 +14,7 @@ const OUT = path.join(ROOT, 'out');
 const PRODUCTION = process.env.PRODUCTION === '1';
 const SITE_NAME = 'Wenworks AI';
 const DESCRIPTION = 'Wenworks AI 每周简报：大模型梯队、Agent 官方文档和 AI 工具精选这一周的变化，每周一更新。';
+const HOME_DESCRIPTION = 'Wenworks AI：大模型梯队榜和选型、编程 Agent 官方文档导航、AI 工具精选，每周一份简报汇总三个站的变化。';
 const SHARE_IMAGE = 'https://models.wenworks.dev/share/tiers-latest.png';
 const BEACON = `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "39176fa04b684b35ad02b6c672a79986"}'></script>`;
 
@@ -119,11 +120,12 @@ function hero(issue, { linkTitle = false } = {}) {
 </section>`;
 }
 
-function emptyHero() {
+/** What a first-time visitor reads first: what this is and where to go. */
+function homeHero() {
   return `<section class="hero">
-<p class="eyebrow num"><b>WEEKLY</b><span>每周一更新</span></p>
-<h1>模型、Agent、工具，<em>每周一份简报</em></h1>
-<p class="lede">Wenworks AI 把三个站这一周的变化汇总成一期：梯队榜谁升谁降、官方文档改了什么、新收了哪些工具。第 1 期还没有发布。</p>
+<p class="eyebrow num"><b>WENWORKS AI</b><span>选模型 · 学 Agent · 找工具</span></p>
+<h1>用 AI 做事之前，<em>先来这里查一下</em></h1>
+<p class="lede">Wenworks AI 是三个各管一件事的站：哪个大模型现在最强、最划算；编程 Agent 的官方文档该从哪读起；哪些 AI 工具真的值得用。数据每天自动更新，每周一把变化汇总成一期简报。</p>
 </section>`;
 }
 
@@ -135,12 +137,39 @@ ${issueHtml(issue, loadNote(issue))}
 
 function siteCards(stats) {
   const host = (url) => new URL(url).host;
-  const card = (href, name, text, value, label) => `<a class="site-card" href="${href}"><span class="site-name">${name}<i aria-hidden="true">→</i></span><span class="site-desc">${text}</span>${value ? `<span class="site-stat"><b class="num">${value}</b><em>${label}</em></span>` : '<span class="site-stat"></span>'}<span class="site-host num">${host(href)}</span></a>`;
-  return `<div class="band"><h2>三个站</h2></div>
+  const card = ({ href, name, want, links, value, label }) => `<article class="site-card">
+<a class="site-name" href="${href}">${name}<i aria-hidden="true">→</i></a>
+<p class="site-desc">${want}</p>
+<ul class="site-links">${links.map(([text, url]) => `<li><a href="${url}">${text}</a></li>`).join('')}</ul>
+<p class="site-stat">${value ? `<b class="num">${value}</b><em>${label}</em>` : ''}</p>
+<a class="site-host num" href="${href}">${host(href)}</a>
+</article>`;
+  return `<div class="band"><h2>从哪里开始</h2></div>
 <nav class="sites" aria-label="三个站">
-${card(SITES.models, '模型', '大模型梯队榜、选型、价格', stats.leader ? Number(stats.leader.score).toFixed(1) : '', stats.leader ? `当前榜首 ${esc(stats.leader.family)}` : '')}
-${card(SITES.agents, 'Agent 导航', 'Claude Code、Codex 等官方文档的导航', stats.docs || '', '篇官方文档')}
-${card(SITES.tools, '工具精选', 'AI 工具和资源精选', stats.tools || '', '条精选收录')}
+${card({
+    href: SITES.models,
+    name: '模型',
+    want: '想知道现在哪个大模型最强、哪个最划算。',
+    links: [['看梯队榜', SITES.models], ['按场景和预算选型', `${SITES.models}pick/`], ['查价格和参数', `${SITES.models}models/`]],
+    value: stats.leader ? Number(stats.leader.score).toFixed(1) : '',
+    label: stats.leader ? `当前榜首 ${esc(stats.leader.family)}` : '',
+  })}
+${card({
+    href: SITES.agents,
+    name: 'Agent 导航',
+    want: '想把 Claude Code、Codex 这类编程 Agent 用起来。',
+    links: [['Claude Code 学习路线', `${SITES.agents}claude-code/`], ['Codex 学习路线', `${SITES.agents}codex/`], ['几家功能和价格对比', `${SITES.agents}compare/`]],
+    value: stats.docs || '',
+    label: '篇官方文档，排好了阅读顺序',
+  })}
+${card({
+    href: SITES.tools,
+    name: '工具精选',
+    want: '想找真正值得用的 AI 工具、技能和开源项目。',
+    links: [['工具', `${SITES.tools}?kind=tool`], ['技能', `${SITES.tools}?kind=skill`], ['开源项目', `${SITES.tools}?kind=project`]],
+    value: stats.tools || '',
+    label: '条收录，每条一句话说清为什么',
+  })}
 </nav>`;
 }
 
@@ -189,12 +218,17 @@ async function main() {
   write('.nojekyll', '');
 
   write('index.html', page({
-    title: latest ? `${SITE_NAME} · 周报第 ${latest.number} 期` : SITE_NAME,
-    description: latest ? `${latest.week.label}：${issueSummary(latest)}` : DESCRIPTION,
+    title: `${SITE_NAME} · 选模型、学 Agent、找工具`,
+    description: HOME_DESCRIPTION,
     pathName: '/',
-    body: latest
-      ? `${hero(latest, { linkTitle: true })}\n${issueFacts(latest)}\n${siteCards(stats)}\n<div class="band"><h2>本期简报</h2><a href="/weekly/">往期周报 →</a></div>\n${issueArticle(latest)}`
-      : `${emptyHero()}\n${siteCards(stats)}`,
+    body: `${homeHero()}\n${siteCards(stats)}\n${
+      latest
+        ? `<div class="band"><h2>本周变化 · 第 ${latest.number} 期</h2><a href="/weekly/">往期周报 →</a></div>
+<p class="band-lede"><a href="/weekly/${latest.number}/">${esc(latest.week.label)}</a>：${esc(issueSummary(latest))}</p>
+${issueFacts(latest)}
+${issueArticle(latest)}`
+        : '<div class="band"><h2>本周变化</h2></div>\n<p class="band-lede">每周一把三个站的变化汇总成一期简报，第 1 期还没有发布。</p>'
+    }`,
   }));
 
   write('weekly/index.html', page({
