@@ -1,34 +1,42 @@
-# 维护说明（Wenworks AI · 周报）
+# 维护说明（Wenworks AI）
 
-线上地址 https://ai.wenworks.app 。这个站只做周报，首页就是最新一期；它不是三个站的入口页，不要往首页加站点介绍或入口卡片。结构、数据来源和产物见 `README.md`，视觉规范见 `design/wenworks-ai-design.md`。
+线上地址 https://ai.wenworks.app 。一个仓库、一个站、四个部分：`/`（`sites/home`）、`/models/`（`sites/models`）、`/agents/`（`sites/agents`）、`/tools/`（`sites/tools`）。结构和命令见 `README.md`，视觉规范见 `design/wenworks-ai-design.md`。
+
+动手改某个部分之前，先读那个部分自己的 `sites/<部分>/AGENTS.md`，里面有只适用于它的规则。两个 Next.js 部分（models、tools）用的 Next.js 版本有破坏性变更，写代码前先看各自 `node_modules/next/dist/docs/`。
 
 ## 上线方式
 
-- 推送到 `main` 就会重新发布（`.github/workflows/deploy.yml`）。不要直接推 `main`，在分支上改，开 PR。
-- 推送到其他分支会自动跑一遍预览（`weekly.yml`）：照常收集和生成，但不提交、不发布，产物在那次运行的 Artifacts 里。合并前先看它。
-- 仓库的 Pages 设成了 GitHub Actions 发布，自定义域名在仓库设置里绑定，不需要 CNAME 文件。
+- 合并到 `main` 就上线：`deploy.yml` 构建整个站并发布到 GitHub Pages。不要直接推 `main`，在分支上改，开 PR。
+- 推送到其他分支会跑同样的测试和构建但不发布，产物在那次运行的 Artifacts 里。
+- 自定义域名在仓库的 Pages 设置里绑定，不需要 CNAME 文件。
+- 三个定时任务会自己往 `main` 提交数据（模型数据、文档索引、每周动态）。它们提交前会先 `git pull --rebase`。
 
-## 不能做的
+## 四个部分怎么拼在一起
 
-- 不调用任何需要密钥的接口，不用大模型生成内容。周报全部由数据拼出来，评论只来自 `notes/` 里的编辑手记。
-- 不转载文章正文，只放标题、来源和链接。
-- 不加依赖，不加构建工具：Node 22 自带的东西够用。
-- 梯队的比对规则不要在这里另写一套。`scripts/collect.mjs` 直接加载模型仓库的 `lib/tiers.ts`，规则只有那一份。
+- 每个部分构建到自己的输出目录，`scripts/build-all.mjs` 把它们放进 `dist/` 的对应路径。首页部分拥有根路径。
+- models 和 tools 的 `next.config.ts` 固定带 basePath（`/models`、`/tools`）。站内跳转用 `next/link`，它会自动加前缀；**普通的 `<a>`、`<img>` 和 `history.replaceState` 不会**，要自己用 `process.env.NEXT_PUBLIC_BASE_PATH` 或 `window.location.pathname`。
+- agents 的模板里所有站内地址都从 `BASE='/agents'` 拼出来。
+- 页头里"Wenworks AI"指向 `/`，三个入口指向 `/models/`、`/agents/`、`/tools/`，都是普通链接。
+- 整个站只有一个统计代码（Cloudflare Web Analytics），只在发布构建里出现。
 
-## 数据和状态
+## 共用页头
 
-- `data/issues/NNNN.json` 是每一期的数据，由每周的任务生成并提交。已发布的期数不要手改；要更正就重新生成那一周（手动触发，填 `week`），期号和首次发布时间会保留。
-- `state/tools-seen.json` 和 `state/articles-seen.json` 记录每个条目是哪一期第一次见到的。删掉它们会让下一期重新建基线，那一期就不会列出新收录。
-- 期号连续编号。同一周再生成一次会覆盖原来那一期，不会多出一期。
+页头样式只有一份：`shared/site-header.css`。四个部分的样式文件里各有一段带标记的副本，由 `node scripts/sync-shared.mjs` 写入。不要直接改副本；CI 会用 `--check` 检查它们是否一致。
 
 ## 改完要做的检查
 
 ```bash
-npm test
-npm run build
+node scripts/sync-shared.mjs --check
+npm test --prefix sites/home
+npm test --prefix sites/models && npm run lint --prefix sites/models
+npm test --prefix sites/tools && npm run lint --prefix sites/tools
+node scripts/build-all.mjs
 ```
 
-- 改了页面或样式：把 `out/` 挂在根路径下用浏览器看首页、往期列表、单期页面，至少看 1280px 和 375px。
-- 改了推文串：每条不能超过 140 个汉字（英文和数字按半个算，链接按 11.5 个算），测试里有这条。
-- 页头是和三个站共用的，`src/styles.css` 里"Wenworks AI 共用页头"一段逐字相同，要改就四个仓库一起改。三个站的页头最右边各有一个"周报"链接指到这里。
-- 统计代码只在 `PRODUCTION=1` 时加，本地和预览构建里不应该出现。
+构建后把 `dist/` 起一个静态服务器，用浏览器看改到的页面，至少看 1280px 和 375px。跨部分的改动（页头、路径）要四个部分都点一遍，并留意请求里有没有 404：最常见的错误是某个资源路径漏了 `/models` 或 `/tools` 前缀。
+
+## 不能做的
+
+- 不要在没有本地数据库的环境里运行 Curator 的任何命令（见 `sites/tools/AGENTS.md`）。
+- 不要额外运行 `npm run fetch`：Artificial Analysis 的免费 API 每天只有 100 次。
+- 不要给 `sites/home` 和 `sites/agents` 加依赖或构建工具。

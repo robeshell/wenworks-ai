@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Claude Code、Codex、Antigravity CLI、Grok 的官方文档导航：学习路线、快速上手、功能对照。非官方整理。">
+<link rel="alternate" type="application/rss+xml" title="Wenworks AI · Agent 导航 · 文档变化" href="/agents/feed.xml">
+<title>Wenworks AI · Agent 导航</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Wenworks AI 共用视觉规范，见 design/wenworks-ai-design.md。
+   黑白灰加一个橙色；直角；1px 线分隔；不用渐变、模糊、发光。 */
+:root{color-scheme:light;--bg:#ffffff;--ink:#171717;--mute:#525252;--seen:#737373;--soft:#f5f5f5;--softer:#fafafa;--line:#e5e5e5;--line2:#d4d4d4;--accent:#ec5b13;--sans:"IBM Plex Sans",ui-sans-serif,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;--ease:cubic-bezier(0.22,1,0.36,1);--header-height:3.5rem}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:calc(var(--header-height) + 1rem)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@keyframes site-header-in{from{opacity:0;transform:translateY(-0.35rem)}to{opacity:1;transform:translateY(0)}}
+@keyframes site-content-in{from{opacity:0}to{opacity:1}}
+.site-header{animation:site-header-in 360ms var(--ease) both}
+.site-header a{text-decoration:none}
+.enter>*{animation:site-content-in 460ms var(--ease) 60ms both}
+
+/* ---- Wenworks AI 共用页头 ----
+   这一段由 shared/site-header.css 同步而来，不要在这里改。
+   改 shared/site-header.css，然后运行 node scripts/sync-shared.mjs。 */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.site-brand {
+  flex: none;
+  margin-right: 1rem;
+  color: #171717;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 180ms ease;
+}
+
+.site-brand:hover {
+  opacity: 0.7;
+}
+
+.site-switch,
+.site-nav {
+  display: flex;
+  align-items: center;
+}
+
+.site-switch {
+  flex: none;
+}
+
+.site-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.site-nav-end {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.site-sep {
+  flex: none;
+  width: 1px;
+  height: 1.25rem;
+  margin: 0 0.75rem;
+  background: #e5e5e5;
+}
+
+.site-header nav a {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  color: #525252;
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.site-header nav a::after {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.55rem;
+  left: 0.75rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease;
+}
+
+.site-header nav a:hover {
+  color: #171717;
+  transform: translateY(-1px);
+}
+
+.site-header nav a[aria-current="page"] {
+  color: #171717;
+  font-weight: 500;
+}
+
+.site-header nav a:hover::after,
+.site-header nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.site-menu-button {
+  display: none;
+  flex: none;
+  align-items: center;
+  height: 2.75rem;
+  margin-left: auto;
+  padding: 0 0.75rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  background: #ffffff;
+  color: #171717;
+  font: inherit;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.site-menu-button:hover {
+  border-color: #d4d4d4;
+  background: #f5f5f5;
+}
+
+@media (max-width: 52rem) {
+  .site-header-inner {
+    padding: 0 1rem;
+  }
+
+  .site-brand {
+    margin-right: 0.5rem;
+  }
+
+  /* 三个站点入口始终显示；屏幕再窄时可以横向滑动。 */
+  .site-switch {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-right: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .site-switch::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header .site-switch a {
+    padding: 0 0.5rem;
+  }
+
+  .site-header .site-switch a::after {
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .site-sep {
+    display: none;
+  }
+
+  .site-menu-button {
+    display: inline-flex;
+  }
+
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #e5e5e5;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 6%);
+  }
+
+  .site-nav[data-open="true"] {
+    display: flex;
+  }
+
+  .site-nav-end {
+    margin-left: 0;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .site-header .site-nav a {
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .site-header .site-nav a::after {
+    display: none;
+  }
+
+  .site-header .site-nav a:hover {
+    transform: none;
+  }
+
+  .site-header .site-nav > a + a {
+    border-top: 1px solid #e5e5e5;
+  }
+}
+
+@media (max-width: 25rem) {
+  .site-brand {
+    margin-right: 0.25rem;
+  }
+
+  .site-switch {
+    margin-right: 0.25rem;
+  }
+
+  .site-header .site-switch a {
+    padding: 0 0.375rem;
+  }
+
+  .site-header .site-switch a::after {
+    right: 0.375rem;
+    left: 0.375rem;
+  }
+
+  .site-menu-button {
+    padding: 0 0.5rem;
+  }
+}
+/* ---- 共用页头结束 ---- */
+
+/* ---- 页面 ---- */
+.band{max-width:72rem;margin:0 auto;padding:2rem 1rem}
+@media(min-width:40rem){.band{padding:2.5rem 1.5rem}}
+.phead{margin-bottom:1.5rem}
+h1{font-size:1.5rem;font-weight:500;line-height:1.25;letter-spacing:-0.025em;margin:0 0 .25rem;text-wrap:balance}
+@media(min-width:40rem){h1{font-size:1.75rem}}
+.lede{color:var(--mute);font-size:.875rem;margin:0;max-width:62ch}
+.stat{display:none}
+.bar{height:3px;background:var(--line);overflow:hidden;margin-top:.5rem}
+.bar i{display:block;height:100%;background:var(--accent);transition:width 360ms var(--ease)}
+.note{color:var(--mute);font-size:.875rem;margin:1rem 0 0}
+.note a{text-underline-offset:3px}
+.hint{color:var(--mute);font-size:.875rem;margin:1rem 0 0;max-width:60ch}
+.empty{color:var(--mute);padding:3rem 0;text-align:center}
+.prose{max-width:62ch}.prose p{margin:0 0 1rem}.prose a{text-underline-offset:3px}
+.subhead{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin:2rem 0 1rem}
+.subhead h2{font-size:1.125rem;font-weight:500;line-height:1.3;margin:0}
+.foot{color:var(--mute);font-size:.875rem;border-top:1px solid var(--line);margin:3rem 0 0;padding-top:1rem}
+.foot a{text-underline-offset:3px}
+
+/* 选择 agent、视图切换、搜索 */
+.agents{display:flex;gap:.5rem;overflow-x:auto;padding:2px 2px .5rem;margin:0 -2px}
+.agents button{flex:none;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:0;padding:.5rem 1rem;min-height:2.75rem;cursor:pointer;transition:border-color 180ms ease,background-color 180ms ease,transform 180ms ease}
+.agents button b{display:block;font-size:.9375rem;font-weight:500;line-height:1.3}
+.agents button small{display:block;color:var(--mute);font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.75rem}
+.agents button:not(:disabled):hover{border-color:var(--line2);background:var(--soft);transform:translateY(-1px)}
+.agents button{position:relative}
+.agents button[aria-pressed=true]{border-color:var(--ink)}
+.agents button[aria-pressed=true]::before{content:"";position:absolute;top:-1px;right:-1px;left:-1px;height:2px;background:var(--accent)}
+.agents button:disabled{cursor:default;color:var(--mute);background:var(--softer)}
+.tools{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;margin-top:1rem}
+.seg{display:inline-flex;gap:.25rem;border-bottom:1px solid var(--line)}
+.seg button{font:inherit;font-size:.875rem;color:var(--mute);background:none;border:0;border-bottom:2px solid transparent;border-radius:0;padding:0 .75rem;min-height:2.75rem;cursor:pointer;white-space:nowrap;transition:color 180ms ease,border-color 180ms ease}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed=true]{border-bottom-color:var(--ink);color:var(--ink);font-weight:500}
+.search{flex:1 1 15rem;position:relative}
+.search input{width:100%;height:2.75rem;font:inherit;font-size:.875rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:0;padding:0 .875rem 0 2.5rem;transition:border-color 180ms ease;-webkit-appearance:none;appearance:none}
+.search input::placeholder{color:var(--mute)}
+.search input:hover{border-color:var(--line2)}
+.search input:focus{outline:none;border-color:var(--ink)}
+.search input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.search svg{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);width:1rem;height:1rem;stroke:var(--mute)}
+.reset{font:inherit;font-size:.875rem;color:var(--mute);background:none;border:0;cursor:pointer;min-height:2.75rem;padding:0 .25rem;text-decoration:underline;text-underline-offset:3px}
+.reset:hover{color:var(--ink)}
+
+/* 卡片 */
+.stage,.card{background:var(--bg);border:1px solid var(--line);border-radius:0}
+.stage{padding:1.5rem 1.5rem 1rem;display:flex;flex-direction:column}
+.card{padding:1rem 1rem .25rem}
+.stage .n{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1.5rem;font-weight:500;line-height:1.2}
+.stage h3{font-size:1.125rem;font-weight:500;line-height:1.3;margin:.25rem 0}
+.stage p{color:var(--mute);font-size:.875rem;margin:0 0 .5rem}
+.stage .meta{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.75rem;color:var(--mute);display:flex;justify-content:space-between;margin-bottom:.25rem}
+.meta b,.ahead b{font-weight:inherit}
+.card h4{font-size:.875rem;font-weight:500;line-height:1.3;color:var(--mute);margin:0 0 .25rem}
+.card h5{font-size:.8125rem;font-weight:500;color:var(--mute);margin:.5rem 0 0;padding-top:.5rem;border-top:1px solid var(--line)}
+.ahead{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:.75rem}
+.ahead h3{font-size:1.125rem;font-weight:500;line-height:1.3;margin:0}
+.ahead span{color:var(--mute);font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.8125rem;white-space:nowrap}
+.ahead a{text-underline-offset:3px}
+
+/* 链接列表 */
+ul.pages,.plain{list-style:none;padding:0;margin:0}
+.stage ul.pages,.plain{margin-top:.5rem}
+.pages li{display:flex;align-items:flex-start;gap:.5rem;border-top:1px solid var(--line)}
+.pages li:first-child{border-top:0}
+.plain li{border-top:1px solid var(--line)}
+.pages a,.plain a{flex:1;display:block;text-decoration:none;padding:.625rem 0;font-size:.9375rem;line-height:1.4;transition:color 180ms ease}
+.pages a:hover,.plain a:hover{text-decoration:underline;text-underline-offset:3px}
+.pages .tag,.plain .tag{display:block;font-size:.8125rem;color:var(--mute);margin-top:.125rem}
+.pages .lab,.plain .lab{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.75rem;color:var(--mute);margin-bottom:.125rem}
+.pages li.seen a,.pages li.seen .tag{color:var(--seen)}
+.pages li.done a{color:var(--seen);text-decoration:line-through;text-decoration-color:var(--line2)}
+.badge{flex:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.75rem;color:var(--mute);border:1px solid var(--line);padding:0 .375rem;margin-top:.625rem;white-space:nowrap}
+.chk{flex:none;width:2.25rem;height:2.5rem;background:none;border:0;cursor:pointer;display:grid;place-items:center;padding:0}
+.chk span{width:1.125rem;height:1.125rem;border:1px solid var(--line2);background:var(--bg);display:grid;place-items:center;transition:background-color 180ms ease,border-color 180ms ease}
+.chk:hover span{border-color:var(--ink)}
+li.done .chk span{background:var(--accent);border-color:var(--accent)}
+.chk svg{width:.75rem;height:.75rem}
+.chk path{fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-dasharray:11;stroke-dashoffset:11}
+li.done .chk path{stroke-dashoffset:0}
+li.just .chk path{transition:stroke-dashoffset 180ms ease-out}
+
+/* 首页 */
+.hgrid{display:grid;grid-template-columns:1fr;gap:1rem;align-items:start}
+.hside{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.big>p{margin:0 0 .5rem}
+.big .arows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 3rem}
+.arow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.25rem 1rem;align-items:center;border-top:1px solid var(--line);padding:1rem 0}
+.arow b{font-size:1rem;font-weight:500}
+.arow .meta{display:block;margin:.125rem 0 0}
+.pill{display:inline-flex;align-items:center;min-height:2.75rem;padding:0 1rem;border:1px solid var(--ink);border-radius:0;background:var(--ink);color:#ffffff;font:inherit;font-size:.875rem;white-space:nowrap;cursor:pointer;transition:background-color 180ms ease,transform 180ms ease}
+.pill:hover{background:#404040;transform:translateY(-1px)}
+.quick{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:0 1.25rem;font-size:.875rem}
+.quick a{color:var(--mute);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:4px;padding:.375rem 0;transition:color 180ms ease}
+.quick a:hover{color:var(--ink);text-decoration-color:currentColor}
+button.entry{text-align:left;cursor:pointer;color:var(--ink);font:inherit;justify-content:flex-start;transition:border-color 180ms ease,background-color 180ms ease,transform 180ms ease}
+button.entry:hover{border-color:var(--line2);background:var(--softer);transform:translateY(-1px)}
+.entry h3{margin:0 0 .25rem;font-size:1rem}
+.entry p{margin:0}
+.entry .arr{margin-top:auto;padding-top:1rem;font-size:.875rem;color:var(--mute)}
+.entry:hover .arr{color:var(--ink)}
+.alinks{display:flex;gap:.5rem;margin-top:.5rem;padding-top:1rem;border-top:1px solid var(--line)}
+.alinks button{font:inherit;font-size:.875rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:0;min-height:2.75rem;padding:0 1rem;cursor:pointer;white-space:nowrap;transition:border-color 180ms ease,background-color 180ms ease,transform 180ms ease}
+.alinks button:hover{border-color:var(--line2);background:var(--soft);transform:translateY(-1px)}
+
+/* 学习路线、完整目录 */
+/* 学习路线：每个阶段一段，左边是阶段说明，右边每篇一行（标题 + 一句话说明） */
+.route{border-bottom:1px solid var(--line)}
+.route .stage{display:grid;grid-template-columns:15rem minmax(0,1fr);column-gap:3rem;align-content:start;border:0;border-top:1px solid var(--line);padding:1.5rem 0}
+.route .stage>*{grid-column:1}
+.route .stage>ul.pages{grid-column:2;grid-row:1/span 5;margin:0}
+.route .pages a{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:1.5rem;align-items:baseline}
+.route .pages .tag{margin:0}
+@media(max-width:800px){.route .stage{display:flex;padding:1.5rem 0 .5rem}.route .stage>ul.pages{margin-top:.5rem}.route .pages a{display:block}.route .pages .tag{margin-top:.125rem}}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:1rem;align-items:start}
+.chips{display:flex;gap:.5rem;overflow-x:auto;padding:2px 2px 1rem;margin:0 -2px}
+.chips a{flex:none;display:inline-flex;align-items:center;min-height:2.75rem;padding:0 .875rem;border:1px solid var(--line);background:var(--bg);color:var(--mute);font-size:.875rem;text-decoration:none;white-space:nowrap;transition:border-color 180ms ease,color 180ms ease,transform 180ms ease}
+.chips a:hover{color:var(--ink);border-color:var(--line2);transform:translateY(-1px)}
+.chips small{color:var(--mute);font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.75rem;margin-left:.375rem}
+@media(min-width:700px){.chips{flex-wrap:wrap;overflow:visible}}
+section.sec{margin:1.5rem 0 .5rem}
+section.sec h2{font-size:1.125rem;font-weight:500;line-height:1.3;margin:0 0 1rem;display:flex;align-items:baseline;gap:.75rem}
+section.sec h2 small{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.8125rem;font-weight:400;color:var(--mute)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,18rem),1fr));gap:1rem;align-items:start}
+
+/* 对照表 */
+.tw{overflow-x:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+table.cmp{width:100%;border-collapse:collapse;font-size:.875rem;line-height:1.4}
+.tw table.cmp{min-width:55rem}
+.cmp th,.cmp td{text-align:left;padding:.75rem 1rem .75rem 0;border-top:1px solid var(--line);vertical-align:top}
+.cmp thead th{border-top:0;color:var(--mute);font-weight:500}
+.cmp tbody tr{transition:background-color 180ms ease}
+@media(hover:hover){.cmp tbody tr:hover{background:var(--soft)}}
+.cmp td:first-child{font-weight:500;width:22%}
+.cmp a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:4px}
+.cmp a:hover{text-decoration-color:currentColor}
+.cmp code{display:block;margin-top:.125rem;font-family:var(--mono);font-size:.8125rem;color:var(--mute)}
+.cmp td.none{color:var(--mute)}
+
+@media(max-width:900px){.hside{grid-template-columns:repeat(2,minmax(0,1fr))}.big .arows{grid-template-columns:1fr}}
+@media(max-width:600px){.stage{padding:1rem 1rem .75rem}.tw{overflow:visible}.tw table.cmp{min-width:0}
+.stack thead{display:none}.stack tr{display:grid;padding-block:.5rem;border-top:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:.25rem 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mute);font-weight:400}.stack td:first-child{width:auto}}
+@media(max-width:480px){.hside{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.site-header nav a:hover,.agents button:hover,.pill:hover,button.entry:hover,.alinks button:hover,.chips a:hover{transform:none!important}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="site-brand">Wenworks AI</a>
+    <nav class="site-switch" aria-label="Wenworks AI 站点"><a href="/models/">模型</a><a href="/agents/" aria-current="page">Agent 导航</a><a href="/tools/">工具精选</a></nav>
+    <span class="site-sep" aria-hidden="true"></span>
+    <nav id="top" class="site-nav" aria-label="本站栏目" data-open="false"></nav>
+    <button type="button" class="site-menu-button" id="menu" aria-expanded="false" aria-controls="top">菜单</button>
+  </div>
+</header>
+<div class="band"><div class="wrap">
+<div class="phead">
+  <div>
+    <h1 id="h1"></h1>
+    <p class="lede" id="lede"></p>
+  </div>
+  <div class="stat" id="stat"><b id="pct">0%</b><span id="cnt">已读 0 / 0</span><div class="bar"><i id="bar" style="width:0"></i></div></div>
+</div>
+<nav class="agents" id="agents" aria-label="选择 agent"></nav>
+<div class="tools" id="tools">
+  <div class="seg" id="seg" role="group" aria-label="视图">
+    <button data-m="start">快速上手</button>
+    <button data-m="path">学习路线</button>
+    <button data-m="all">完整目录</button>
+  </div>
+  <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="搜索页面，例如 hooks、权限、MCP" autocomplete="off" aria-label="搜索页面"></label>
+  <button class="reset" id="reset">清除看过的标记</button>
+</div>
+<p class="note" id="note"></p>
+<main id="out" style="margin-top:18px"></main>
+<p class="foot">非官方整理，与 Anthropic、OpenAI、Google、xAI 无关。目录来自各家官方文档索引（<a href="https://code.claude.com/docs/_llms/zh-cn.txt">Claude Code</a> · <a href="https://learn.chatgpt.com/docs/llms.txt">Codex</a> · <a href="https://antigravity.google/llms.txt">Antigravity</a> · <a href="https://docs.x.ai/llms.txt">Grok</a>），2026-11-26 整理。 </p>
+<p class="foot" style="margin-top:10px;border-top:0;padding-top:0">站内：<a href="/agents/">首页</a> · <a href="/agents/claude-code/">Claude Code</a> · <a href="/agents/codex/">Codex</a> · <a href="/agents/antigravity-cli/">Antigravity CLI</a> · <a href="/agents/grok/">Grok</a> · <a href="/agents/articles/">文章</a> · <a href="/agents/compare/">对比</a> · <a href="/agents/updates/">更新</a> · <a href="/agents/about/">关于本站</a></p>
+</div></div>
+
+<script type="application/json" id="notes">@@NOTES@@</script>
+<script type="text/plain" id="idx-claude">
+@@CLAUDE@@
+</script>
+<script type="text/plain" id="idx-codex">
+@@CODEX@@
+</script>
+<script type="text/plain" id="idx-antigravity">
+@@ANTIGRAVITY@@
+</script>
+<script type="text/plain" id="idx-grok">
+@@GROK@@
+</script>
+
+<script>
+{
+const AGENTS={
+ claude:{name:'Claude Code',maker:'Anthropic',base:'https://code.claude.com/docs/zh-CN/',key:'cc-docs-read-v1',note:'',
+  stages:[
+   {n:'理解原理',d:'agent 循环、上下文窗口、缓存和工具，先弄清它为什么这样做。',p:['how-claude-code-works','context-window','prompt-caching','claude-directory','features-overview','tools-reference']},
+   {n:'日常用熟',d:'CLAUDE.md 记忆、权限、会话与回滚、命令，加上最佳实践。',p:['memory','best-practices','common-workflows','permission-modes','permissions','sandboxing','sessions','checkpointing','commands','interactive-mode','cli-reference']},
+   {n:'扩展机制',d:'MCP 接外部系统，skills 封装做法，subagents 隔离上下文，hooks 做强制约束。',p:['mcp-quickstart','mcp','skills','sub-agents','hooks-guide','hooks','plugins/overview','plugins/create']},
+   {n:'并行与自动化',d:'worktrees、多会话编排、headless、定时任务、云端会话和 Projects、CI。',p:['agents','worktrees','agent-teams','workflows','cross-session-messaging','headless','scheduled-tasks','routines','goal','channels','claude-code-on-the-web','claude-projects','github-actions','code-review']},
+   {n:'Agent SDK',d:'自己造 agent：代理循环、自定义工具、hooks、权限、会话。',p:['agent-sdk/overview','agent-sdk/agent-loop','agent-sdk/custom-tools','agent-sdk/hooks','agent-sdk/permissions','agent-sdk/sessions']}]},
+ codex:{name:'Codex',maker:'OpenAI',base:'https://learn.chatgpt.com/zh-Hans/docs/',key:'codex-docs-read-v1',news:[['November 2–6, 2026','whats-new/november-2-6-2026'],['October 26–30, 2026','whats-new/october-26-30-2026'],['October 5–9, 2026','whats-new/october-5-9-2026'],['September 28–October 2, 2026','whats-new/september-28-october-2-2026'],['DevDay 2026','whats-new/devday-2026'],['GPT-6.2','whats-new/gpt-62-astra-sol']],note:'Codex 文档已并入 ChatGPT 文档站，部分页面还没有中文翻译，打开后会显示英文原文。',
+  stages:[
+   {n:'理解原理',d:'CLI、运行模式、沙盒和审批机制，先搞清它在哪里跑、能动什么。',p:['codex/cli','quickstart','working-with-agents','environments/modes','sandboxing','agent-approvals-security']},
+   {n:'日常用熟',d:'AGENTS.md、提示词、权限和基础配置，加上命令和代码审查。',p:['agent-configuration/agents-md','prompting','https://learn.chatgpt.com/guides/best-practices','permissions','config-file/config-basic','developer-commands','cli-customization','code-review']},
+   {n:'扩展机制',d:'MCP、技能与插件、子智能体、钩子和规则。',p:['extend/mcp','skills-and-plugins','build-skills','build-plugins','agent-configuration/subagents','hooks','agent-configuration/rules']},
+   {n:'并行与自动化',d:'Git 工作树、codex exec、计划任务、长时间运行、云端和 GitHub。',p:['environments/git-worktrees','non-interactive-mode','automations','long-running-work','cloud','github-action','third-party/github']},
+   {n:'SDK 与嵌入',d:'用 Codex SDK 和 App Server 把 Codex 嵌进自己的产品。',p:['codex-sdk','app-server','config-file/config-reference']}]},
+ antigravity:{name:'Antigravity CLI',maker:'Google',base:'https://antigravity.google/docs/',key:'agy-docs-read-v1',note:'Antigravity CLI 接替了 Gemini CLI（个人用户的 Gemini CLI 已在 2026 年 6 月停用）。这里也收录了 Antigravity 平台通用的功能文档；中文标题是本站翻译的。',noteLink:['https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/','看官方说明'],
+  log:['changelog','官方更新日志'],news:[],
+  stages:[
+   {n:'理解原理',d:'先分清 Antigravity 的几种形态，装好 CLI，再看 agent 和上下文是怎么回事。',p:['overview','getting-started','install','cli/prompting','learn/how-agents-work','learn/context-and-tokens']},
+   {n:'日常用熟',d:'提示与交互、执行模式、对话管理、规则、权限和沙箱。',p:['cli/modes','cli/conversations','cli/using','rules','permissions','sandbox','cli/reference','cli/best-practices']},
+   {n:'扩展机制',d:'MCP、skills、hooks、插件、子代理和斜杠命令。',p:['mcp','skills','hooks','plugins','subagents','slash-commands']},
+   {n:'并行与自动化',d:'无头模式、swarm 和 agent 团队、动态工作流、定时、远程 agent。',p:['cli/headless','swarm','teamwork','dynamic-workflows','commands/schedule','remote-agents','cli/acp']},
+   {n:'Antigravity SDK',d:'用 Python SDK 自己搭 agent：工具、子代理、生命周期和策略。',p:['sdk/overview','sdk/tools','sdk/subagents','sdk/lifecycle','sdk/policies']}]},
+ grok:{name:'Grok',maker:'xAI',base:'https://docs.x.ai/',key:'grok-docs-read-v1',note:'收录了 Grok Build（编程 agent）和 Grok Bot 两部分。官方文档只有英文，这里的中文标题是本站翻译的。',
+  log:null,news:[],
+  stages:[
+   {n:'理解原理',d:'Grok Build 的安装、模式和命令，以及权限和沙箱。',p:['build/overview','build/modes-and-commands','build/features/permissions','build/features/sandbox']},
+   {n:'日常用熟',d:'项目规则、计划模式、会话、快捷键和设置。',p:['build/features/project-rules','build/features/plan-mode','build/features/sessions','build/keyboard-shortcuts','build/settings','build/cli/reference']},
+   {n:'扩展机制',d:'MCP、skills 和插件、hooks、子代理。',p:['build/features/mcp-servers','build/features/skills-plugins-marketplaces','build/features/hooks','build/features/subagents']},
+   {n:'并行与自动化',d:'worktrees、后台任务、agent 面板、无头模式和脚本。',p:['build/features/worktrees','build/features/background-tasks','build/features/dashboard','build/cli/headless-scripting']},
+   {n:'Grok Bot',d:'另一条产品线：能用电脑和应用、可以定时做事的 bot。',p:['grok-bot/overview','grok-bot/get-started','grok-bot/how-grok-bot-works','grok-bot/skills-routines-and-automations','grok-bot/computer-and-apps']}]}
+};
+const PENDING=[];
+const CMP2={'项目说明文件':[['rules','AGENTS.md / GEMINI.md'],['build/features/project-rules','AGENTS.md']],'配置文件':[['cli/using','settings.json'],['build/settings','config.toml']],'权限模式':[['cli/modes',''],['build/features/permissions','']],'沙箱':[['sandbox',''],['build/features/sandbox','']],'MCP':[['mcp',''],['build/features/mcp-servers','']],'Skills':[['skills',''],['build/features/skills-plugins-marketplaces','']],'插件':[['plugins',''],['build/features/skills-plugins-marketplaces','']],'子代理':[['subagents',''],['build/features/subagents','']],'Hooks':[['hooks',''],['build/features/hooks','']],'脚本与非交互':[['cli/headless','agy -p'],['build/cli/headless-scripting','grok -p']],'并行 worktrees':[null,['build/features/worktrees','']],'定时任务':[['commands/schedule',''],['grok-bot/skills-routines-and-automations','']],'云端运行':[['remote-agents',''],null],'代码审查':[['review-changes',''],null],'SDK':[['sdk/overview',''],null],'IDE':[['ide/extensions',''],null],'浏览器':[['browser',''],null],'计算机使用':[null,['grok-bot/computer-and-apps','']]};
+const CMP=[
+ ['项目说明文件','memory','CLAUDE.md','agent-configuration/agents-md','AGENTS.md'],
+ ['配置文件','settings','settings.json','config-file/config-basic','config.toml'],
+ ['权限模式','permission-modes','','permissions',''],
+ ['沙箱','sandboxing','','sandboxing',''],
+ ['MCP','mcp','','extend/mcp',''],
+ ['Skills','skills','','build-skills',''],
+ ['插件','plugins/overview','','plugins',''],
+ ['子代理','sub-agents','','agent-configuration/subagents',''],
+ ['Hooks','hooks-guide','','hooks',''],
+ ['脚本与非交互','headless','claude -p','non-interactive-mode','codex exec'],
+ ['并行 worktrees','worktrees','','environments/git-worktrees',''],
+ ['定时任务','scheduled-tasks','','automations',''],
+ ['云端运行','claude-code-on-the-web','','cloud',''],
+ ['代码审查','code-review-local','/code-review','code-review',''],
+ ['CI 集成','github-actions','','github-action',''],
+ ['SDK','agent-sdk/overview','','codex-sdk',''],
+ ['IDE','vs-code','','codex/ide',''],
+ ['浏览器','chrome','','browser',''],
+ ['计算机使用','computer-use','','computer-use','']
+];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+for(const id in AGENTS){
+  const A=AGENTS[id];A.secs=[];A.all=[];let S,G,Sub;
+  for(const raw of document.getElementById('idx-'+id).textContent.split('\n')){
+    const l=raw.trim();if(!l)continue;
+    if(l.startsWith('### ')){Sub={t:l.slice(4),items:[]};G.subs.push(Sub);continue}
+    if(l.startsWith('## ')){G={t:l.slice(3),items:[],subs:[]};S.groups.push(G);Sub=null;continue}
+    if(l.startsWith('# ')){S={t:l.slice(2),groups:[]};A.secs.push(S);continue}
+    const k=l.lastIndexOf('|');const it={t:l.slice(0,k),slug:l.slice(k+1),sec:S.t,grp:G.t+(Sub?' · '+Sub.t:'')};
+    (Sub?Sub.items:G.items).push(it);A.all.push(it);
+  }
+  A.by=Object.fromEntries(A.all.map(i=>[i.slug,i]));
+  A.stageOf={};A.stages.forEach((s,k)=>s.p.forEach(p=>A.stageOf[p]=k+1));
+  try{A.read=JSON.parse(localStorage.getItem(A.key)||'{}')||{}}catch(e){A.read={}}
+}
+const url=(A,slug)=>/^https?:/.test(slug)?slug:A.base+slug;
+const save=A=>{try{localStorage.setItem(A.key,JSON.stringify(A.read))}catch(e){}};
+const NAV=[['home','首页'],['docs','文档'],['articles','文章'],['compare','对比'],['updates','更新']];
+const HEAD={home:['AI 编程 Agent <span>导航</span>','从挑工具到系统学完，各家编程 agent 的官方资料都整理在这里。所有链接指向官方原文。'],
+ docs:['文档','官方文档排成学习路线。点标题打开官方原文，看过的标题会自动变浅。'],
+ articles:['文章','各家官方博客里值得读的文章。只列标题和链接，点开去官方站看。'],
+ compare:['对比','几家的基本情况、价格，以及同一类功能在各家文档里的位置。'],
+ updates:['更新','各家官方的更新日志，以及文档目录每天的变化。'],
+ about:['关于本站','']};
+const MUST=[
+ {a:'claude',t:'Claude Code: Best practices for agentic coding',u:'https://www.anthropic.com/engineering/claude-code-best-practices',w:'官方写的 Claude Code 用法和习惯，入门后先读这篇'},
+ {a:'claude',t:'Effective context engineering for AI agents',u:'https://www.anthropic.com/research/effective-context-engineering-for-ai-agents',w:'怎么管理 agent 的上下文'},
+ {a:'claude',t:'Equipping agents for the real world with Agent Skills',u:'https://www.anthropic.com/research/equipping-agents-for-the-real-world-with-agent-skills',w:'Agent Skills 的由来和设计思路'},
+ {a:'claude',t:'Beyond permission prompts: making Claude Code more secure and autonomous',u:'https://www.anthropic.com/research/claude-code-sandboxing',w:'Claude Code 的沙箱：少弹权限确认的同时保证安全'},
+ {a:'claude',t:'How we built Claude Code auto mode: a safer way to skip permissions',u:'https://www.anthropic.com/research/claude-code-auto-mode',w:'自动模式是怎么做出来的'},
+ {a:'claude',t:'Harness design for long-running application development',u:'https://www.anthropic.com/research/harness-design-long-running-apps',w:'面向前端和长时间自主开发任务的 harness 设计'},
+ {a:'claude',t:'Building a C compiler with a team of parallel Claudes',u:'https://www.anthropic.com/research/building-c-compiler',w:'多个 Claude 并行协作写一个 C 编译器的实例'},
+ {a:'codex',t:'Run long horizon tasks with Codex',u:'https://developers.openai.com/blog/run-long-horizon-tasks-with-codex',w:'让 Codex 跑长时间任务'},
+ {a:'codex',t:'Rethinking skills and prompts for GPT-6 Astra',u:'https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra',w:'重新审视 skill 描述、AGENTS.md 和任务提示词，避免上下文臃肿'},
+ {a:'codex',t:'Custom Code Review rules for Codex',u:'https://developers.openai.com/blog/custom-code-review-rules-for-codex',w:'写更细的规则，让 Codex 审查代码时按你的规范来'},
+ {a:'codex',t:'Testing Agent Skills Systematically with Evals',u:'https://developers.openai.com/blog/eval-skills',w:'把 skills 变成可以测试、打分、持续改进的东西'},
+ {a:'codex',t:'Automating repetitive work at OpenAI with Codex',u:'https://developers.openai.com/blog/automating-repetitive-work-at-openai-with-codex',w:'把重复的工程任务变成可审查、可复用的工作流'},
+ {a:'codex',t:'Using skills to accelerate OSS maintenance',u:'https://developers.openai.com/blog/skills-agents-sdk',w:'用 skills 和 GitHub Actions 维护开源仓库'},
+ {a:'codex',t:'Supercharging Codex with JetBrains MCP at Skyscanner',u:'https://developers.openai.com/blog/skyscanner-codex-jetbrains-mcp',w:'Skyscanner 把 Codex CLI 接进 JetBrains IDE 的做法'},
+ {a:'antigravity',t:'An important update: Transitioning Gemini CLI to Antigravity CLI',u:'https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/',w:'Google 说明为什么用 Antigravity CLI 接替 Gemini CLI，以及保留了哪些功能'}
+];
+const START={claude:[['安装并登录','quickstart'],['弄清它怎么工作','how-claude-code-works'],['写项目说明 CLAUDE.md','memory'],['选一个权限模式','permission-modes'],['跑几个常见任务','common-workflows'],['过一遍最佳实践','best-practices']],
+ codex:[['安装并登录','quickstart'],['熟悉 CLI','codex/cli'],['写项目说明 AGENTS.md','agent-configuration/agents-md'],['选一个权限模式','permission-modes'],['学会怎么提需求','prompting'],['过一遍最佳实践','https://learn.chatgpt.com/guides/best-practices']],
+ antigravity:[['安装并跑起来','getting-started'],['登录','install'],['用过 Gemini CLI 的话先看迁移','cli/gcli-migration'],['学会提需求','cli/prompting'],['选一个执行模式','cli/modes'],['过一遍最佳实践','cli/best-practices']],
+ grok:[['安装并登录 Grok Build','build/overview'],['熟悉模式和命令','build/modes-and-commands'],['写项目规则','build/features/project-rules'],['设好权限','build/features/permissions'],['试试计划模式','build/features/plan-mode'],['学会管理会话','build/features/sessions']]};
+const PICK=[['出品方',{claude:'Anthropic',codex:'OpenAI',antigravity:'Google',grok:'xAI'}],
+ ['可以在哪里用',{claude:'终端、VS Code、JetBrains、桌面应用、网页云端、手机',codex:'终端（CLI）、IDE 扩展、桌面应用、云端、手机',antigravity:'终端（agy）、桌面应用、IDE 扩展',grok:'终端（Grok Build）；Grok Bot 另有手机、Microsoft Teams 和 X'}],
+ ['项目说明文件',{claude:'CLAUDE.md',codex:'AGENTS.md',antigravity:['rules','AGENTS.md 或 GEMINI.md'],grok:['build/features/project-rules','AGENTS.md（也读 CLAUDE.md）']}],
+ ['配置文件',{claude:'settings.json',codex:'config.toml',antigravity:['cli/using','settings.json'],grok:['build/settings','config.toml']}],
+ ['官方中文文档',{claude:'完整的简体中文版',codex:'部分页面有中文',antigravity:'本站标题为翻译',grok:'只有英文'}],
+ ['本站收录',{claude:0,codex:0,antigravity:0,grok:0}]];
+const PRICE=[['免费能用吗',{claude:'不能，Free 方案不含 Claude Code',codex:'能，Free 方案可做简单的编码任务',antigravity:'能，个人免费方案包含 CLI',grok:'定价页没有写明 Free 是否包含 Grok Build'}],
+ ['最低的付费档',{claude:'Pro：$20/月，年付折合 $17/月',codex:'Go：$8/月，面向轻量任务；Plus：$20/月，明确列出可用 CLI 和 IDE 扩展',antigravity:'Google AI Pro，定价页没有标价',grok:'Plus：$8/月，包含 Grok Build'}],
+ ['更高的档位',{claude:'Max $100/月，Ultra $200/月；Team 标准席 $25、高级席 $125（每席每月）',codex:'Pro 有 $100、$200、$500 三档；Business $25/人/月，年付 $20',antigravity:'Google AI Ultra，未标价；企业走 Google Cloud，Gemini Enterprise 每席 $30/月起',grok:'Premium $30/月，Super $100/月，Ultra $200/月'}],
+ ['按用量付费',{claude:'Enterprise 为每席 $20 加按 API 费率计的用量',codex:'支持用 API key，按 API 价格计费，不含云端功能',antigravity:'Gemini Enterprise 有按量付费，无席位费',grok:'定价页没有说明'}],
+ ['官方定价页',{claude:['https://claude.com/pricing','claude.com/pricing'],codex:['pricing','Codex 定价'],antigravity:['https://antigravity.google/pricing','antigravity.google/pricing'],grok:['https://x.ai/pricing','x.ai/pricing']}]];
+const VIEWS=[...NAV.map(n=>n[0]),'about'];
+let view='home',mode='path',cur='claude';
+try{const m0=localStorage.getItem('docs-mode');if(['start','path','all'].includes(m0))mode=m0;const s=localStorage.getItem('docs-agent');if(AGENTS[s])cur=s}catch(e){}
+// Agent 导航是整个站里的 /agents/ 部分，所有站内地址都带这个前缀。
+const BASE='/agents';
+const ROUTES={home:BASE+'/',articles:BASE+'/articles/',compare:BASE+'/compare/',updates:BASE+'/updates/',about:BASE+'/about/'};
+const APATH={claude:BASE+'/claude-code/',codex:BASE+'/codex/',antigravity:BASE+'/antigravity-cli/',grok:BASE+'/grok/'};
+const WEB=/^https?:$/.test(location.protocol),SITE='Wenworks AI · Agent 导航';
+const pathOf=()=>view==='docs'?APATH[cur]:ROUTES[view];
+const TITLE={articles:'值得读的官方文章',compare:'几家编程 agent 的对比',updates:'文档更新',about:'关于本站'};
+function fromLocation(){
+  const qs=new URLSearchParams(location.search);let v=qs.get('v'),a=qs.get('a'),m=qs.get('m');
+  if(!v&&WEB){const p=location.pathname.replace(/index\.html$/,'');const ag=Object.keys(APATH).find(k=>APATH[k]===p);
+    if(ag){v='docs';a=ag}else v=Object.keys(ROUTES).find(k=>ROUTES[k]===p)||null}
+  let x=location.hash.slice(1);
+  if((!v||v==='home')&&x){if(x==='pick')x='compare';if(x==='start'){x='docs';m='start'}if(VIEWS.includes(x))v=x}
+  view=VIEWS.includes(v)?v:'home';if(a&&AGENTS[a])cur=a;if(['start','path','all'].includes(m))mode=m;
+  if(WEB&&x&&VIEWS.includes(x))try{history.replaceState(null,'',pathOf())}catch(e){}
+}
+fromLocation();
+const $=id=>document.getElementById(id);
+const out=$('out'),q=$('q'),seg=$('seg'),resetB=$('reset');
+let UPD=null,ART=null,NOTES={};
+try{NOTES=JSON.parse(document.getElementById('notes').textContent)||{}}catch(e){}
+let SD={};try{SD=JSON.parse(localStorage.getItem('start-done-v1')||'{}')||{}}catch(e){}
+const sd=id=>SD[id]||(SD[id]={});
+const li=(id,it,opt={})=>{const A=AGENTS[id],on=opt.check?!!sd(id)[it.slug]:false;return `<li class="${opt.check?(on?'done':''):(A.read[it.slug]?'seen':'')}" data-a="${id}" data-s="${esc(it.slug)}"${opt.check?' data-c="1"':''}>${opt.check?`<button class="chk" aria-label="标记完成：${esc(it.t)}" aria-pressed="${on}"><span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.6 6.3l2.3 2.3 4.5-5"/></svg></span></button>`:''}<a href="${esc(url(A,it.slug))}" target="_blank" rel="noopener">${opt.lab?`<span class="lab">${esc(opt.lab(it))}</span>`:''}${esc(it.t)}${opt.tag?`<span class="tag">${esc(it.sec)} · ${esc(it.grp)}</span>`:''}${opt.note&&NOTES[id]&&NOTES[id][it.slug]?`<span class="tag">${esc(NOTES[id][it.slug])}</span>`:''}</a>${opt.badge&&A.stageOf[it.slug]?`<span class="badge">阶段 ${A.stageOf[it.slug]}</span>`:''}</li>`};
+const ul=(id,items,opt)=>`<ul class="pages">${items.map(i=>li(id,i,opt)).join('')}</ul>`;
+const nRead=A=>A.all.filter(i=>A.read[i.slug]).length;
+const IDS=Object.keys(AGENTS);
+const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let shown=0,roll=0;
+function stats(animate){
+  const A=AGENTS[cur],n=nRead(A),p=Math.round(n/A.all.length*100);
+  $('cnt').textContent=`${A.name} 已读 ${n} / ${A.all.length} 篇`;$('bar').style.width=p+'%';
+  cancelAnimationFrame(roll);
+  if(!animate||calm||shown===p){shown=p;$('pct').textContent=p+'%';return}
+  const from=shown,t0=performance.now();
+  const step=t=>{const k=Math.min(1,(t-t0)/450),e=1-Math.pow(1-k,3);shown=Math.round(from+(p-from)*e);$('pct').textContent=shown+'%';if(k<1)roll=requestAnimationFrame(step);else shown=p};
+  roll=requestAnimationFrame(step);
+}
+const menuB=$('menu');
+function setMenu(on){$('top').dataset.open=on;menuB.setAttribute('aria-expanded',on)}
+function moveTop(){
+  const top=$('top');
+  if(!top.firstChild)top.innerHTML=NAV.map(n=>`<a data-v="${n[0]}" href="${n[0]==='docs'?APATH[cur]:ROUTES[n[0]]}">${n[1]}</a>`).join('');
+  top.querySelectorAll('a[data-v]').forEach(a=>{if(a.dataset.v==='docs')a.setAttribute('href',APATH[cur]);
+    if(a.dataset.v===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  setMenu(false);
+}
+function renderHome(){
+  const total=IDS.reduce((a,id)=>a+AGENTS[id].all.length,0);
+  const QUICK={claude:['quickstart','best-practices','mcp'],codex:['quickstart','codex/cli','agent-configuration/agents-md'],antigravity:['getting-started','cli/gcli-migration','mcp'],grok:['build/overview','build/features/project-rules','grok-bot/overview']};
+  const rows=IDS.map(id=>{const A=AGENTS[id];return `<div class="arow"><span><b>${esc(A.name)}</b><span class="meta">${A.all.length} 篇 · ${A.stages.length} 个阶段</span></span><button class="pill" data-go="docs" data-a="${id}">进入 →</button><span class="quick">${QUICK[id].filter(s=>A.by[s]).map(s=>`<a href="${esc(url(A,s))}" target="_blank" rel="noopener">${esc(A.by[s].t)}</a>`).join('')}</span></div>`}).join('');
+  const entry=(v,t,d,m)=>`<button class="stage entry" data-go="${v}"${m?` data-m="${m}"`:''}><h3>${t}</h3><p>${d}</p><span class="arr">进入 →</span></button>`;
+  return `<div class="hgrid"><section class="stage big"><div class="ahead"><h3>文档导航</h3><span>${total} 篇</span></div><p>官方文档排成五个阶段的学习路线，按顺序看就行。下面是每家最常用的几篇。</p><div class="arows">${rows}</div></section>
+<div class="hside">${entry('docs','快速上手','每家六步，30 分钟跑通第一个任务。','start')}${entry('articles','文章','官方博客里值得读的文章。')}${entry('compare','对比','基本情况，和各家功能在文档里的位置。')}${entry('updates','更新','官方更新日志和每天的文档变化。')}</div></div>`;
+}
+const thead=first=>`<thead><tr><th>${first}</th>${IDS.map(id=>`<th>${esc(AGENTS[id].name)}</th>`).join('')}</tr></thead>`;
+function renderPick(rows){
+  const c=(id,v)=>{const A=AGENTS[id];return Array.isArray(v)?`<td><a href="${esc(url(A,v[0]))}" target="_blank" rel="noopener">${esc(v[1])}</a></td>`:`<td>${esc(v===0?A.all.length+' 篇':v)}</td>`};
+  return `<div class="tw"><table class="cmp stack">${thead('　')}<tbody>${(rows||PICK).map(r=>`<tr><td>${esc(r[0])}</td>${IDS.map(id=>c(id,r[1][id])).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+function renderStart(id){
+  const A=AGENTS[id];const steps=START[id].map((s,k)=>({...A.by[s[1]],k,lab:s[0]})).filter(s=>s.slug);const d=steps.filter(s=>sd(id)[s.slug]).length;
+  return `<section class="stage" style="max-width:760px"><div class="ahead"><h3>${esc(A.name)} · 30 分钟上手</h3><span><b class="dn">${d}</b> / ${steps.length} 步</span></div><div class="bar"><i style="width:${d/steps.length*100}%"></i></div>${ul(id,steps,{check:1,lab:s=>`第 ${s.k+1} 步 · ${s.lab}`})}<div class="alinks"><button data-go="docs" data-a="${id}" data-m="path">接着走完整学习路线</button></div></section>`;
+}
+function renderPath(id){const A=AGENTS[id];
+  return `<div class="route">${A.stages.map((s,k)=>{const items=s.p.map(p=>A.by[p]).filter(Boolean);const d=items.filter(i=>A.read[i.slug]).length;
+  return `<div class="stage"><div class="n">${k+1}</div><h3>${esc(s.n)}</h3><p>${esc(s.d)}</p><div class="meta"><span>${items.length} 篇</span></div>${ul(id,items,{note:1})}</div>`}).join('')}</div>`;
+}
+function renderAll(id){const A=AGENTS[id];
+  const count=s=>s.groups.reduce((a,g)=>a+g.items.length+g.subs.reduce((b,x)=>b+x.items.length,0),0);
+  const chips=`<nav class="chips" aria-label="分类">${A.secs.map((s,k)=>`<a href="#sec-${k}" data-sec="${k}">${esc(s.t)}<small>${count(s)}</small></a>`).join('')}</nav>`;
+  return chips+A.secs.map((s,k)=>`<section class="sec" id="sec-${k}"><h2>${esc(s.t)}<small>${count(s)} 篇</small></h2><div class="cards">${s.groups.map(g=>`<div class="card"><h4>${esc(g.t)}</h4>${g.items.length?ul(id,g.items,{badge:1}):''}${g.subs.map(x=>`<h5>${esc(x.t)}</h5>${ul(id,x.items,{badge:1})}`).join('')}</div>`).join('')}</div></section>`).join('');
+}
+function cell(id,pair){const A=AGENTS[id],it=pair&&A.by[pair[0]];if(!it)return '<td class="none">—</td>';return `<td><a href="${esc(url(A,pair[0]))}" target="_blank" rel="noopener">${esc(it.t)}</a>${pair[1]?`<code>${esc(pair[1])}</code>`:''}</td>`}
+function cmpRow(r){const x=CMP2[r[0]]||[];return {claude:[r[1],r[2]],codex:[r[3],r[4]],antigravity:x[0],grok:x[1]}}
+function renderCmp(term){
+  const t=(term||'').toLowerCase();
+  const rows=CMP.map(r=>[r[0],cmpRow(r)]).filter(([n,m])=>!t||(n+' '+IDS.map(id=>m[id]?(m[id][1]+' '+(AGENTS[id].by[m[id][0]]?.t||'')):'').join(' ')).toLowerCase().includes(t));
+  if(!rows.length)return `<p class="empty">对照表里没有“${esc(term)}”。</p>`;
+  return `<div class="tw"><table class="cmp stack">${thead('功能')}<tbody>${rows.map(([n,m])=>`<tr><td>${esc(n)}</td>${IDS.map(id=>cell(id,m[id])).join('')}</tr>`).join('')}</tbody></table></div>
+<p class="hint">“—”表示在这家的官方文档目录里没有找到对应的页面，不代表它一定没有这个功能。</p>`;
+}
+function renderUpdates(){
+  const C=AGENTS.claude,X=AGENTS.codex;
+  C.log=['changelog','官方更新日志'];C.news=(C.secs.find(s=>s.t==='新功能')?.groups[0].items||[]).slice(1,8).map(i=>[i.t,i.slug]);
+  X.log=['whats-new','官方最新动态'];
+  const col=A=>`<section class="stage"><div class="ahead"><h3>${esc(A.name)}</h3><span>${esc(A.maker)}</span></div>${A.log?`<a class="pill" style="align-self:flex-start;text-decoration:none" href="${esc(url(A,A.log[0]))}" target="_blank" rel="noopener">${A.log[1]} →</a>`:'<p>官方文档目录里没有单独的更新日志页。</p>'}<ul class="plain" style="margin-top:16px">${A.news.map(n=>`<li><a href="${esc(url(A,n[1]))}" target="_blank" rel="noopener">${esc(n[0])}</a></li>`).join('')}</ul></section>`;
+  const KIND={added:'新增',removed:'移除',renamed:'改名',price:'价格'};
+  const live=UPD===null?'':`<section class="stage" style="margin-bottom:20px"><div class="ahead"><h3>文档变化</h3><span><a href="/agents/feed.xml">订阅 RSS</a></span></div>${UPD.length?`<ul class="plain">${UPD.slice(0,40).map(u=>`<li><a href="${esc(/^https?:/.test(u.url)?u.url:'#updates')}" target="_blank" rel="noopener"><span class="lab">${esc(u.date)} · ${esc(u.agent)} · ${KIND[u.type]||''}</span>${esc(u.title)}</a></li>`).join('')}</ul>`:'<p>开始追踪以来，各家的文档目录还没有变化。</p>'}</section>`;
+  return `${live}<div class="two">${IDS.map(id=>col(AGENTS[id])).join('')}</div>
+<p class="hint">${UPD===null?'这里列的是整理时官方目录里的更新页面。':'“文档变化”每天自动比对一次各家的官方文档目录；新出现的页面会先列在这里，之后再整理进学习路线。'}</p>`;
+}
+function renderArticles(){
+  const groups=[['claude','Claude Code','Anthropic 工程博客'],['codex','Codex','OpenAI 开发者博客'],['antigravity','Antigravity CLI','Google 开发者博客']];
+  const ok=u=>/^https:\/\//.test(u)?u:'#articles';
+  const must=`<div class="two">${groups.map(([id,n,s])=>`<section class="stage"><div class="ahead"><h3>${n}</h3><span>${s}</span></div><ul class="plain">${MUST.filter(m=>m.a===id).map(m=>`<li><a href="${esc(m.u)}" target="_blank" rel="noopener">${esc(m.t)}<span class="tag">${esc(m.w)}</span></a></li>`).join('')}</ul></section>`).join('')}</div>`;
+  const latest=ART&&ART.length?`<div class="subhead"><h2>最新文章</h2></div><section class="stage"><ul class="plain">${ART.slice(0,40).map(a=>`<li><a href="${esc(ok(a.url))}" target="_blank" rel="noopener"><span class="lab">${esc((a.date?a.date+' · ':'')+a.src)}</span>${esc(a.title)}</a></li>`).join('')}</ul></section>`:'';
+  return `<div class="subhead" style="margin-top:0"><h2>推荐先读</h2></div>${must}${latest}<p class="hint">推荐是按标题和官方简介挑的第一版，会继续调整。${latest?'最新文章每天自动更新，原文多为英文。':''}</p>`;
+}
+function renderAbout(){
+  return `<section class="stage prose"><p>这是一个非官方的导航站，与 Anthropic、OpenAI、Google、xAI 没有关系。</p><p>本站只做导航：整理标题、分类和学习顺序，所有链接都指向各家的官方文档，不转载正文。产品名称归各自所有者。</p><p>数据来源：<a href="https://code.claude.com/docs/_llms/zh-cn.txt">Claude Code</a>、<a href="https://learn.chatgpt.com/docs/llms.txt">Codex</a>、<a href="https://antigravity.google/llms.txt">Antigravity</a>、<a href="https://docs.x.ai/llms.txt">xAI</a> 的官方文档索引，2026-11-26 整理。Codex 部分只收录了和 Codex 相关的页面。</p><p>看过的标记和上手清单的勾选只保存在你当前的浏览器里。</p><p>源码和每日更新脚本：<a href="https://github.com/robeshell/wenworks-ai-agents">github.com/robeshell/wenworks-ai-agents</a></p></section>`;
+}
+function renderSearch(id,term){
+  const t=term.toLowerCase(),A=AGENTS[id];
+  const hits=A.all.filter(i=>(i.t+' '+i.slug+' '+i.sec+' '+i.grp).toLowerCase().includes(t));
+  if(!hits.length)return `<p class="empty">${esc(A.name)} 里没有找到包含“${esc(term)}”的页面。试试英文关键词，比如 hooks、mcp、sdk。</p>`;
+  return `<div class="card" style="max-width:820px"><h4>${esc(A.name)} · ${hits.length} 篇</h4>${ul(id,hits,{tag:1,badge:1})}</div>`;
+}
+function render(anim){
+  const A=AGENTS[cur],term=q.value.trim(),docs=view==='docs';
+  moveTop();
+  $('h1').innerHTML=HEAD[view][0];$('lede').textContent=HEAD[view][1];$('lede').hidden=!HEAD[view][1];
+  $('stat').hidden=true;$('agents').hidden=!docs;$('tools').hidden=!(docs||view==='compare');seg.hidden=!docs;resetB.hidden=!docs;
+  $('agents').innerHTML=IDS.map(id=>`<button data-a="${id}" aria-pressed="${cur===id}"><b>${esc(AGENTS[id].name)}</b><small>${esc(AGENTS[id].maker)} · ${AGENTS[id].all.length} 篇</small></button>`).join('')+PENDING.map(([n,m])=>`<button disabled><b>${esc(n)}</b><small>${esc(m)} · 待加入</small></button>`).join('');
+  seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===mode));
+  $('note').innerHTML=docs?esc(A.note)+(A.noteLink?` <a href="${esc(A.noteLink[0])}" target="_blank" rel="noopener">${esc(A.noteLink[1])}</a>`:''):'';$('note').hidden=!(docs&&A.note);
+  q.placeholder=docs?`搜索 ${A.name} 文档，例如 hooks、权限、MCP`:'筛选功能，例如 MCP、hooks';
+  out.innerHTML=view==='home'?renderHome():view==='articles'?renderArticles():view==='compare'?(term?'':`<div class="subhead" style="margin-top:6px"><h2>基本情况</h2></div>${renderPick()}<div class="subhead"><h2>价格</h2></div>${renderPick(PRICE)}<p class="hint" style="margin-top:12px">美元价格，2026-11-26 按各家官方定价页核对，不含税。各家的用量上限差别很大，这里没有列；价格随时可能变，以官方页面为准。</p><div class="subhead"><h2>功能对照</h2></div>`)+renderCmp(term):view==='updates'?renderUpdates():view==='about'?renderAbout():term?renderSearch(cur,term):mode==='start'?renderStart(cur):mode==='path'?renderPath(cur):renderAll(cur);
+  document.title=view==='home'?SITE:view==='docs'?`Wenworks AI · ${A.name} 文档导航与学习路线`:`Wenworks AI · ${TITLE[view]}`;
+  out.classList.toggle('enter',!!anim);
+}
+function go(v,m,a){view=v;if(a&&AGENTS[a]){cur=a;try{localStorage.setItem('docs-agent',a)}catch(e){}}if(m){mode=m;try{localStorage.setItem('docs-mode',m)}catch(e){}}q.value='';
+  if(WEB)try{const p=pathOf();if(location.pathname!==p)history.pushState(null,'',p)}catch(e){}
+  render(true);window.scrollTo(0,0)}
+window.addEventListener('popstate',()=>{fromLocation();q.value='';render(true)});
+const plain=e=>!(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button);
+$('top').addEventListener('click',e=>{const b=e.target.closest('a[data-v]');if(b&&plain(e)){e.preventDefault();go(b.dataset.v)}});
+menuB.addEventListener('click',()=>setMenu($('top').dataset.open!=='true'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+$('agents').addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(b)go('docs',null,b.dataset.a)});
+seg.addEventListener('click',e=>{const b=e.target.closest('button[data-m]');if(b)go('docs',b.dataset.m)});
+q.addEventListener('input',()=>render());
+out.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go,g.dataset.m,g.dataset.a);return}
+  const c=e.target.closest('[data-sec]');if(c){e.preventDefault();$('sec-'+c.dataset.sec).scrollIntoView({block:'start'});return}
+  const b=e.target.closest('.chk');
+  if(!b){seen(e);return}
+  const l=b.closest('li'),id=l.dataset.a,s=l.dataset.s,D=sd(id);
+  if(D[s])delete D[s];else D[s]=1;try{localStorage.setItem('start-done-v1',JSON.stringify(SD))}catch(e){}
+  const on=!!D[s];l.classList.toggle('done',on);l.classList.add('just');b.setAttribute('aria-pressed',on);
+  const st=l.closest('.stage');
+  if(st){const all=st.querySelectorAll('.pages li').length,d=st.querySelectorAll('.pages li.done').length;
+    const dn=st.querySelector('.dn'),bi=st.querySelector('.bar i');if(dn)dn.textContent=d;if(bi)bi.style.width=d/all*100+'%'}
+});
+function seen(e){const a=e.target.closest('.pages a');if(!a)return;const l=a.closest('li');if(!l)return;
+  const A=AGENTS[l.dataset.a];A.read[l.dataset.s]=1;save(A);if(!l.dataset.c)l.classList.add('seen')}
+out.addEventListener('auxclick',seen);
+resetB.addEventListener('click',()=>{
+  const b=resetB,A=AGENTS[cur];
+  if(b.dataset.arm){A.read={};save(A);delete b.dataset.arm;b.textContent='清除看过的标记';render();return}
+  b.dataset.arm='1';b.textContent=`再点一次，清除 ${A.name} 的标记`;
+  setTimeout(()=>{if(b.dataset.arm){delete b.dataset.arm;b.textContent='清除看过的标记'}},3000);
+});
+render(true);
+fetch(WEB?BASE+'/updates.json':'updates.json').then(r=>r.ok?r.json():null).then(j=>{if(Array.isArray(j)){UPD=j;if(view==='updates')render()}}).catch(()=>{});
+fetch(WEB?BASE+'/articles.json':'articles.json').then(r=>r.ok?r.json():null).then(j=>{if(Array.isArray(j)){ART=j;if(view==='articles')render()}}).catch(()=>{});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+# 开始使用
+## 入门
+选择你的 Antigravity|overview
+开始使用|getting-started
+登录认证|install
+选择模型|models
+配合 Google 工具构建|build-with-google
+# Antigravity CLI
+## 上手
+从 Gemini CLI 迁移|cli/gcli-migration
+提示与交互|cli/prompting
+CLI 最佳实践|cli/best-practices
+## 日常使用
+设置与技巧|cli/using
+选择执行模式|cli/modes
+管理对话|cli/conversations
+审阅产物|cli/artifacts
+Vim 编辑模式|cli/vim-editor-mode
+状态栏定制|cli/statusline
+终端标题定制|cli/title
+AI 额度|cli/credits
+## 自动化与集成
+无头模式|cli/headless
+Agent Client Protocol（ACP）|cli/acp
+## 命令
+CLI 命令参考|cli/reference
+/agents|cli/commands/agents
+/changelog|cli/commands/changelog
+/codesearch 代码搜索|cli/commands/codesearch
+/context 上下文|cli/commands/context
+/credits 额度|cli/commands/credits
+/diff|cli/commands/diff
+/effort|cli/commands/effort
+/permissions 权限|cli/commands/permissions
+/resume 恢复会话|cli/commands/resume
+/statusline|cli/commands/statusline
+/title|cli/commands/title
+/usage 模型配额|cli/commands/usage
+/voice 语音与听写|cli/commands/voice
+CLI 故障排除|cli/troubleshooting
+# 平台功能
+## 扩展
+MCP|mcp
+MCP Apps|mcp-apps
+Agent skills|skills
+规则（Rules）|rules
+Hooks|hooks
+插件|plugins
+构建插件|build-plugins
+插件市场|marketplace
+自定义子代理|subagents
+Sidecars|sidecars
+斜杠命令概览|slash-commands
+## 安全
+权限|permissions
+终端沙箱|sandbox
+## 多 agent 与自动化
+Swarm（/swarm）|swarm
+Agent 团队（/teamwork）|teamwork
+动态工作流（/run-workflow）|dynamic-workflows
+计划（/plan）|plan
+深度推理（/boost）|boost
+/goal 目标|commands/goal
+/schedule 定时|commands/schedule
+/automation 自动化|commands/automation
+/compact 压缩上下文|commands/compact
+远程 Agent|remote-agents
+远程控制|remote-control
+通过 SSH 连接|ssh
+## 产物与审阅
+产物（Artifacts）|artifacts
+审阅改动|review-changes
+实施计划|implementation-plan
+浏览器使用|browser
+# 学习
+## 基础概念
+学习概览|learn
+提示词与指令|learn/prompting
+上下文窗口与 token|learn/context-and-tokens
+AI agent 如何工作|learn/how-agents-work
+验证与护栏|learn/verification-and-guardrails
+教程：做一个可玩的 3D 浏览器世界|learn/build-3d-browser-world
+# Antigravity SDK
+## SDK
+SDK 概览|sdk/overview
+本地模型|sdk/local-models
+Personas|sdk/personas
+工具与 skills|sdk/tools
+MCP（SDK）|sdk/mcp
+策略（Policies）|sdk/policies
+子代理（SDK）|sdk/subagents
+结构化输出|sdk/structured-output
+生命周期与 hooks|sdk/lifecycle
+# IDE 与其他
+## IDE 扩展
+IDE 扩展概览|ide/extensions
+VS Code|ide/extensions/vscode
+JetBrains 系列|ide/extensions/jetbrains
+其他编辑器（ACP）|ide/extensions/acp
+## 方案与帮助
+方案（Plans）|plans
+按量付费|pay-as-you-go
+企业版|enterprise
+常见问题|faq
+更新日志|changelog

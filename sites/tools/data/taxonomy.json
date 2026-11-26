@@ -1,0 +1,283 @@
+{
+  "note": "分类与标签词表。categories 是按一级内容类型限定的二级分类；blocks 决定该分类在哪些板块可用。tags 是平级、独立多选的属性标签。二者使用不同字段，不共享类型。",
+  "categories": [
+    {
+      "id": "coding",
+      "blocks": ["tool", "skill", "project", "prompt"],
+      "label": {
+        "zh": "代码工程",
+        "en": "Coding"
+      },
+      "hint": "写代码、读代码、架构重构、代码审查与单测补全。"
+    },
+    {
+      "id": "agent",
+      "blocks": ["tool", "project"],
+      "label": {
+        "zh": "通用 Agent",
+        "en": "General agent"
+      },
+      "hint": "派个目标它自己拆任务、操作电脑、交付 PPT/报表/文档这类成品。区别于「自动化」——那个要你自己搭流程。"
+    },
+    {
+      "id": "chat",
+      "blocks": ["tool"],
+      "label": {
+        "zh": "通用对话",
+        "en": "Chat"
+      },
+      "hint": "通用助手，一个输入框解决大部分日常问题。它顺带能写代码、生成图片、做深度研究，但那些是功能不是用途——这类产品只打这一个用途标签。"
+    },
+    {
+      "id": "image",
+      "blocks": ["tool", "project", "prompt"],
+      "label": {
+        "zh": "图像",
+        "en": "Image"
+      },
+      "hint": "生成或编辑图片，含矢量、排版文字、工作流节点编辑器。"
+    },
+    {
+      "id": "video",
+      "blocks": ["tool", "project", "prompt"],
+      "label": {
+        "zh": "视频",
+        "en": "Video"
+      },
+      "hint": "生成或剪辑视频，含数字人、对口型。"
+    },
+    {
+      "id": "automation",
+      "blocks": ["tool", "skill", "project", "prompt"],
+      "label": {
+        "zh": "自动化",
+        "en": "Automation"
+      },
+      "hint": "把重复步骤编排成能反复跑的流程，需要你自己搭。区别于「通用 Agent」。"
+    },
+    {
+      "id": "infra",
+      "blocks": ["tool", "project"],
+      "label": {
+        "zh": "本地基建",
+        "en": "Infrastructure"
+      },
+      "hint": "本地推理服务、模型运行时、向量库与底层计算引擎。"
+    },
+    {
+      "id": "gateway",
+      "blocks": ["project"],
+      "label": {
+        "zh": "API 网关",
+        "en": "API Gateway"
+      },
+      "hint": "自托管 API 中转、官方订阅分发、Token 计费与多账号调度。"
+    },
+    {
+      "id": "memory",
+      "blocks": ["project"],
+      "label": {
+        "zh": "智能记忆",
+        "en": "Smart Memory"
+      },
+      "hint": "智能体跨会话记忆、上下文持久化与本地语义知识库。"
+    },
+    {
+      "id": "workbench",
+      "blocks": ["project"],
+      "label": {
+        "zh": "开发工作台",
+        "en": "Dev Workbench"
+      },
+      "hint": "多端 AI 协同工作台、本地桌面 Agent 与团队项目空间。"
+    },
+    {
+      "id": "multimodal",
+      "blocks": ["project"],
+      "label": {
+        "zh": "多模态",
+        "en": "Multimodal"
+      },
+      "hint": "开源图像生成、语音合成、声音克隆与视频生成工具。"
+    },
+    {
+      "id": "audio",
+      "blocks": ["tool", "project", "prompt"],
+      "label": {
+        "zh": "音频",
+        "en": "Audio"
+      },
+      "hint": "生成或处理声音：音乐、配音、语音克隆、转写。"
+    },
+    {
+      "id": "research",
+      "blocks": ["tool", "skill", "project", "prompt"],
+      "label": {
+        "zh": "调研分析",
+        "en": "Research & Analysis"
+      },
+      "hint": "核心用途是查资料、整理证据或形成有出处的结论。深度技术调研与数据分析。"
+    },
+    {
+      "id": "design",
+      "blocks": ["skill", "prompt"],
+      "label": {
+        "zh": "创作设计",
+        "en": "Creative & Design"
+      },
+      "hint": "前端 UI 规范、界面设计、排版与样式系统。"
+    },
+    {
+      "id": "security",
+      "blocks": ["skill"],
+      "label": {
+        "zh": "安全逆向",
+        "en": "Security & Reversing"
+      },
+      "hint": "逆向工程、授权渗透测试、漏洞分析与安全审计。"
+    },
+    {
+      "id": "devops",
+      "blocks": ["skill"],
+      "label": {
+        "zh": "效率运维",
+        "en": "DevOps & Workflow"
+      },
+      "hint": "自动化部署、Docker 运维、Git 工作流与环境配置。"
+    },
+    {
+      "id": "writing",
+      "blocks": ["skill", "prompt"],
+      "label": {
+        "zh": "写作",
+        "en": "Writing"
+      },
+      "hint": "用于起草、改写、编辑或组织文字内容的方法与提示词。"
+    },
+    {
+      "id": "ui-components",
+      "blocks": ["site"],
+      "label": { "zh": "界面与组件", "en": "UI & Components" },
+      "hint": "前端交互组件、Hero 动效、shadcn 注册表与落地页模板。"
+    },
+    {
+      "id": "design-systems",
+      "blocks": ["site"],
+      "label": { "zh": "设计系统", "en": "Design Systems" },
+      "hint": "真实产品设计规范、UI Tokens、DESIGN.md 与界面样式库。"
+    },
+    {
+      "id": "icons-assets",
+      "blocks": ["site"],
+      "label": { "zh": "图标与素材", "en": "Icons & Assets" },
+      "hint": "矢量图标库、插画、UI 纹理、字体与调色板资源。"
+    },
+    {
+      "id": "agent-ecosystem",
+      "blocks": ["site"],
+      "label": { "zh": "Agent 生态", "en": "Agent Ecosystem" },
+      "hint": "Agent 技能市场、MCP 插件服务目录与工作流指令集。"
+    },
+    {
+      "id": "knowledge",
+      "blocks": ["site"],
+      "label": { "zh": "知识与指南", "en": "Docs & Knowledge" },
+      "hint": "AI 研发体系教程、Prompt Engineering 指南与架构知识库。"
+    },
+    {
+      "id": "directory",
+      "blocks": ["site"],
+      "label": { "zh": "综合导航", "en": "Directory" },
+      "hint": "综合性 AI 资源导航与工具聚合索引。"
+    },
+    {
+      "id": "community",
+      "blocks": ["site"],
+      "label": { "zh": "社区与资讯", "en": "Community" },
+      "hint": "围绕持续更新、讨论、新闻或社区内容组织的网站。"
+    }
+  ],
+  "tags": [
+    {
+      "id": "self-host",
+      "label": {
+        "zh": "本地部署",
+        "en": "Self-hosted"
+      },
+      "hint": "能装在自己机器或服务器上跑，不依赖对方的托管服务。"
+    },
+    {
+      "id": "china",
+      "label": {
+        "zh": "国产",
+        "en": "China"
+      },
+      "hint": "中国团队做的，通常有国内可直连的入口。"
+    },
+    {
+      "id": "free",
+      "label": {
+        "zh": "免费",
+        "en": "Free"
+      },
+      "hint": "不花钱就能用完整功能。"
+    },
+    {
+      "id": "freemium",
+      "label": {
+        "zh": "免费增值",
+        "en": "Freemium"
+      },
+      "hint": "有免费额度，要用得深就得付费。"
+    },
+    {
+      "id": "paid",
+      "label": {
+        "zh": "付费",
+        "en": "Paid"
+      },
+      "hint": "必须订阅或买断。"
+    },
+    {
+      "id": "usage-based",
+      "label": {
+        "zh": "按量计费",
+        "en": "Usage-based"
+      },
+      "hint": "按调用量或 token 结算，多见于 API 服务。"
+    },
+    {
+      "id": "web",
+      "label": {
+        "zh": "网页",
+        "en": "Web"
+      },
+      "hint": "浏览器直接用。"
+    },
+    {
+      "id": "app",
+      "label": {
+        "zh": "客户端",
+        "en": "App"
+      },
+      "hint": "桌面或移动客户端。"
+    },
+    {
+      "id": "cli",
+      "label": {
+        "zh": "命令行",
+        "en": "CLI"
+      },
+      "hint": "终端里跑。命令行 Agent harness 靠「编程 + 命令行」就能筛出来。"
+    },
+    {
+      "id": "api",
+      "label": {
+        "zh": "API",
+        "en": "API"
+      },
+      "hint": "提供接口给程序调用。"
+    }
+  ],
+  "deferred": []
+}

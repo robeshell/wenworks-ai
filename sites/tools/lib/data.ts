@@ -1,0 +1,39 @@
+import siteJson from "@/data/site.json";
+import toolsJson from "@/data/tools.json";
+import type { SiteConfig, Tool } from "./types";
+import { attributeTags, categoryOf } from "./tags";
+
+function validateResources(resources: Tool[]): void {
+  const ids = new Set<string>();
+  const slugs = new Set<string>();
+  for (const resource of resources) {
+    if (!resource.verdict?.en?.trim() || !resource.verdict?.zh?.trim()) {
+      throw new Error(`资源 ${resource.id} 缺少中英文定位文案（verdict）`);
+    }
+    if (!resource.summary?.en?.trim() || !resource.summary?.zh?.trim()) {
+      throw new Error(`资源 ${resource.id} 缺少中英文简介（summary）`);
+    }
+    if (ids.has(resource.id) || slugs.has(resource.slug)) {
+      throw new Error(`资源 ${resource.id} 的 id 或 slug 重复`);
+    }
+    ids.add(resource.id);
+    slugs.add(resource.slug);
+  }
+}
+
+export function loadSite(): SiteConfig {
+  return siteJson;
+}
+
+export function loadResources(): Tool[] {
+  // Only published entries carry the completeness contract: an archived tool
+  // with unfinished copy is not a reason to fail the build.
+  const published = (toolsJson.items as Tool[]).filter((tool) => tool.status === "active");
+  validateResources(published);
+  return published.map((tool) => ({
+    ...tool,
+    kind: tool.kind ?? "tool",
+    category: categoryOf(tool, "tool"),
+    tags: attributeTags(tool.tags ?? []),
+  }) as Tool);
+}

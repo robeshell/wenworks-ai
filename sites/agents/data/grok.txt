@@ -1,0 +1,69 @@
+# Grok Build
+## 入门
+开始使用|build/overview
+## 日常使用
+模式与命令|build/modes-and-commands
+键盘快捷键|build/keyboard-shortcuts
+计划模式|build/features/plan-mode
+会话|build/features/sessions
+后台任务|build/features/background-tasks
+Agent 面板|build/features/dashboard
+## Agent 与自动化
+子代理|build/features/subagents
+Worktrees|build/features/worktrees
+无头模式与脚本|build/cli/headless-scripting
+## 自定义
+项目规则（AGENTS.md）|build/features/project-rules
+Skills、插件与市场|build/features/skills-plugins-marketplaces
+MCP 服务器|build/features/mcp-servers
+Hooks|build/features/hooks
+状态栏|build/features/status-line
+主题|build/features/theming
+## 安全
+权限|build/features/permissions
+沙箱|build/features/sandbox
+## 参考
+设置|build/settings
+设置参考|build/settings/reference
+CLI 参考|build/cli/reference
+终端支持|build/cli/terminal-support
+## 企业
+企业版|build/enterprise
+ZDR 视频存储|build/settings/zdr-video-storage
+# Grok Bot
+## 入门
+概览|grok-bot/overview
+开始使用 Grok Bot|grok-bot/get-started
+使用场景|grok-bot/use-cases
+Grok Bot 如何工作|grok-bot/how-grok-bot-works
+## 使用 Grok Bot
+Bots|grok-bot/bots
+消息与协作|grok-bot/chat-and-collaboration
+文件与结果|grok-bot/files-and-results
+使用电脑和应用|grok-bot/computer-and-apps
+Skills 与例行任务|grok-bot/skills-routines-and-automations
+审批与隐私|grok-bot/approvals-security-and-privacy
+保险库与安全登录|grok-bot/vault
+Team Bots|grok-bot/team-bots
+创建并分享 Team Bot|grok-bot/create-a-team-bot
+手机上的 Grok Bot|grok-bot/mobile
+在 Microsoft Teams 里用|grok-bot/microsoft-teams
+把 Bot 加进会议|grok-bot/meetings
+Bot 主动行动时|grok-bot/initiative
+在 X 上 @bot|grok-bot/tag-on-x
+## 团队与企业
+团队与企业|grok-bot/teams-and-enterprises
+部署到组织|grok-bot/deployment
+身份与访问|grok-bot/identity-and-access
+Okta Verify 与 FastPass|grok-bot/okta-fastpass
+私有网络|grok-bot/private-networks
+TLS 检查代理|grok-bot/proxies
+管理电脑|grok-bot/computers
+推理 hooks|grok-bot/inference-hooks
+安全|grok-bot/security
+安全常见问题|grok-bot/security-faq
+## 参考
+设置与通知|grok-bot/settings-and-notifications
+深度链接|grok-bot/deep-links
+故障排除|grok-bot/troubleshooting
+常见问题|grok-bot/faq

@@ -1,8 +1,7 @@
-name: Weekly digest
+name: Weekly issue
 
-# 每周一 08:17（Asia/Taipei）生成新一期并发布。
-# 手动触发时可以选"只预览"：照常生成，但不提交也不发布，产物在这次运行的 Artifacts 里。
-# 推送到 main 以外的分支也会跑一遍预览，用来在合并前检查。
+# 每周一 08:17（Asia/Taipei）汇总上一周的动态，提交回仓库并发布整个站。
+# 手动触发时可以选"只预览"（不提交也不发布），也可以指定要生成哪一周。
 on:
   schedule:
     - cron: "17 0 * * 1"
@@ -16,8 +15,6 @@ on:
         description: 要生成哪一周：填这一周里任意一天（YYYY-MM-DD）。留空是上一个完整的周
         type: string
         required: false
-  push:
-    branches-ignore: [main]
 
 permissions:
   contents: write
@@ -25,87 +22,65 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
-
-env:
-  PREVIEW: ${{ github.event_name == 'push' || inputs.preview == true }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # 模型梯队的数据和比对规则都来自模型站的仓库，只取用得到的部分。
-      - name: Checkout model data
-        uses: actions/checkout@v4
-        with:
-          repository: robeshell/wenworks-ai-models
-          path: .sources/models
-          sparse-checkout: |
-            data
-            lib/tiers.ts
-          sparse-checkout-cone-mode: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Test
-        run: node --test scripts/*.test.mjs
-
-      - name: Collect this issue
+          cache: npm
+          cache-dependency-path: |
+            sites/models/package-lock.json
+            sites/tools/package-lock.json
+      - name: Install
+        run: |
+          npm ci --prefix sites/models
+          npm ci --prefix sites/tools
+      - name: Collect this week's issue and build the whole site
         env:
           WEEK: ${{ inputs.week }}
+          PRODUCTION: ${{ inputs.preview == true && '0' || '1' }}
         run: |
           if [ -n "$WEEK" ]; then
-            node scripts/collect.mjs "--week=$WEEK"
+            node scripts/build-all.mjs --collect "--week=$WEEK"
           else
-            node scripts/collect.mjs
+            node scripts/build-all.mjs --collect
           fi
-
-      - name: Build
-        env:
-          PRODUCTION: ${{ env.PREVIEW == 'true' && '0' || '1' }}
-        run: node scripts/build.mjs
-
       - name: Commit the issue
-        if: env.PREVIEW != 'true'
+        if: inputs.preview != true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/issues state
-          if git diff --cached --quiet; then
+          git add sites/home/data/issues sites/home/state
+          if git diff --staged --quiet; then
             echo "Nothing new to commit."
           else
-            git commit -m "chore: weekly digest"
+            git commit -m "chore: weekly issue"
+            git pull --rebase origin main
             git push
           fi
-
       - name: Upload preview
-        if: env.PREVIEW == 'true'
+        if: inputs.preview == true
         uses: actions/upload-artifact@v4
         with:
-          name: preview
-          path: |
-            out
-            data/issues
-            state
+          name: site-preview
+          path: dist
           include-hidden-files: true
-
       - name: Upload Pages artifact
-        if: env.PREVIEW != 'true'
+        if: inputs.preview != true
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: dist
 
   deploy:
     needs: build
-    if: github.event_name != 'push' && inputs.preview != true
+    if: inputs.preview != true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
