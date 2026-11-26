@@ -62,7 +62,7 @@ a {
 }
 
 /* ---- Wenworks AI 共用页头 ----
-   这一段在三个站里逐字相同：models.wenworks.dev、agents.wenworks.dev、tools.wenworks.dev。
+   这一段在三个站里逐字相同：models.wenworks.app、agents.wenworks.app、tools.wenworks.app。
    要改就三个仓库一起改。 */
 .site-header {
   position: sticky;

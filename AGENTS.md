@@ -1,6 +1,6 @@
 # 维护说明（Wenworks AI · 周报）
 
-线上地址 https://ai.wenworks.dev 。这个站只做周报，首页就是最新一期；它不是三个站的入口页，不要往首页加站点介绍或入口卡片。结构、数据来源和产物见 `README.md`，视觉规范见 `design/wenworks-ai-design.md`。
+线上地址 https://ai.wenworks.app 。这个站只做周报，首页就是最新一期；它不是三个站的入口页，不要往首页加站点介绍或入口卡片。结构、数据来源和产物见 `README.md`，视觉规范见 `design/wenworks-ai-design.md`。
 
 ## 上线方式
 

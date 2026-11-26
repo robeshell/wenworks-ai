@@ -14,8 +14,8 @@ const OUT = path.join(ROOT, 'out');
 const PRODUCTION = process.env.PRODUCTION === '1';
 const SITE_NAME = 'Wenworks AI';
 const DESCRIPTION = 'Wenworks AI 每周简报：大模型梯队、Agent 官方文档和 AI 工具精选这一周的变化，每周一更新。';
-const SHARE_IMAGE = 'https://models.wenworks.dev/share/tiers-latest.png';
-const BEACON = `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "39176fa04b684b35ad02b6c672a79986"}'></script>`;
+const SHARE_IMAGE = 'https://models.wenworks.app/share/tiers-latest.png';
+const BEACON = `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4dff1f86a3894509bbdf147ef75e6487"}'></script>`;
 
 const write = (file, content) => {
   const full = path.join(OUT, file);

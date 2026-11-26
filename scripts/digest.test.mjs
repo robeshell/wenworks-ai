@@ -146,10 +146,10 @@ test('titles and links from the sources are escaped', () => {
 });
 
 test('the editor\'s note is rendered first and stays plain', () => {
-  const html = issueHtml(issue(), '这周**值得看**的是 [梯队榜](https://models.wenworks.dev/)。\n\n- 一\n- 二 <b>x</b>');
+  const html = issueHtml(issue(), '这周**值得看**的是 [梯队榜](https://models.wenworks.app/)。\n\n- 一\n- 二 <b>x</b>');
   assert.ok(html.indexOf('编辑手记') < html.indexOf('模型梯队'));
   assert.ok(html.includes('<strong>值得看</strong>'));
-  assert.ok(html.includes('<a href="https://models.wenworks.dev/">梯队榜</a>'));
+  assert.ok(html.includes('<a href="https://models.wenworks.app/">梯队榜</a>'));
   assert.ok(html.includes('&lt;b&gt;x&lt;/b&gt;'));
   assert.equal(noteHtml('a\n\nb').split('<p>').length - 1, 2);
 });
@@ -165,7 +165,7 @@ test('every line of the thread fits 140 Chinese characters', () => {
   for (const candidate of [busy, issue(), issue({ models: { ...busy.models, leaderChanged: true, leader: { family: '一个非常非常非常长的新榜首模型名字'.repeat(6), score: 70 } } })]) {
     const tweets = thread(candidate);
     assert.ok(tweets.length >= 2 && tweets.length <= 5);
-    assert.ok(tweets[0].includes('https://ai.wenworks.dev/weekly/7/'));
+    assert.ok(tweets[0].includes('https://ai.wenworks.app/weekly/7/'));
     for (const tweet of tweets) assert.ok(weight(tweet) <= TWEET_LIMIT, `${weight(tweet)}: ${tweet}`);
   }
   assert.equal(weight('汉字ab'), 3);

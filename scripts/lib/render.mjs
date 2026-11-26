@@ -4,10 +4,10 @@
 import { TIER_LABEL } from './sections.mjs';
 
 export const SITES = {
-  home: 'https://ai.wenworks.dev',
-  models: 'https://models.wenworks.dev/',
-  agents: 'https://agents.wenworks.dev/',
-  tools: 'https://tools.wenworks.dev/',
+  home: 'https://ai.wenworks.app',
+  models: 'https://models.wenworks.app/',
+  agents: 'https://agents.wenworks.app/',
+  tools: 'https://tools.wenworks.app/',
 };
 
 export const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

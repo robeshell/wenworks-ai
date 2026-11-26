@@ -1,6 +1,6 @@
 # Wenworks AI 共用视觉规范
 
-品牌：Wenworks AI。三个站：模型 models.wenworks.dev、Agent 导航 agents.wenworks.dev、工具精选 tools.wenworks.dev；另有周报 ai.wenworks.dev。
+品牌：Wenworks AI。三个站：模型 models.wenworks.app、Agent 导航 agents.wenworks.app、工具精选 tools.wenworks.app；另有周报 ai.wenworks.app。
 
 ## 颜色
 
@@ -44,8 +44,8 @@
 
 ## 周报的补充
 
-- ai.wenworks.dev 只做周报，首页就是最新一期，不放站点介绍和入口卡片。
-- 页头：品牌指向 https://ai.wenworks.dev/ ，三个站点入口都不加 aria-current；本站栏目是"最新一期、往期、RSS"。
+- ai.wenworks.app 只做周报，首页就是最新一期，不放站点介绍和入口卡片。
+- 页头：品牌指向 https://ai.wenworks.app/ ，三个站点入口都不加 aria-current；本站栏目是"最新一期、往期、RSS"。
 - 三个站的页头最右边各有一个"周报"链接指到这里（手机上在菜单里）。
 - 每一期从上到下：刊头（周次、日期、期号、一句话概括）、本期要点的一排数字、正文。正文左边是栏目名，右边是内容；手机上叠成一栏。
 - 橙色用在：刊头的期号、"榜首"那一格和第一梯队标签的顶线、"榜首更换"和"新"两个标记，以及和模型站一致的梯队标签（五档由深到浅）。

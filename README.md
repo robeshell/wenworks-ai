@@ -1,10 +1,10 @@
 # Wenworks AI 周报
 
-https://ai.wenworks.dev ：每周自动生成的简报，把 Wenworks AI 三个站这一周的变化汇总成一期，每周一发布。它不是三个站的入口页，三个站的页头各有一个"周报"链接指到这里。
+https://ai.wenworks.app ：每周自动生成的简报，把 Wenworks AI 三个站这一周的变化汇总成一期，每周一发布。它不是三个站的入口页，三个站的页头各有一个"周报"链接指到这里。
 
-- [模型](https://models.wenworks.dev/)：大模型梯队榜、选型、价格
-- [Agent 导航](https://agents.wenworks.dev/)：Claude Code、Codex 等官方文档的导航
-- [工具精选](https://tools.wenworks.dev/)：AI 工具和资源精选
+- [模型](https://models.wenworks.app/)：大模型梯队榜、选型、价格
+- [Agent 导航](https://agents.wenworks.app/)：Claude Code、Codex 等官方文档的导航
+- [工具精选](https://tools.wenworks.app/)：AI 工具和资源精选
 
 Node 22 加零依赖脚本，生成纯静态 HTML，用 GitHub Actions 部署到 GitHub Pages。
 
@@ -14,9 +14,9 @@ Node 22 加零依赖脚本，生成纯静态 HTML，用 GitHub Actions 部署到
 |---|---|---|
 | 模型梯队 | `robeshell/wenworks-ai-models` 的 `data/history/tiers-*.json` | 本周开始前最后一份快照对比本周结束前最后一份，用那个仓库 `lib/tiers.ts` 的 `diffTiers` 算出榜首、新进前五档、升档、降档 |
 | 使用量前五 | 同一仓库的 `data/popularity.json` | 只有当前值，没有历史，所以只列名次 |
-| Agent 文档 | `https://agents.wenworks.dev/updates.json` | 取日期落在本周的条目 |
-| 官方文章 | `https://agents.wenworks.dev/articles.json` | 有日期的按日期；没日期的按"哪一期第一次见到"，记在 `state/articles-seen.json` |
-| 新收录工具 | `https://tools.wenworks.dev/catalog.json` | 和 `state/tools-seen.json` 里见过的 id 比。第一次运行只建基线 |
+| Agent 文档 | `https://agents.wenworks.app/updates.json` | 取日期落在本周的条目 |
+| 官方文章 | `https://agents.wenworks.app/articles.json` | 有日期的按日期；没日期的按"哪一期第一次见到"，记在 `state/articles-seen.json` |
+| 新收录工具 | `https://tools.wenworks.app/catalog.json` | 和 `state/tools-seen.json` 里见过的 id 比。第一次运行只建基线 |
 
 - 一期覆盖周一 00:00 到周日 24:00（Asia/Taipei）。
 - 任何一个数据源取不到，只影响它自己那一节；新收录工具取不到时整节不出现。
