@@ -14,8 +14,8 @@ import { lastCompleteWeek, weekContaining } from './lib/week.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MODELS_DIR = path.resolve(ROOT, process.env.MODELS_DIR || '.sources/models');
-const AGENTS_BASE = (process.env.AGENTS_BASE || 'https://agents.wenworks.dev').replace(/\/$/, '');
-const TOOLS_CATALOG_URL = process.env.TOOLS_CATALOG_URL || 'https://tools.wenworks.dev/catalog.json';
+const AGENTS_BASE = (process.env.AGENTS_BASE || 'https://agents.wenworks.app').replace(/\/$/, '');
+const TOOLS_CATALOG_URL = process.env.TOOLS_CATALOG_URL || 'https://tools.wenworks.app/catalog.json';
 
 const readJson = (file, fallback) => {
   try {
