@@ -1,6 +1,6 @@
-# 维护说明（Wenworks AI · 总入口与周报）
+# 维护说明（Wenworks AI · 周报）
 
-线上地址 https://ai.wenworks.dev 。结构、数据来源和产物见 `README.md`，视觉规范见 `design/wenworks-ai-design.md`。
+线上地址 https://ai.wenworks.dev 。这个站只做周报，首页就是最新一期；它不是三个站的入口页，不要往首页加站点介绍或入口卡片。结构、数据来源和产物见 `README.md`，视觉规范见 `design/wenworks-ai-design.md`。
 
 ## 上线方式
 
@@ -30,5 +30,5 @@ npm run build
 
 - 改了页面或样式：把 `out/` 挂在根路径下用浏览器看首页、往期列表、单期页面，至少看 1280px 和 375px。
 - 改了推文串：每条不能超过 140 个汉字（英文和数字按半个算，链接按 11.5 个算），测试里有这条。
-- 页头是和三个站共用的，`src/styles.css` 里"Wenworks AI 共用页头"一段逐字相同，要改就四个仓库一起改。
+- 页头是和三个站共用的，`src/styles.css` 里"Wenworks AI 共用页头"一段逐字相同，要改就四个仓库一起改。三个站的页头最右边各有一个"周报"链接指到这里。
 - 统计代码只在 `PRODUCTION=1` 时加，本地和预览构建里不应该出现。

@@ -1,6 +1,6 @@
-# Wenworks AI
+# Wenworks AI 周报
 
-Wenworks AI 的总入口 https://ai.wenworks.dev ，内容是每周自动生成的简报：把三个站这一周的变化汇总成一期，每周一发布。
+https://ai.wenworks.dev ：每周自动生成的简报，把 Wenworks AI 三个站这一周的变化汇总成一期，每周一发布。它不是三个站的入口页，三个站的页头各有一个"周报"链接指到这里。
 
 - [模型](https://models.wenworks.dev/)：大模型梯队榜、选型、价格
 - [Agent 导航](https://agents.wenworks.dev/)：Claude Code、Codex 等官方文档的导航
@@ -31,7 +31,7 @@ Node 22 加零依赖脚本，生成纯静态 HTML，用 GitHub Actions 部署到
 
 | 地址 | 内容 |
 |---|---|
-| `/` | 最新一期，下面是三个站的入口和各自的一个数字 |
+| `/` | 最新一期 |
 | `/weekly/` | 往期列表 |
 | `/weekly/N/` | 第 N 期 |
 | `/feed.xml` | RSS，每期一条，全文 |
@@ -40,7 +40,7 @@ Node 22 加零依赖脚本，生成纯静态 HTML，用 GitHub Actions 部署到
 ## 自动任务
 
 - `.github/workflows/weekly.yml`：每周一 08:17（台北时间）生成新一期，把 `data/issues/NNNN.json` 和 `state/` 提交回仓库，然后发布。手动触发时可以勾"只预览"，也可以指定要生成哪一周。推送到 `main` 以外的分支会自动跑一遍预览，产物在那次运行的 Artifacts 里。
-- `.github/workflows/deploy.yml`：合并到 `main` 时，以及每天一次，用已有的各期重新生成并发布，不出新一期。每天那次是为了刷新首页入口卡片上的数字。
+- `.github/workflows/deploy.yml`：合并到 `main` 时，用已有的各期重新生成并发布，不出新一期。
 
 ## 本地运行
 

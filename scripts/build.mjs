@@ -1,5 +1,5 @@
-// Build out/ from data/issues/*.json: the home page, the archive, one page per
-// issue, the RSS feed and one X thread per issue. Plain static files, no framework.
+// Build out/ from data/issues/*.json: the latest issue as the front page, the
+// archive, one page per issue, the RSS feed and one X thread per issue. Plain static files, no framework.
 //
 //   node scripts/build.mjs
 //
@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SITES, esc, issueHtml, issueSummary, issueTitle, issueUrl, thread } from './lib/render.mjs';
+import { SITES, esc, issueFacts, issueHtml, issueSummary, issueTitle, issueUrl, thread } from './lib/render.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'out');
@@ -38,32 +38,8 @@ function loadNote(issue) {
   return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
 }
 
-async function tryFetch(url, as = 'json') {
-  try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
-    if (!response.ok) throw new Error(String(response.status));
-    return as === 'json' ? await response.json() : await response.text();
-  } catch (error) {
-    console.log(`::warning title=live number skipped::${url}: ${error instanceof Error ? error.message : error}`);
-    return null;
-  }
-}
-
-/** The three numbers on the entry cards. Each falls back to the latest issue, then to nothing. */
-async function liveStats(latest) {
-  const RAW = 'https://raw.githubusercontent.com/robeshell';
-  const [changes, catalog, ...indexes] = await Promise.all([
-    tryFetch(`${RAW}/wenworks-ai-models/main/data/tier-changes.json`),
-    tryFetch('https://tools.wenworks.dev/catalog.json'),
-    ...['claude', 'codex', 'antigravity', 'grok'].map((name) => tryFetch(`${RAW}/wenworks-ai-agents/main/data/${name}.txt`, 'text')),
-  ]);
-  const leader = changes?.leader ?? (latest?.models.status === 'ok' ? latest.models.leader : null);
-  const docs = indexes.every((text) => typeof text === 'string') ? indexes.reduce((sum, text) => sum + text.split('\n').filter((line) => line.includes('|') && !line.startsWith('#')).length, 0) : null;
-  const tools = Array.isArray(catalog?.items) ? catalog.items.length : latest?.tools.status === 'ok' ? latest.tools.total : null;
-  return { leader, docs, tools };
-}
-
-function page({ title, description, pathName, body, ogType = 'website' }) {
+function page({ title, description, pathName, body, ogType = 'website', active = '' }) {
+  const nav = [['latest', '/', '最新一期'], ['archive', '/weekly/', '往期'], ['feed', '/feed.xml', 'RSS']];
   const url = `${SITES.home}${pathName}`;
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -97,34 +73,48 @@ function page({ title, description, pathName, body, ogType = 'website' }) {
   <div class="site-header-inner">
     <a href="${SITES.home}/" class="site-brand">Wenworks AI</a>
     <nav class="site-switch" aria-label="Wenworks AI 站点"><a href="${SITES.models}">模型</a><a href="${SITES.agents}">Agent 导航</a><a href="${SITES.tools}">工具精选</a></nav>
+    <span class="site-sep" aria-hidden="true"></span>
+    <nav id="site-nav" class="site-nav" aria-label="周报" data-open="false">${nav.map(([key, href, label]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
+    <button type="button" class="site-menu-button" id="site-menu" aria-expanded="false" aria-controls="site-nav">菜单</button>
   </div>
 </header>
 <main class="site-content">
 ${body}
 </main>
-<footer class="site-foot"><p><a href="/weekly/">往期周报</a> · <a href="/feed.xml">RSS</a> · 周报由三个站的公开数据自动生成，每周一更新；只列标题和链接，不转载正文。</p></footer>
+<footer class="site-foot"><p>周报由 Wenworks AI 三个站的公开数据自动生成，每周一更新；只列标题和链接，不转载正文。</p></footer>
+<script>{const n=document.getElementById('site-nav'),b=document.getElementById('site-menu'),set=o=>{n.dataset.open=o;b.setAttribute('aria-expanded',o)};b.addEventListener('click',()=>set(n.dataset.open!=='true'));document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)})}</script>
 ${PRODUCTION ? BEACON : ''}
 </body>
 </html>
 `;
 }
 
-function issueBlock(issue, { heading = 'h1', linkTitle = false } = {}) {
-  const title = linkTitle ? `<a href="/weekly/${issue.number}/">${esc(issueTitle(issue))}</a>` : esc(issueTitle(issue));
-  return `<div class="page-head"><${heading}>${title}</${heading}><p>${esc(issue.week.label)}</p></div>
-<article class="issue">
-${issueHtml(issue, loadNote(issue))}
-</article>`;
+/** Masthead of an issue: number, dates and a one-line summary. */
+function hero(issue, { linkTitle = false } = {}) {
+  const title = `Wenworks AI 周报 <em>第 ${issue.number} 期</em>`;
+  return `<section class="hero">
+<p class="eyebrow num"><b>WEEKLY</b><span>${esc(issue.week.isoWeek)}</span><span>${esc(issue.week.label)}</span></p>
+<h1>${linkTitle ? `<a href="/weekly/${issue.number}/">${title}</a>` : title}</h1>
+<p class="lede">${esc(issueSummary(issue))}</p>
+</section>`;
 }
 
-function siteCards(stats) {
-  const card = (href, name, text, stat) => `<a class="site-card" href="${href}"><b>${name}</b><span>${text}</span>${stat ? `<span class="stat">${stat}</span>` : ''}</a>`;
-  return `<section class="sites">
-<h2>三个站</h2>
-${card(SITES.models, '模型', '大模型梯队榜、选型、价格', stats.leader ? `当前榜首 ${esc(stats.leader.family)} <span class="num">${Number(stats.leader.score).toFixed(1)}</span>` : '')}
-${card(SITES.agents, 'Agent 导航', 'Claude Code、Codex 等官方文档的导航', stats.docs ? `收录文档 <span class="num">${stats.docs}</span> 篇` : '')}
-${card(SITES.tools, '工具精选', 'AI 工具和资源精选', stats.tools ? `收录 <span class="num">${stats.tools}</span> 条` : '')}
+function emptyHero() {
+  return `<section class="hero">
+<p class="eyebrow num"><b>WEEKLY</b><span>每周一更新</span></p>
+<h1>Wenworks AI 周报</h1>
+<p class="lede">每周一把模型、Agent 导航、工具精选三个站的变化汇总成一期。第 1 期还没有发布。</p>
 </section>`;
+}
+
+function pager(issue, latest) {
+  return `<p class="pager">${issue.number > 1 ? `<a href="/weekly/${issue.number - 1}/">← 上一期</a>` : ''}<a href="/weekly/">往期列表</a>${issue.number < (latest?.number ?? 0) ? `<a href="/weekly/${issue.number + 1}/">下一期 →</a>` : ''}<a href="/feed.xml">RSS 订阅</a></p>`;
+}
+
+function issueArticle(issue) {
+  return `<article class="issue">
+${issueHtml(issue, loadNote(issue))}
+</article>`;
 }
 
 const rfc822 = (iso) => new Date(iso).toUTCString();
@@ -161,28 +151,29 @@ ${items}
 `;
 }
 
-async function main() {
+function main() {
   fs.rmSync(OUT, { recursive: true, force: true });
   const issues = loadIssues();
   const latest = issues[0] ?? null;
-  const stats = await liveStats(latest);
 
   write('styles.css', fs.readFileSync(path.join(ROOT, 'src', 'styles.css'), 'utf8'));
   write('icon.svg', fs.readFileSync(path.join(ROOT, 'src', 'icon.svg'), 'utf8'));
   write('.nojekyll', '');
 
   write('index.html', page({
-    title: latest ? `${SITE_NAME} · 周报第 ${latest.number} 期` : SITE_NAME,
+    title: latest ? `${SITE_NAME} · 周报第 ${latest.number} 期` : `${SITE_NAME} · 周报`,
     description: latest ? `${latest.week.label}：${issueSummary(latest)}` : DESCRIPTION,
     pathName: '/',
-    body: `${latest ? issueBlock(latest, { linkTitle: true }) : '<div class="page-head"><h1>Wenworks AI 周报</h1><p>第 1 期还没有发布。</p></div>'}\n${siteCards(stats)}`,
+    active: 'latest',
+    body: latest ? `${hero(latest, { linkTitle: true })}\n${issueFacts(latest)}\n${issueArticle(latest)}\n${pager(latest, latest)}` : emptyHero(),
   }));
 
   write('weekly/index.html', page({
     title: `${SITE_NAME} · 往期周报`,
     description: DESCRIPTION,
     pathName: '/weekly/',
-    body: `<div class="page-head"><h1>往期周报</h1><p>每周一更新 · <a href="/feed.xml">RSS</a></p></div>
+    active: 'archive',
+    body: `<section class="hero"><p class="eyebrow num"><b>WEEKLY</b><span>每周一更新</span></p><h1>往期周报</h1><p class="lede">共 ${issues.length} 期 · <a href="/feed.xml">RSS 订阅</a></p></section>
 ${issues.length ? `<ol class="archive">${issues.map((issue) => `<li><a href="/weekly/${issue.number}/"><b class="num n">第 ${issue.number} 期</b><b>${esc(issue.week.label)}</b><span>${esc(issueSummary(issue))}</span></a></li>`).join('')}</ol>` : '<p class="quiet">还没有发布过。</p>'}`,
   }));
 
@@ -192,20 +183,17 @@ ${issues.length ? `<ol class="archive">${issues.map((issue) => `<li><a href="/we
       description: `${issue.week.label}：${issueSummary(issue)}`,
       pathName: `/weekly/${issue.number}/`,
       ogType: 'article',
-      body: `${issueBlock(issue)}\n<p class="quiet" style="margin-top:1.5rem;font-size:.875rem">${issue.number > 1 ? `<a href="/weekly/${issue.number - 1}/">← 上一期</a> · ` : ''}<a href="/weekly/">往期列表</a>${issue.number < (latest?.number ?? 0) ? ` · <a href="/weekly/${issue.number + 1}/">下一期 →</a>` : ''}</p>`,
+      body: `${hero(issue)}\n${issueFacts(issue)}\n${issueArticle(issue)}\n${pager(issue, latest)}`,
     }));
     write(`x/${issue.number}.txt`, thread(issue).join('\n\n') + '\n');
   }
 
   write('feed.xml', feed(issues));
-  write('404.html', page({ title: `${SITE_NAME} · 没有这个页面`, description: DESCRIPTION, pathName: '/404.html', body: '<div class="page-head"><h1>没有这个页面</h1><p><a href="/">回到首页</a> · <a href="/weekly/">往期周报</a></p></div>' }));
+  write('404.html', page({ title: `${SITE_NAME} · 没有这个页面`, description: DESCRIPTION, pathName: '/404.html', body: '<section class="hero"><p class="eyebrow num"><b>404</b></p><h1>没有这个页面</h1><p class="lede"><a href="/">回到首页</a> · <a href="/weekly/">往期周报</a></p></section>' }));
   write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITES.home}/sitemap.xml\n`);
   write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${['/', '/weekly/', ...issues.map((i) => `/weekly/${i.number}/`)].map((p) => `<url><loc>${SITES.home}${p}</loc></url>`).join('\n')}\n</urlset>\n`);
 
-  console.log(`built ${issues.length} issue(s)${latest ? `, latest is #${latest.number}` : ''}; beacon ${PRODUCTION ? 'on' : 'off'}; live numbers: leader ${stats.leader ? 'ok' : 'missing'}, docs ${stats.docs ?? 'missing'}, tools ${stats.tools ?? 'missing'}`);
+  console.log(`built ${issues.length} issue(s)${latest ? `, latest is #${latest.number}` : ''}; beacon ${PRODUCTION ? 'on' : 'off'}`);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main();
