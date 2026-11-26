@@ -1,0 +1,608 @@
+/* Wenworks AI 共用视觉规范见 design/wenworks-ai-design.md。
+   黑白灰加一个橙色；直角；1px 线分隔；不用渐变、模糊、发光；不做深色模式。 */
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --ink: #171717;
+  --mute: #525252;
+  --soft: #f5f5f5;
+  --softer: #fafafa;
+  --line: #e5e5e5;
+  --line-strong: #d4d4d4;
+  --accent: #ec5b13;
+  --sans: "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+html {
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@keyframes site-header-in {
+  from { opacity: 0; transform: translateY(-0.35rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes site-content-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.site-header {
+  animation: site-header-in 360ms var(--ease) both;
+}
+
+.site-content {
+  animation: site-content-in 460ms var(--ease) 60ms both;
+}
+
+/* ---- Wenworks AI 共用页头 ----
+   这一段在三个站里逐字相同：models.wenworks.dev、agents.wenworks.dev、tools.wenworks.dev。
+   要改就三个仓库一起改。 */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.site-brand {
+  flex: none;
+  margin-right: 1rem;
+  color: #171717;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 180ms ease;
+}
+
+.site-brand:hover {
+  opacity: 0.7;
+}
+
+.site-switch,
+.site-nav {
+  display: flex;
+  align-items: center;
+}
+
+.site-switch {
+  flex: none;
+}
+
+.site-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.site-nav-end {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.site-sep {
+  flex: none;
+  width: 1px;
+  height: 1.25rem;
+  margin: 0 0.75rem;
+  background: #e5e5e5;
+}
+
+.site-header nav a {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  color: #525252;
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.site-header nav a::after {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.55rem;
+  left: 0.75rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease;
+}
+
+.site-header nav a:hover {
+  color: #171717;
+  transform: translateY(-1px);
+}
+
+.site-header nav a[aria-current="page"] {
+  color: #171717;
+  font-weight: 500;
+}
+
+.site-header nav a:hover::after,
+.site-header nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.site-menu-button {
+  display: none;
+  flex: none;
+  align-items: center;
+  height: 2.75rem;
+  margin-left: auto;
+  padding: 0 0.75rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  background: #ffffff;
+  color: #171717;
+  font: inherit;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.site-menu-button:hover {
+  border-color: #d4d4d4;
+  background: #f5f5f5;
+}
+
+@media (max-width: 52rem) {
+  .site-header-inner {
+    padding: 0 1rem;
+  }
+
+  .site-brand {
+    margin-right: 0.5rem;
+  }
+
+  /* 三个站点入口始终显示；屏幕再窄时可以横向滑动。 */
+  .site-switch {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-right: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .site-switch::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header .site-switch a {
+    padding: 0 0.5rem;
+  }
+
+  .site-header .site-switch a::after {
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .site-sep {
+    display: none;
+  }
+
+  .site-menu-button {
+    display: inline-flex;
+  }
+
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #e5e5e5;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 6%);
+  }
+
+  .site-nav[data-open="true"] {
+    display: flex;
+  }
+
+  .site-nav-end {
+    margin-left: 0;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .site-header .site-nav a {
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .site-header .site-nav a::after {
+    display: none;
+  }
+
+  .site-header .site-nav a:hover {
+    transform: none;
+  }
+
+  .site-header .site-nav > a + a {
+    border-top: 1px solid #e5e5e5;
+  }
+}
+
+@media (max-width: 25rem) {
+  .site-brand {
+    margin-right: 0.25rem;
+  }
+
+  .site-switch {
+    margin-right: 0.25rem;
+  }
+
+  .site-header .site-switch a {
+    padding: 0 0.375rem;
+  }
+
+  .site-header .site-switch a::after {
+    right: 0.375rem;
+    left: 0.375rem;
+  }
+
+  .site-menu-button {
+    padding: 0 0.5rem;
+  }
+}
+/* ---- 共用页头结束 ---- */
+
+/* ---- 页面 ---- */
+.site-content {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+@media (min-width: 40rem) {
+  .site-content {
+    padding: 2.5rem 1.5rem 3rem;
+  }
+}
+
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.quiet {
+  color: var(--mute);
+}
+
+.mark {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0 0.375rem;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.page-head {
+  margin-bottom: 1.5rem;
+}
+
+.page-head h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 40rem) {
+  .page-head h1 {
+    font-size: 1.75rem;
+  }
+}
+
+.page-head p {
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.875rem;
+}
+
+.page-head a {
+  text-underline-offset: 3px;
+}
+
+.page-head h1 a {
+  text-decoration: none;
+}
+
+.page-head h1 a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+/* 一期简报 */
+.issue {
+  max-width: 46rem;
+  border-top: 2px solid var(--accent);
+}
+
+.issue section {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.issue h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.issue h3 {
+  margin: 1rem 0 0.25rem;
+  color: var(--mute);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.issue p {
+  margin: 0 0 0.5rem;
+}
+
+.issue ul,
+.issue ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.issue li {
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.issue li:first-child {
+  border-top: 0;
+}
+
+.issue ol {
+  counter-reset: rank;
+}
+
+.issue ol li {
+  counter-increment: rank;
+}
+
+.issue ol li::before {
+  display: inline-block;
+  width: 1.5rem;
+  color: var(--mute);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  content: counter(rank);
+}
+
+.issue a {
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 180ms ease;
+}
+
+.issue a:hover {
+  text-decoration-color: currentColor;
+}
+
+.issue .quiet {
+  font-size: 0.875rem;
+}
+
+.issue .more {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+}
+
+.issue .note {
+  background: var(--softer);
+  padding: 1.5rem 1rem;
+}
+
+.issue .note ul {
+  padding-left: 1.25rem;
+  list-style: square;
+}
+
+.issue .note li {
+  padding: 0.125rem 0;
+  border: 0;
+}
+
+.issue code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+}
+
+/* 三个站的入口 */
+.sites {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.sites h2 {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.site-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 9rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.site-card:hover {
+  border-color: var(--line-strong);
+  background: var(--softer);
+  transform: translateY(-1px);
+}
+
+.site-card b {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.site-card span {
+  color: var(--mute);
+  font-size: 0.875rem;
+}
+
+.site-card .stat {
+  margin-top: auto;
+  padding-top: 1rem;
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+
+@media (max-width: 46rem) {
+  .sites {
+    grid-template-columns: 1fr;
+  }
+
+  .site-card {
+    min-height: 0;
+  }
+}
+
+/* 往期列表 */
+.archive {
+  max-width: 46rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.archive li {
+  border-bottom: 1px solid var(--line);
+}
+
+.archive a {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  padding: 1rem 0;
+  text-decoration: none;
+  transition: background-color 180ms ease;
+}
+
+.archive a:hover {
+  background: var(--soft);
+}
+
+.archive .n {
+  color: var(--mute);
+}
+
+.archive span {
+  grid-column: 2;
+  color: var(--mute);
+  font-size: 0.875rem;
+}
+
+.site-foot {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 2.5rem;
+  color: var(--mute);
+  font-size: 0.875rem;
+}
+
+@media (min-width: 40rem) {
+  .site-foot {
+    padding: 1rem 1.5rem 2.5rem;
+  }
+}
+
+.site-foot p {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.site-foot a {
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .site-header nav a:hover,
+  .site-card:hover {
+    transform: none !important;
+  }
+}
