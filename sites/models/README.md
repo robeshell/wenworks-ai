@@ -1,6 +1,6 @@
 # Wenworks AI · 模型
 
-大模型对比站，线上地址 https://models.wenworks.app 。和 Agent 导航（https://agents.wenworks.app ）同属 Wenworks AI。数据来自 [Artificial Analysis](https://artificialanalysis.ai/) 和 [OpenRouter](https://openrouter.ai/)，GitHub Actions 每天刷新两次，以静态站形式部署到 GitHub Pages。
+[Wenworks AI](https://ai.wenworks.app) 的 `/models/` 部分，线上地址 https://ai.wenworks.app/models/ 。数据来自 [Artificial Analysis](https://artificialanalysis.ai/) 和 [OpenRouter](https://openrouter.ai/)，GitHub Actions 每天刷新两次，和整站一起静态发布。
 
 ## 功能
 
@@ -20,7 +20,7 @@
 npm install
 export AA_API_KEY=你的key   # Artificial Analysis 官方 API key（价格与评测需要）
 npm run fetch      # 抓取价格、评测与使用排行 → data/*.json
-npm run dev        # http://localhost:3000
+npm run dev        # http://localhost:3000/models/
 ```
 
 | 命令 | 说明 |
@@ -29,9 +29,12 @@ npm run dev        # http://localhost:3000
 | `npm run fetch:prices` | 仅价格 |
 | `npm run fetch:rankings` | 仅排行 |
 | `npm run fetch:popularity` | 仅使用排行 |
-| `npm run build` | 静态导出到 `out/`（GitHub Pages 同配置） |
+| `npm run build` | 生成分享图，静态导出到 `out/` |
+| `npm run lint` / `npm test` | ESLint / 梯队与选型规则的单元测试 |
 
 ## 数据说明
+
+下表的路径都在 `/models` 之下（`next.config.ts` 固定带这个 basePath）。
 
 | 页面 | 来源 | 内容 |
 |------|------|------|
@@ -68,56 +71,14 @@ npm run dev        # http://localhost:3000
   - 设了预算时，没有价格的模型不参与
 - 厂商 logo 来自 Artificial Analysis 的公开资源，保存在 `public/logos/`
 
-## GitHub Pages
+## 发布和定时刷新
 
-仓库已配置：
+都在仓库根目录的 `.github/workflows/` 里：
 
-1. **Deploy GitHub Pages**（`.github/workflows/pages.yml`）  
-   - 触发：推送到 `main`，或手动 Run workflow  
-   - 构建静态站并部署到 GitHub Pages  
+- `deploy.yml`：合并到 `main` 后构建整个站并发布；数据刷新完成后也会跑一次。
+- `refresh-models.yml`：每天 UTC 00:00 和 12:00 运行 `npm run fetch`，把 `data/` 和 `public/logos/` 的变化提交到 `main`。需要仓库 Secret `AA_API_KEY`。
 
-2. **Refresh market data**（`.github/workflows/refresh-data.yml`）  
-   - 触发：每天 UTC `00:00` / `12:00`（北京时间约 **08:00 / 20:00**），或手动  
-   - 执行 `npm run fetch`，若 `data/` 有变更则 commit 并 push  
-   - push 后会自动触发上面的 Pages 部署  
-
-首次发布后请在仓库打开：
-
-**Settings → Pages → Build and deployment → Source: GitHub Actions**
-
-站点使用自定义域名 `models.wenworks.app`（`public/CNAME`），挂在根路径下，不设 basePath。域名本身在 **Settings → Pages → Custom domain** 里配置。
-
-## 定时更新怎么做？
-
-已经用 GitHub Actions 的 `schedule` 做了定时，无需额外服务器：
-
-```yaml
-# .github/workflows/refresh-data.yml
-on:
-  schedule:
-    - cron: "0 0,12 * * *"   # 每天两次（UTC）
-  workflow_dispatch:         # 也可在 Actions 页手动点一次
-```
-
-想改频率，编辑该 cron 即可，例如每 6 小时：
-
-```yaml
-- cron: "0 */6 * * *"
-```
-
-注意：
-
-- 免费仓库的 schedule 可能有延迟，属 GitHub 正常行为  
-- Actions 必须保持启用；长期无仓库活动时，schedule 有时会被暂停，偶尔手动 Run 一下即可  
-- 价格与评测来自 Artificial Analysis 官方免费 API（每天 100 次请求），需在仓库 **Settings → Secrets and variables → Actions** 添加 `AA_API_KEY`
-- 免费 API 不含上下文长度和单项基准分（GPQA、HLE 等），已有模型沿用上次的值，新模型这些列为空
-- 若某次失败，可看 Actions 日志并手动重跑  
-
-本机也可用 cron（可选）：
-
-```bash
-0 */6 * * * cd /path/to/llm-model-comparison && npm run fetch && git add data && git commit -m "chore: refresh data" && git push
-```
+Artificial Analysis 的免费 API 每天只有 100 次请求，定时任务已经在用这个额度，所以不要调高频率，也不要在本地或 CI 里额外跑 `npm run fetch`。
 
 ## 技术栈
 

@@ -1,0 +1,13 @@
+{
+  "name": "wenworks-ai",
+  "private": true,
+  "description": "Wenworks AI：ai.wenworks.app 整站（首页、模型、Agent 导航、工具精选）",
+  "scripts": {
+    "build": "node scripts/build-all.mjs",
+    "sync": "node scripts/sync-shared.mjs",
+    "test": "node scripts/sync-shared.mjs --check && npm test --prefix sites/home && npm test --prefix sites/models && npm test --prefix sites/tools",
+    "lint": "npm run lint --prefix sites/models && npm run lint --prefix sites/tools",
+    "check": "npm test && npm run lint",
+    "serve": "python3 -m http.server 4500 -d dist"
+  }
+}

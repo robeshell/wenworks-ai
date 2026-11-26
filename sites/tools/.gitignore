@@ -50,4 +50,3 @@ next-env.d.ts
 /skills/*
 !/skills/curator-ingest/
 !/skills/vendor/
-.wrangler/

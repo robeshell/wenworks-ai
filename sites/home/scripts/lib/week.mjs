@@ -60,8 +60,3 @@ export function inWeek(week, instant) {
 export function dateInWeek(week, date) {
   return typeof date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(date) && date.slice(0, 10) >= week.startDate && date.slice(0, 10) <= week.endDate;
 }
-
-/** Taipei calendar date (YYYY-MM-DD) of an instant. */
-export function taipeiDate(instant) {
-  return ymd(toTaipei(new Date(instant)));
-}

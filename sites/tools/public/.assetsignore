@@ -1,3 +1,0 @@
-# Copied into out/ by next build; wrangler skips these when uploading.
-# out/curator is the local admin UI and must never go online.
-curator

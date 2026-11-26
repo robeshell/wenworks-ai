@@ -20,6 +20,7 @@ sites/agents/    零依赖：一个 HTML 模板加构建脚本，预渲染需要
 sites/tools/     Next.js 静态导出，basePath 是 /tools；含本地管理界面 Curator
 shared/          四个部分共用的东西，目前是页头样式 site-header.css
 scripts/         build-all.mjs（整站构建）、sync-shared.mjs（同步共用页头）
+.github/         四个工作流，加一个共用的安装步骤 actions/setup
 design/          视觉规范
 ```
 
@@ -28,9 +29,10 @@ design/          视觉规范
 ## 本地
 
 ```bash
-node scripts/build-all.mjs                # 构建整个站到 dist/
+npm run check                             # 测试和 lint（CI 跑的就是这一条）
+node scripts/build-all.mjs                # 构建整个站到 dist/（npm run build）
 node scripts/build-all.mjs --only=home    # 只构建某几个部分（逗号分隔）
-python3 -m http.server 4500 -d dist       # 在 http://localhost:4500 看
+npm run serve                             # 在 http://localhost:4500 看 dist/
 ```
 
 - 两个 Next.js 部分第一次构建会自动 `npm ci`。

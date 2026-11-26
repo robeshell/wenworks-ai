@@ -6,7 +6,7 @@
 
 | 部分 | 技术 | 职责 |
 |------|------|------|
-| 公开站（`app/(en)/`、`app/zh/`） | Next.js 16 `output: "export"`、React 19、定制 CSS | 只读静态产物，中英双版，部署在 Cloudflare Workers 静态资源 |
+| 公开站（`app/(zh)/`、`app/en/`） | Next.js 16 `output: "export"`、React 19、定制 CSS | 只读静态产物，中英双版，随整站发布到 GitHub Pages |
 | Curator 前端（`app/curator/` + `components/`） | Mantine 9 | 本地管理台：工作台、资源库、编辑器、收录、系统 |
 | Curator 服务（`scripts/curator-server.mjs`） | Node 内置 `http` + `node:sqlite` | 本地 API：内容 CRUD、AI 收录、候选版本、静态导出、构建校验 |
 
@@ -27,7 +27,7 @@ flowchart LR
   end
   SRV -->|"curator:export"| EXPORT["data/tools.json + content/*.md"]
   EXPORT --> BUILD["next build（output: export）"]
-  BUILD --> PAGES["Cloudflare（tools.wenworks.app）"]
+  BUILD --> PAGES["GitHub Pages（ai.wenworks.app/tools/）"]
 ```
 
 - 编辑源只有 SQLite；`data/` 与 `content/` 是**派生文件**，每次保存/发布/删除后由服务自动重新导出，也可用 `npm run curator:export` 手动触发。
@@ -38,9 +38,9 @@ flowchart LR
 
 | 路由 | 说明 |
 |------|------|
-| `/`、`/zh/` | 首页（英文在根路径，中文在 `/zh/`；旧的 `/en/...` 由 `_redirects` 301 到新地址）：工具 / 技能 / 项目 / 站点 / 提示词五个板块（客户端切换，无单独路由） |
-| `/skills/[slug]` `/projects/[slug]` `/sites/[slug]` `/prompts/[slug]`（中文加 `/zh` 前缀） | 分类详情页（`generateStaticParams` 由 `content/` 驱动，无内容时保留 `__empty__` 占位路由命中 `notFound()`——`output: export` 要求动态段至少产出一个路由） |
-| `/curator/**` | 管理台（CI 发布前会从 `out/` 移除） |
+| `/`、`/en/` | 首页（下面的路径都在 `/tools` 之下；中文在根，英文在 `/en/`）：工具 / 技能 / 项目 / 站点 / 提示词五个板块（客户端切换，无单独路由） |
+| `/skills/[slug]` `/projects/[slug]` `/sites/[slug]` `/prompts/[slug]`（英文加 `/en` 前缀） | 分类详情页（`generateStaticParams` 由 `content/` 驱动，无内容时保留 `__empty__` 占位路由命中 `notFound()`——`output: export` 要求动态段至少产出一个路由） |
+| `/curator/**` | 管理台（只在本机用；整站构建时从 `dist/tools/` 里删掉） |
 
 内容文件是 JSON frontmatter + Markdown（`lib/public-content.ts` 解析），`status !== "active"` 的文件不参与构建。
 
@@ -77,17 +77,17 @@ AI 收录管线：服务器把 `skills/curator-ingest/SKILL.md`（编辑口径�
 | `.curator/pi-config.json` | Curator「系统」页 | 当前项目专用的 AI 网关、密钥与默认模型（文件名沿用旧名）；忽略提交，文件权限为 `0600` |
 | `CURATOR_ALLOWED_ORIGIN` | 本站来源 | 追加允许的 CORS 来源 |
 | `NEXT_PUBLIC_CURATOR_API_URL` | `http://127.0.0.1:4317` | 前端访问的服务地址 |
-| `PAGES_BASE_PATH` | 未设置 | 站点挂在子路径时的 `basePath`；根域名部署不设 |
-| `NEXT_PUBLIC_BASE_PATH` | `""` | 由 `next.config.ts` 从上面派生，Logo 路径拼接用 |
+| `BASE_PATH` | `/tools` | `next.config.ts` 的 `basePath`；只在单独调试时覆盖 |
+| `NEXT_PUBLIC_BASE_PATH` | `/tools` | 由 `next.config.ts` 从上面派生，Logo 和封面路径拼接用 |
 
 ## 部署
 
-Cloudflare 连接本仓库，推送 `main` 后构建（lint → `next build`，不跑 `curator:export`，直接用已提交的 `data/`、`content/`）并 `wrangler deploy` 上传 `out/`；`out/.assetsignore` 排除 `out/curator/`。配置见 `wrangler.jsonc`。线上不含数据库、服务与任何 Agent 记录。
+不单独部署。合并到 `main` 后，仓库根目录的 `deploy.yml` 运行 `scripts/build-all.mjs`：lint、`next build`（不跑 `curator:export`，直接用已提交的 `data/`、`content/`），把 `out/` 放进整站的 `dist/tools/` 并删掉 `curator/`，再发布到 GitHub Pages。线上不含数据库、服务与任何 Agent 记录。
 
 ## 目录速览
 
 ```
-app/(en)/ app/zh/    公开站路由：英文在根路径、中文在 /zh/，都是 components/SiteRoutes.tsx 上的薄文件
+app/(zh)/ app/en/    公开站路由：中文在根、英文在 /en/，都是 components/SiteRoutes.tsx 上的薄文件
 app/curator/         管理台路由（Mantine，含 curator.css）
 components/          公开站组件 + components/curator/ 管理台组件
 lib/                 数据加载、内容模型、i18n、服务客户端
