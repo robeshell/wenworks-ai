@@ -1,6 +1,6 @@
 # Wenworks AI 共用视觉规范
 
-品牌：Wenworks AI。总入口 ai.wenworks.dev；三个站：模型 models.wenworks.dev、Agent 导航 agents.wenworks.dev、工具精选 tools.wenworks.dev。
+品牌：Wenworks AI。三个站：模型 models.wenworks.dev、Agent 导航 agents.wenworks.dev、工具精选 tools.wenworks.dev；另有周报 ai.wenworks.dev。
 
 ## 颜色
 
@@ -32,7 +32,7 @@
 ## 共用页头（三个站必须一模一样）
 
 ```
-[Wenworks AI]   模型   Agent 导航   工具精选   |   本站栏目 …
+[Wenworks AI]   模型   Agent 导航   工具精选   |   本站栏目 …   周报
 ```
 
 - 高 3.5rem，白底，底部 1px #e5e5e5 边线
@@ -42,11 +42,10 @@
 - 手机宽度下，本站栏目收进菜单按钮，三个站点入口始终显示
 - 样式在 `src/styles.css` 里"Wenworks AI 共用页头"一段，和三个站的仓库逐字相同，要改一起改
 
-## 总入口的补充
+## 周报的补充
 
-- 总入口 ai.wenworks.dev 的页头没有本站栏目，所以也没有菜单按钮。
-- "Wenworks AI" 指向 https://ai.wenworks.dev/ ，三个站点入口都不加 aria-current。
-- 首页先照顾第一次来的人：开头一句话说明 Wenworks AI 是什么，接着是三个站的入口（每个写明"想做什么"，带两三个具体入口和一个数字），然后才是"本周变化"：一排数字加最新一期的正文。
-- 单期页面用刊头：期号、日期、一句话概括。
-- 简报正文左边是栏目名，右边是内容；手机上叠成一栏。
+- ai.wenworks.dev 只做周报，首页就是最新一期，不放站点介绍和入口卡片。
+- 页头：品牌指向 https://ai.wenworks.dev/ ，三个站点入口都不加 aria-current；本站栏目是"最新一期、往期、RSS"。
+- 三个站的页头最右边各有一个"周报"链接指到这里（手机上在菜单里）。
+- 每一期从上到下：刊头（周次、日期、期号、一句话概括）、本期要点的一排数字、正文。正文左边是栏目名，右边是内容；手机上叠成一栏。
 - 橙色用在：刊头的期号、"榜首"那一格和第一梯队标签的顶线、"榜首更换"和"新"两个标记，以及和模型站一致的梯队标签（五档由深到浅）。
