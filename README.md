@@ -1,54 +1,53 @@
-# Wenworks AI 周报
+# Wenworks AI
 
-https://ai.wenworks.app ：每周自动生成的简报，把 Wenworks AI 三个站这一周的变化汇总成一期，每周一发布。它不是三个站的入口页，三个站的页头各有一个"周报"链接指到这里。
+https://ai.wenworks.app ：一个站，四个部分。
 
-- [模型](https://models.wenworks.app/)：大模型梯队榜、选型、价格
-- [Agent 导航](https://agents.wenworks.app/)：Claude Code、Codex 等官方文档的导航
-- [工具精选](https://tools.wenworks.app/)：AI 工具和资源精选
-
-Node 22 加零依赖脚本，生成纯静态 HTML，用 GitHub Actions 部署到 GitHub Pages。
-
-## 一期简报里有什么
-
-| 节 | 数据来源 | 怎么比对 |
+| 地址 | 目录 | 内容 |
 |---|---|---|
-| 模型梯队 | `robeshell/wenworks-ai-models` 的 `data/history/tiers-*.json` | 本周开始前最后一份快照对比本周结束前最后一份，用那个仓库 `lib/tiers.ts` 的 `diffTiers` 算出榜首、新进前五档、升档、降档 |
-| 使用量前五 | 同一仓库的 `data/popularity.json` | 只有当前值，没有历史，所以只列名次 |
-| Agent 文档 | `https://agents.wenworks.app/updates.json` | 取日期落在本周的条目 |
-| 官方文章 | `https://agents.wenworks.app/articles.json` | 有日期的按日期；没日期的按"哪一期第一次见到"，记在 `state/articles-seen.json` |
-| 新收录工具 | `https://tools.wenworks.app/catalog.json` | 和 `state/tools-seen.json` 里见过的 id 比。第一次运行只建基线 |
+| `/` | `sites/home` | 本周动态：梯队变化、官方文章、新收录的工具，每周一更新 |
+| `/models/` | `sites/models` | 大模型梯队榜、选型、价格、评测 |
+| `/agents/` | `sites/agents` | Claude Code、Codex 等编程 Agent 官方文档的中文导航 |
+| `/tools/` | `sites/tools` | AI 工具、站点、技能、开源项目、提示词精选（另有英文版 `/tools/en/`） |
 
-- 一期覆盖周一 00:00 到周日 24:00（Asia/Taipei）。
-- 任何一个数据源取不到，只影响它自己那一节；新收录工具取不到时整节不出现。
-- 某一节没有变化时写"本周没有变化"，不会去掉。
-- 全部由公开数据拼出来，不调用需要密钥的接口，不用大模型，不转载正文。
+四个部分各自构建，由 `scripts/build-all.mjs` 拼进 `dist/`，用 GitHub Actions 发布到 GitHub Pages。它们原来是四个仓库、四个子域名，现在合在这里。
 
-## 编辑手记
+## 目录
 
-想在某一期最前面加几句话，就新建 `notes/<ISO 周>.md`，例如 `notes/2026-W48.md`。ISO 周写在每期数据的 `week.isoWeek` 里。支持段落、列表、链接、加粗和行内代码。合并到 `main` 后会自动重新发布。
+```
+sites/home/      零依赖 Node 脚本，生成首页、往期、RSS、X 推文串
+sites/models/    Next.js 静态导出，basePath 是 /models
+sites/agents/    零依赖：一个 HTML 模板加构建脚本，预渲染需要 Chrome
+sites/tools/     Next.js 静态导出，basePath 是 /tools；含本地管理界面 Curator
+shared/          四个部分共用的东西，目前是页头样式 site-header.css
+scripts/         build-all.mjs（整站构建）、sync-shared.mjs（同步共用页头）
+design/          视觉规范
+```
 
-## 产物
+每个部分自己的说明在 `sites/<部分>/README.md` 和 `sites/<部分>/AGENTS.md`。
 
-| 地址 | 内容 |
-|---|---|
-| `/` | 最新一期 |
-| `/weekly/` | 往期列表 |
-| `/weekly/N/` | 第 N 期 |
-| `/feed.xml` | RSS，每期一条，全文 |
-| `/x/N.txt` | 第 N 期的 X 推文串，手动发 |
+## 本地
+
+```bash
+node scripts/build-all.mjs                # 构建整个站到 dist/
+node scripts/build-all.mjs --only=home    # 只构建某几个部分（逗号分隔）
+python3 -m http.server 4500 -d dist       # 在 http://localhost:4500 看
+```
+
+- 两个 Next.js 部分第一次构建会自动 `npm ci`。
+- Agent 导航的预渲染需要 Chrome；不在默认位置时用 `CHROME=/path/to/chrome`。
+- 改共用页头：改 `shared/site-header.css`，然后 `node scripts/sync-shared.mjs`。
 
 ## 自动任务
 
-- `.github/workflows/weekly.yml`：每周一 08:17（台北时间）生成新一期，把 `data/issues/NNNN.json` 和 `state/` 提交回仓库，然后发布。手动触发时可以勾"只预览"，也可以指定要生成哪一周。推送到 `main` 以外的分支会自动跑一遍预览，产物在那次运行的 Artifacts 里。
-- `.github/workflows/deploy.yml`：合并到 `main` 时，用已有的各期重新生成并发布，不出新一期。
+| 工作流 | 什么时候 | 做什么 |
+|---|---|---|
+| `deploy.yml` | 合并到 `main`；两个数据任务跑完之后 | 测试、构建整个站、发布。推送到其他分支时只构建，产物在 Artifacts 里 |
+| `refresh-models.yml` | 每天 UTC 00:00、12:00 | 刷新模型数据并提交。需要仓库 Secret `AA_API_KEY` |
+| `update-agents.yml` | 每天 UTC 22:17 | 比对各家官方文档目录、更新官方文章列表并提交 |
+| `weekly.yml` | 每周一 UTC 00:17（台北 08:17） | 汇总上一周的动态，提交并发布。手动触发可以只预览 |
 
-## 本地运行
+## 约束
 
-```bash
-git clone --depth 1 https://github.com/robeshell/wenworks-ai-models .sources/models
-npm test            # node --test
-npm run collect     # 生成上一个完整周的那一期；加 -- --week=2026-11-18 指定某一周
-npm run build       # 生成 out/
-```
-
-`npm run collect` 会改 `data/issues/` 和 `state/`。只是想看效果的话，看完用 `git checkout data state` 还原。
+- 不转载正文，只放标题、来源和链接。Agent 导航页脚"与 Anthropic、OpenAI、Google、xAI 无关"的声明保留。
+- 动态页全部由数据拼出来，不调用需要密钥的接口，不用大模型；评论只来自 `sites/home/notes/` 里的编辑手记。
+- 工具精选的内容由站长在本地用 Curator 维护，见 `sites/tools/AGENTS.md` 里"不要动内容数据链路"一节。

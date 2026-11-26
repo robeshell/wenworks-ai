@@ -1,0 +1,291 @@
+# 快速入门
+## 入门
+概述|overview
+快速入门|quickstart
+更新日志|changelog
+## 核心概念
+Claude Code 如何工作|how-claude-code-works
+扩展 Claude Code|features-overview
+探索 .claude 目录|claude-directory
+探索上下文窗口|context-window
+Claude Code 如何使用 prompt caching|prompt-caching
+## 使用 Claude Code
+Claude 如何记住您的项目|memory
+管理会话|sessions
+常见工作流程|common-workflows
+提示词库|prompt-library
+Claude Code 最佳实践|best-practices
+## 平台与集成
+平台和集成|platforms
+使用 Remote Control 从任何设备继续本地会话|remote-control
+让 Claude 通过 Projects 协调持续进行的工作|claude-projects
+Claude Code 移动版|mobile
+在 Chrome 中使用 Claude Code|chrome
+让 Claude 从 CLI 使用您的计算机|computer-use
+在 VS Code 中使用 Claude Code|vs-code
+JetBrains IDEs|jetbrains
+Slack 中的 Claude Code|slack
+Claude Tag|claude-tag
+### 云端 Claude Code
+在云中开始使用 Claude Code|web-quickstart
+在云端使用 Claude Code|claude-code-on-the-web
+使用例程自动化工作|routines
+### 桌面版 Claude Code
+开始使用桌面应用|desktop-quickstart
+Desktop application|desktop
+Linux 上的 Claude Desktop（测试版）|desktop-linux
+Claude Code Desktop 在 WSL 中|desktop-wsl
+在 Claude Code Desktop 中安排定期任务|desktop-scheduled-tasks
+在模拟器中测试 iOS 应用|desktop-ios-simulator
+## 代码审查与 Pull Request
+使用 /code-review 在本地审查|code-review-local
+使用 Ultrareview 查找错误|ultrareview
+Claude Code 与 GitHub Enterprise Server|github-enterprise-server
+### Code Review
+Code Review|code-review
+设置 Code Review|code-review-setup
+自定义 Code Review|code-review-customize
+阅读和请求 Pull Request 上的审查|code-review-pull-requests
+Code Review 费用和用量|code-review-costs
+Code Review 故障排除|code-review-troubleshooting
+### 安全扫描
+在 Claude 编写代码时捕获安全问题|security-guidance
+扫描代码库中的漏洞|claude-security
+### 在您自己的 CI 中运行 Claude
+Claude Code GitHub Actions|github-actions
+通过云提供商使用 Claude Code GitHub Actions|github-actions-cloud-providers
+Claude Code GitLab CI/CD|gitlab-ci-cd
+# 使用 Claude Code 构建
+## Agent 与并行工作
+并行运行代理|agents
+创建自定义 subagents|sub-agents
+使用 agent view 管理多个代理|agent-view
+协调 Claude Code 会话团队|agent-teams
+消息传递到您的其他 Claude Code 会话|cross-session-messaging
+使用动态工作流大规模编排子代理|workflows
+使用 worktrees 运行并行会话|worktrees
+## MCP
+连接到 MCP 服务器|mcp-quickstart
+通过 MCP 将 Claude Code 连接到工具|mcp
+## Skills
+使用 skills 扩展 Claude|skills
+## Artifact
+将会话输出作为 artifacts 共享|artifacts
+## 自动化
+使用 hooks 自动化操作|hooks-guide
+使用 channels 将事件推送到运行中的会话|channels
+按计划运行提示词|scheduled-tasks
+让 Claude 朝着目标工作|goal
+以编程方式运行 Claude Code|headless
+从链接启动会话|deep-links
+## 指南
+在 monorepo 或大型代码库中设置 Claude Code|large-codebases
+## 故障排除
+排查安装和登录问题|troubleshoot-install
+故障排除|troubleshooting
+调试你的配置|debug-your-config
+错误参考|errors
+# 插件
+## 插件
+插件概览|plugins/overview
+## 使用插件
+安装和管理插件|plugins/install
+Anthropic 的插件市场|plugins/anthropic-marketplaces
+代码智能插件|plugins/code-intelligence
+插件安全和信任|plugins/security
+## 创建插件
+创建 Claude Code 插件|plugins/create
+向插件添加组件|plugins/components
+插件依赖|plugins/dependencies
+使用 evals 测试插件|plugin-evals
+发布和分发插件|plugins/publish
+测量插件成本和使用情况|plugins/measure
+从您的 CLI 推荐您的插件|plugins/cli-hints
+## mod
+Mods 概览|plugins/mods/overview
+创建一个 mod|plugins/mods/create
+mod 参考|plugins/mods/reference
+### 构建
+使用 mod 在界面中绘制|plugins/mods/interface
+mod 界面元素图库|plugins/mods/gallery
+使用 mod 响应事件|plugins/mods/events
+使用 mods API|plugins/mods/api
+### 测试与故障排除
+测试 mod|plugins/mods/test
+排查 mod 问题|plugins/mods/troubleshoot
+## 运营市场
+创建一个 marketplace|plugins/create-marketplace
+托管和维护一个 marketplace|plugins/host-marketplace
+为您的组织推荐插件|plugins/relevance
+## 管理组织的插件
+为您的组织管理 Claude Code plugins|plugins/org
+为您的组织管理 mods|plugins/mods/admin
+## 故障排除
+排查插件问题|plugins/troubleshooting
+插件加载参考|plugins/loading
+## 参考
+Plugin manifest 参考|plugins/manifest-reference
+Marketplace 参考|plugins/marketplace-reference
+插件命令参考|plugins/cli-reference
+# 管理
+## 设置与访问
+为您的组织设置 Claude Code|admin-setup
+高级设置|setup
+身份验证|authentication
+部署托管设置|managed-settings
+配置服务器管理的设置|server-managed-settings
+控制组织的 MCP 服务器访问权限|managed-mcp
+配置自动模式|auto-mode-config
+## 部署
+企业部署概览|third-party-integrations
+功能可用性|feature-availability
+Amazon Bedrock 上的 Claude Code|amazon-bedrock
+AWS 上的 Claude Platform 中的 Claude Code|claude-platform-on-aws
+Google Cloud 的 Agent Platform 上的 Claude Code|google-vertex-ai
+Microsoft Foundry 上的 Claude Code|microsoft-foundry
+企业网络配置|network-config
+在企业启动器后面运行 Claude Code|corporate-launcher
+开发容器|devcontainer
+## 网关
+通过网关运行 Claude Code|gateways
+### Claude 应用网关
+Claude 应用网关（Bedrock / AWS / Google Cloud / Foundry）|claude-apps-gateway
+Claude 应用网关配置|claude-apps-gateway-config
+Claude 应用网关支出限制|claude-apps-gateway-spend-limits
+Claude 应用网关部署和运维|claude-apps-gateway-deploy
+在 AWS 上部署 Claude apps gateway|claude-apps-gateway-on-aws
+在 Google Cloud 上部署 Claude apps gateway|claude-apps-gateway-on-gcp
+### 其他网关
+其他 LLM 网关|llm-gateway
+将 Claude Code 连接到 LLM 网关|llm-gateway-connect
+为您的组织推出 LLM 网关|llm-gateway-rollout
+Claude Code 网关兼容性指南|llm-gateway-protocol
+## 用量与费用
+监控|monitoring-usage
+有效管理成本|costs
+使用分析跟踪团队使用情况|analytics
+## 安全与数据
+安全性|security
+数据使用|data-usage
+零数据保留|zero-data-retention
+为符合 HIPAA 要求的组织设置 Claude Code（本地模式）|hipaa-setup
+## 采用
+通信工具包|communications-kit
+Champion kit|champion-kit
+# 配置
+## 设置
+设置文件和优先级|settings
+所有设置|settings-reference
+示例设置文件|settings-example
+## 权限和沙箱隔离
+配置权限|permissions
+选择权限模式|permission-modes
+自动模式分类器请求费用|auto-mode-classifier-billing
+配置沙箱化的 Bash 工具|sandboxing
+选择沙箱环境|sandbox-environments
+## 环境
+配置云环境|cloud-environments
+### 自托管环境
+自托管环境|self-hosted-environments
+自托管环境快速入门|self-hosted-environments-quickstart
+将自托管环境部署到生产环境|self-hosted-environments-deploy
+在自托管环境中自定义会话|self-hosted-environments-configuration
+端到端测试自托管环境|self-hosted-environments-testing
+自托管环境参考|self-hosted-environments-reference
+在自托管环境中验证会话身份|self-hosted-environments-identity
+## 模型与回复
+模型配置|model-config
+使用快速模式加快响应速度|fast-mode
+使用顾问工具升级困难决策|advisor
+输出样式|output-styles
+## 界面
+为 Claude Code 配置您的终端|terminal-config
+全屏渲染|fullscreen
+使用 Claude Code 与屏幕阅读器|accessibility
+语音听写|voice-dictation
+自定义你的状态行|statusline
+自定义快捷键|keybindings
+# 参考
+## 参考
+CLI 参考|cli-reference
+Commands|commands
+环境变量|env-vars
+工具参考|tools-reference
+交互模式|interactive-mode
+Checkpointing|checkpointing
+Hooks 参考|hooks
+Channels 参考|channels-reference
+## 术语表
+术语表|glossary
+# Agent SDK
+## 入门
+Agent SDK 概览|agent-sdk/overview
+快速开始|agent-sdk/quickstart
+迁移到 Claude Agent SDK|agent-sdk/migration-guide
+Agent SDK 故障排除|agent-sdk/troubleshooting
+## 构建 Agent
+配置你的代理|agent-sdk/configuration
+示例|agent-sdk/examples
+## 核心概念
+代理循环如何工作|agent-sdk/agent-loop
+在 SDK 中使用 Claude Code 功能|agent-sdk/claude-code-features
+使用会话|agent-sdk/sessions
+将会话持久化到外部存储|agent-sdk/session-storage
+## 输入和输出
+流式输入|agent-sdk/streaming-vs-single-mode
+处理批准和用户输入|agent-sdk/user-input
+实时流式传输响应|agent-sdk/streaming-output
+从代理获取结构化输出|agent-sdk/structured-outputs
+## 使用工具扩展
+为 Claude 提供自定义工具|agent-sdk/custom-tools
+使用 MCP 连接外部工具|agent-sdk/mcp
+使用工具搜索扩展到多个工具|agent-sdk/tool-search
+SDK 中的子代理|agent-sdk/subagents
+## 自定义行为
+修改系统提示词|agent-sdk/modifying-system-prompts
+使用 skills 扩展 agents|agent-sdk/skills
+SDK 中的 Plugins|agent-sdk/plugins
+## 控制与可观测性
+配置权限|agent-sdk/permissions
+使用 hooks 拦截和控制代理行为|agent-sdk/hooks
+使用 checkpointing 回滚文件更改|agent-sdk/file-checkpointing
+追踪成本和使用情况|agent-sdk/cost-tracking
+使用 OpenTelemetry 进行可观测性|agent-sdk/observability
+跟踪待办事项|agent-sdk/todo-tracking
+## 部署
+托管 Agent SDK|agent-sdk/hosting
+安全部署 AI 代理|agent-sdk/secure-deployment
+## SDK 参考
+Agent SDK 参考 - TypeScript|agent-sdk/typescript
+TypeScript SDK V2 session API（已移除）|agent-sdk/typescript-v2-preview
+Agent SDK 参考 - Python|agent-sdk/python
+# 新功能
+## 最新动态
+最新动态总览|whats-new/index
+第 37 周 · 9 月 7–11 日|whats-new/2026-w37
+第 36 周 · 8 月 31 日–9 月 4 日|whats-new/2026-w36
+第 35 周 · 8 月 24–28 日|whats-new/2026-w35
+第 34 周 · 8 月 17–21 日|whats-new/2026-w34
+第 33 周 · 8 月 10–14 日|whats-new/2026-w33
+第 32 周 · 8 月 3–7 日|whats-new/2026-w32
+第 30 周 · 7 月 20–24 日|whats-new/2026-w30
+第 29 周 · 7 月 13–17 日|whats-new/2026-w29
+第 28 周 · 7 月 6–10 日|whats-new/2026-w28
+第 27 周 · 6 月 29 日–7 月 3 日|whats-new/2026-w27
+第 26 周 · 6 月 22–26 日|whats-new/2026-w26
+第 25 周 · 6 月 15–19 日|whats-new/2026-w25
+第 24 周 · 6 月 8–12 日|whats-new/2026-w24
+第 23 周 · 6 月 1–5 日|whats-new/2026-w23
+第 22 周 · 5 月 25–29 日|whats-new/2026-w22
+第 21 周 · 5 月 18–22 日|whats-new/2026-w21
+第 20 周 · 5 月 11–15 日|whats-new/2026-w20
+第 19 周 · 5 月 4–8 日|whats-new/2026-w19
+第 18 周 · 4 月 27 日–5 月 1 日|whats-new/2026-w18
+第 17 周 · 4 月 20–24 日|whats-new/2026-w17
+第 16 周 · 4 月 13–17 日|whats-new/2026-w16
+第 15 周 · 4 月 6–10 日|whats-new/2026-w15
+第 14 周 · 3 月 30 日–4 月 3 日|whats-new/2026-w14
+第 13 周 · 3 月 23–27 日|whats-new/2026-w13
+# 资源
+## 资源
+法律和合规|legal-and-compliance

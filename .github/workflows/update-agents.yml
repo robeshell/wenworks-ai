@@ -1,0 +1,41 @@
+name: Update agent docs index
+
+# 每天比对一次各家官方文档的目录，并更新官方文章列表。提交之后由 Deploy site 重新发布。
+on:
+  schedule:
+    - cron: "17 22 * * *" # 06:17 Asia/Taipei
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: sites/agents
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/update.mjs
+      - run: node scripts/articles.mjs
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --staged --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git commit -m "chore: daily docs index update"
+          git pull --rebase origin main
+          git push

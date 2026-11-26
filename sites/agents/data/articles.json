@@ -1,0 +1,450 @@
+[
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Migrating our Messages API to Rust",
+  "url": "https://www.anthropic.com/research/migrating-api-to-rust",
+  "date": "2026-11-25",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Building strong safety evaluations",
+  "url": "https://www.anthropic.com/research/building-strong-safety-evaluations",
+  "date": "2026-11-13",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "The components of agent memory",
+  "url": "https://www.anthropic.com/research/components-of-agent-memory",
+  "date": "2026-11-06",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Redesigning source control at Anthropic",
+  "url": "https://www.anthropic.com/research/redesigning-source-control",
+  "date": "2026-10-13",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "How we contain Claude across products",
+  "url": "https://www.anthropic.com/research/how-we-contain-claude",
+  "date": "2026-05-25",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "An update on Claude Code quality reports",
+  "url": "https://www.anthropic.com/research/april-23-postmortem",
+  "date": "2026-04-23",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Scaling Managed Agents with stable interfaces",
+  "url": "https://www.anthropic.com/research/managed-agents",
+  "date": "2026-04-08",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "How we built Claude Code auto mode",
+  "url": "https://www.anthropic.com/research/claude-code-auto-mode",
+  "date": "2026-03-25",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Harness design for long-running apps",
+  "url": "https://www.anthropic.com/research/harness-design-long-running-apps",
+  "date": "2026-03-24",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Eval awareness in Opus 4.6 on BrowseComp",
+  "url": "https://www.anthropic.com/research/eval-awareness-browsecomp",
+  "date": "2026-03-06",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Building a C compiler with parallel Claudes",
+  "url": "https://www.anthropic.com/research/building-c-compiler",
+  "date": "2026-02-05",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Infrastructure noise in agentic coding evals",
+  "url": "https://www.anthropic.com/research/infrastructure-noise",
+  "date": "2026-02-05",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Designing AI resistant technical evaluations",
+  "url": "https://www.anthropic.com/research/AI-resistant-technical-evaluations",
+  "date": "2026-01-21",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Demystifying evals for AI agents",
+  "url": "https://www.anthropic.com/research/demystifying-evals-for-ai-agents",
+  "date": "2026-01-09",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Effective harnesses for long-running agents",
+  "url": "https://www.anthropic.com/research/effective-harnesses-for-long-running-agents",
+  "date": "2025-11-26",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Introducing advanced tool use for Claude",
+  "url": "https://www.anthropic.com/research/advanced-tool-use",
+  "date": "2025-11-24",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Code execution with MCP for efficient agents",
+  "url": "https://www.anthropic.com/research/code-execution-with-mcp",
+  "date": "2025-11-04",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Making Claude Code safer with sandboxing",
+  "url": "https://www.anthropic.com/research/claude-code-sandboxing",
+  "date": "2025-10-20",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Equipping agents with Agent Skills",
+  "url": "https://www.anthropic.com/research/equipping-agents-for-the-real-world-with-agent-skills",
+  "date": "2025-10-16",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Effective context engineering for AI agents",
+  "url": "https://www.anthropic.com/research/effective-context-engineering-for-ai-agents",
+  "date": "2025-09-29",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "A postmortem of three recent issues",
+  "url": "https://www.anthropic.com/research/a-postmortem-of-three-recent-issues",
+  "date": "2025-09-17",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Writing effective tools for AI agents",
+  "url": "https://www.anthropic.com/research/writing-tools-for-agents",
+  "date": "2025-09-11",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Desktop Extensions: One-click MCP installs",
+  "url": "https://www.anthropic.com/research/desktop-extensions",
+  "date": "2025-06-26",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "Anthropic 工程博客",
+  "title": "Confidential Inference via trusted VMs",
+  "url": "https://www.anthropic.com/research/confidential-inference-trusted-vms",
+  "date": "2025-06-18",
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "15 lessons learned building ChatGPT Apps",
+  "url": "https://developers.openai.com/blog/15-lessons-building-chatgpt-apps",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Architectural visualization with Astra",
+  "url": "https://developers.openai.com/blog/architectural-visualization-with-astra",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Automating repetitive work at OpenAI with Codex",
+  "url": "https://developers.openai.com/blog/automating-repetitive-work-at-openai-with-codex",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Bringing my LED display to life with GPT-Live-1 and Codex",
+  "url": "https://developers.openai.com/blog/bringing-my-led-display-to-life",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Building a retro handheld game with Codex and ModRetro Chromatic",
+  "url": "https://developers.openai.com/blog/build-a-game-with-modretro-chromatic",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Building frontend UIs with Codex and Figma",
+  "url": "https://developers.openai.com/blog/building-frontend-uis-with-codex-and-figma",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Building games with Astra",
+  "url": "https://developers.openai.com/blog/how-to-build-games-with-astra",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Building security review into your SDLC with Codex Security",
+  "url": "https://developers.openai.com/blog/building-security-review-into-your-sdlc-with-codex-security",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Codex as a platform: build on the open agent harness",
+  "url": "https://developers.openai.com/blog/codex-as-a-platform",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Custom Code Review rules for Codex",
+  "url": "https://developers.openai.com/blog/custom-code-review-rules-for-codex",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Designing delightful frontends with GPT-5.4",
+  "url": "https://developers.openai.com/blog/designing-delightful-frontends-with-gpt-5-4",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Designing failover across OpenAI model providers",
+  "url": "https://developers.openai.com/blog/designing-failover-across-openai-model-providers",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Developer notes on the Realtime API",
+  "url": "https://developers.openai.com/blog/realtime-api",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "From prompts to products: One year of Responses",
+  "url": "https://developers.openai.com/blog/one-year-of-responses",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Hello, world!",
+  "url": "https://developers.openai.com/blog/intro",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "How Codex ran OpenAI DevDay 2025",
+  "url": "https://developers.openai.com/blog/codex-at-devday",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "How I stay in the flow with Ultrafast",
+  "url": "https://developers.openai.com/blog/how-i-stay-in-the-flow-with-ultrafast",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "How Perplexity Brought Voice Search to Millions Using the Realtime API",
+  "url": "https://developers.openai.com/blog/realtime-perplexity-computer",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Maintaining software with the GPT-6 family",
+  "url": "https://developers.openai.com/blog/maintaining-software-with-the-gpt-6-family",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Making private MCP servers reachable without making them public",
+  "url": "https://developers.openai.com/blog/connect-private-mcp-servers-to-openai-products",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Mastering remote engineering work from your phone",
+  "url": "https://developers.openai.com/blog/mastering-codex-remote-for-engineering",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Meet Rosalind Workbench: Empowering every scientist to be their own research team",
+  "url": "https://developers.openai.com/blog/rosalind-workbench",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Meet the winners of OpenAI Build Week",
+  "url": "https://developers.openai.com/blog/build-week-winners",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "OpenAI for Developers in 2025",
+  "url": "https://developers.openai.com/blog/openai-for-developers-2025",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Production monitoring with Codex",
+  "url": "https://developers.openai.com/blog/production-monitoring-with-codex",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Prompting GPT-Live for languages and regional accents",
+  "url": "https://developers.openai.com/blog/prompting-multilingual-voice-agents",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Pushing voice agents further: inside four GPT-Live builds",
+  "url": "https://developers.openai.com/blog/pushing-voice-agents-further",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Rethinking skills and prompts for GPT-6 Astra",
+  "url": "https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Run long horizon tasks with Codex",
+  "url": "https://developers.openai.com/blog/run-long-horizon-tasks-with-codex",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Scaling cyber defenders with Daybreak",
+  "url": "https://developers.openai.com/blog/scaling-cyber-defenders-with-daybreak",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Securing persistent agents like OpenClaw at OpenAI",
+  "url": "https://developers.openai.com/blog/securing-persistent-agents-like-openclaw-at-openai",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Shell + Skills + Compaction: Tips for long-running agents that do real work",
+  "url": "https://developers.openai.com/blog/skills-shell-tips",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Supercharging Codex with JetBrains MCP at Skyscanner",
+  "url": "https://developers.openai.com/blog/skyscanner-codex-jetbrains-mcp",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Testing Agent Skills Systematically with Evals",
+  "url": "https://developers.openai.com/blog/eval-skills",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Time awareness and async input for personal agents",
+  "url": "https://developers.openai.com/blog/time-awareness-and-async-input-for-personal-agents",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Updates for developers building with voice",
+  "url": "https://developers.openai.com/blog/updates-audio-models",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Using Codex for education at Dagster Labs",
+  "url": "https://developers.openai.com/blog/codex-for-documentation-dagster",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Using skills to accelerate OSS maintenance",
+  "url": "https://developers.openai.com/blog/skills-agents-sdk",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "What makes a great ChatGPT app",
+  "url": "https://developers.openai.com/blog/what-makes-a-great-chatgpt-app",
+  "date": null,
+  "seen": "2026-11-26"
+ },
+ {
+  "src": "OpenAI 开发者博客",
+  "title": "Why we built the Responses API",
+  "url": "https://developers.openai.com/blog/responses-api",
+  "date": null,
+  "seen": "2026-11-26"
+ }
+]

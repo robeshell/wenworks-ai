@@ -1,10 +1,15 @@
 name: Deploy site
 
-# 不出新一期，只用已有的各期重新生成页面并发布：合并到 main 之后（改了样式、模板或编辑手记）。
+# 把四个部分构建成一个站，发布到 GitHub Pages（ai.wenworks.app）。
+# - 合并到 main 之后
+# - 两个数据任务提交了新数据之后（它们用仓库自带的令牌推送，不会触发 push 事件）
+# - 推送到其他分支时只构建、不发布，产物在这次运行的 Artifacts 里
 on:
   push:
-    branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Refresh model data", "Update agent docs index"]
+    types: [completed]
 
 permissions:
   contents: read
@@ -12,13 +17,17 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
+
+env:
+  PUBLISH: ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,22 +36,47 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            sites/models/package-lock.json
+            sites/tools/package-lock.json
+
+      - name: Install
+        run: |
+          npm ci --prefix sites/models
+          npm ci --prefix sites/tools
 
       - name: Test
-        run: node --test scripts/*.test.mjs
+        run: |
+          node scripts/sync-shared.mjs --check
+          npm test --prefix sites/home
+          npm test --prefix sites/models
+          npm test --prefix sites/tools
+          npm run lint --prefix sites/models
+          npm run lint --prefix sites/tools
 
-      - name: Build
+      - name: Build the whole site
         env:
-          PRODUCTION: "1"
-        run: node scripts/build.mjs
+          PRODUCTION: ${{ env.PUBLISH == 'true' && '1' || '0' }}
+        run: node scripts/build-all.mjs
+
+      - name: Upload preview
+        if: env.PUBLISH != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: dist
+          include-hidden-files: true
 
       - name: Upload Pages artifact
+        if: env.PUBLISH == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: dist
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

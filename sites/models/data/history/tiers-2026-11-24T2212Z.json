@@ -1,0 +1,825 @@
+{
+  "updatedAt": "2026-11-24T22:12:35.194Z",
+  "leaderScore": 64.8,
+  "entries": [
+    {
+      "familyKey": "gemini-4-neon",
+      "family": "Gemini 4 Neon",
+      "score": 61.5,
+      "tier": "T1",
+      "ids": [
+        "09fea5f5-7217-452d-b693-fcca01e07bdf",
+        "2ba1a8f6-e052-4a33-b178-4db1e86157e4",
+        "7c667f2d-0149-4eb1-864c-7e66c166ad88",
+        "9b696f5b-b5d2-4b1f-9ed5-7c1446ec8421"
+      ]
+    },
+    {
+      "familyKey": "gemini-4-carbon",
+      "family": "Gemini 4 Carbon",
+      "score": 60.1,
+      "tier": "T1",
+      "ids": [
+        "0d3eaafd-54ed-4f78-bdd7-05a2db883986",
+        "909ed0ba-bcc5-4f38-8162-08a4e187a772",
+        "b3866703-a9f7-4ea2-8f3f-b361c90aaf0e"
+      ]
+    },
+    {
+      "familyKey": "claude-fable-5-2",
+      "family": "Claude Fable 5.2",
+      "score": 64.8,
+      "tier": "T1",
+      "ids": [
+        "0c9b4e05-9259-42cc-b40e-d6acbbeaa7e8",
+        "593f2d23-247b-41c9-a679-cebd225f0a9a",
+        "76942526-cc96-46b0-bc27-29561c53ed70",
+        "cfc7acb1-d903-4858-9b6c-6c7776caf8f9",
+        "fdc1913b-9497-45ef-83f7-17dae756f37e"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-2-astra",
+      "family": "GPT-6.2 Astra",
+      "score": 62.2,
+      "tier": "T1",
+      "ids": [
+        "592572d5-f789-4106-abbc-fadf2206d10b",
+        "75c1b0b8-9db3-4c7e-95be-d74e59defee4",
+        "8cec011f-c959-4726-8668-2ee2409a6bca",
+        "cc93ecfd-845e-455d-9642-6799d7133b7e",
+        "fe959a7a-944c-4ba8-8e41-349712599b39"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-2-sol",
+      "family": "GPT-6.2 Sol",
+      "score": 57.3,
+      "tier": "T2",
+      "ids": [
+        "27c326a6-ec9b-415f-a29e-b1f4927484dc",
+        "82b37079-56d9-4451-8a1a-22b0a921f4f8",
+        "a1a84b18-e8c9-48fb-8e04-6003bd9f6ff4",
+        "a77965fb-2117-4e2c-bd8b-80b5579a7e7e",
+        "cd85e412-c43f-4535-bf8e-5ba113d97ca3"
+      ]
+    },
+    {
+      "familyKey": "claude-opus-5-5",
+      "family": "Claude Opus 5.5",
+      "score": 59.1,
+      "tier": "T2",
+      "ids": [
+        "2f3c4dc9-a450-4303-8697-0237257cf08f",
+        "4416ca93-fde6-4b7b-abbc-3a6be109cc3d",
+        "df5bf99d-d228-4715-b41b-19ca86118777",
+        "ea9e0da6-169f-43c6-92f5-730a10d6ff8d",
+        "f314eade-2232-44bf-a3ab-9b326bc67de6"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-astra",
+      "family": "GPT-6 Astra",
+      "score": 56.9,
+      "tier": "T2",
+      "ids": [
+        "1f541ef3-913f-4eb2-9d07-0e93c7a9a5e3",
+        "2f339a97-9a0d-499a-9cb5-e0db665bfa25",
+        "a3f8100d-e38f-408b-b0fa-0085dae18dc1",
+        "e05a4828-0536-4876-870d-a235023f992b",
+        "e97a4ef5-e817-480e-9595-12f81dc4974f"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-1-terra",
+      "family": "GPT-6.1 Terra",
+      "score": 51.4,
+      "tier": "T3",
+      "ids": [
+        "0d3c777f-6817-42d7-9bb9-223314bc5a57",
+        "b0c462cf-f2d0-4126-9434-28db9502219f",
+        "c441e158-a87d-4116-911b-93325e4b4f1c",
+        "c955b262-a17f-4f1a-b097-6860b866295b",
+        "e8d443ba-8aca-4830-a186-ae869bb9c6fe",
+        "ea3e1f50-f62d-41d2-849a-9af0413e4d37"
+      ]
+    },
+    {
+      "familyKey": "gemini-4-hydrogen",
+      "family": "Gemini 4 Hydrogen",
+      "score": 54.1,
+      "tier": "T3",
+      "ids": [
+        "88c68c50-03c1-458a-9292-bd398c27adc5",
+        "dad0e3b1-e3e7-477a-99f9-c14457a91114",
+        "dae0262d-26a4-44d1-925a-6f2731cbda6a",
+        "f0537484-af30-4a8a-bf34-368c552e5cfd"
+      ]
+    },
+    {
+      "familyKey": "claude-sonnet-5-5",
+      "family": "Claude Sonnet 5.5",
+      "score": 54.7,
+      "tier": "T3",
+      "ids": [
+        "042e8a37-fcd0-40f4-8f41-99215fb68eda",
+        "268525e2-f873-4178-bc07-e6a0ee1f002d",
+        "975aeaef-50bd-4a65-9c73-f1015adcd4d4",
+        "b171d979-5ec1-45de-b8b9-db1ee65e77ec",
+        "bbc2ffea-cf6b-43be-8c41-1769347e234d"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-1-sol",
+      "family": "GPT-6.1 Sol",
+      "score": 54.7,
+      "tier": "T3",
+      "ids": [
+        "092a3b0e-c5c8-45dc-bf1b-53673c8ff352",
+        "3b84fee3-b70a-41bc-819e-5fbdef9a0042",
+        "a2e51d62-ea4e-4f15-8be0-be9dc1fb489d",
+        "b25ac058-1e33-4c31-bbc9-a20c3ad0717a",
+        "e76e0fe5-93ca-4272-9359-2eb1740467d1"
+      ]
+    },
+    {
+      "familyKey": "gemini-4-argon",
+      "family": "Gemini 4 Argon",
+      "score": 50.5,
+      "tier": "T3",
+      "ids": [
+        "48e6f735-f2bc-418f-b99f-3dc5a0ddda77",
+        "d366dfa1-d940-4788-aa73-d298c45699b3"
+      ]
+    },
+    {
+      "familyKey": "claude-fable-5-1",
+      "family": "Claude Fable 5.1",
+      "score": 50,
+      "tier": "T3",
+      "ids": [
+        "05776db7-f5c0-40f7-b824-079160f8cfa8",
+        "3b7de71c-e034-4591-8ca6-6b6be2fa471f",
+        "3e87c73e-a257-495e-9730-367a66229811",
+        "9b166bf3-42db-4f63-8338-1c4a1244ffe8",
+        "9d7d72cd-d95d-45a0-b109-4ad292c9aabd"
+      ]
+    },
+    {
+      "familyKey": "muse-wonder-full",
+      "family": "Muse Wonder Full",
+      "score": 49.9,
+      "tier": "T3",
+      "ids": [
+        "e994a6e0-d36b-4dab-8ae1-c1b469e4d9e2"
+      ]
+    },
+    {
+      "familyKey": "kimi-k3-1-pro",
+      "family": "Kimi K3.1 Pro",
+      "score": 46.6,
+      "tier": "T4",
+      "ids": [
+        "665c67ca-09eb-48f0-a7a3-0096e1d5de51"
+      ]
+    },
+    {
+      "familyKey": "qwen4",
+      "family": "Qwen4 Max",
+      "score": 42.8,
+      "tier": "T5",
+      "ids": [
+        "fef6625d-9097-45f6-95c0-bcaa06e3d8e1"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-sol",
+      "family": "GPT-6 Sol",
+      "score": 44.1,
+      "tier": "T5",
+      "ids": [
+        "c50ea08c-88c0-4eb7-85b8-27f2bbf6d527"
+      ]
+    },
+    {
+      "familyKey": "muse-wonder",
+      "family": "Muse Wonder",
+      "score": 43.7,
+      "tier": "T5",
+      "ids": [
+        "38a98e3d-779b-49ec-b005-230a3a72088a",
+        "ff2f3f3d-783f-4e27-8a39-47237501a313"
+      ]
+    },
+    {
+      "familyKey": "claude-opus-5",
+      "family": "Claude Opus 5",
+      "score": 44.2,
+      "tier": "T5",
+      "ids": [
+        "b8fc61f7-5e9a-49e6-8547-6ac56db24627"
+      ]
+    },
+    {
+      "familyKey": "muse-spark-1-3",
+      "family": "Muse Spark 1.3",
+      "score": 36.6,
+      "tier": "rest",
+      "ids": [
+        "9999672c-b687-4026-9c15-5cef02ff53bb"
+      ]
+    },
+    {
+      "familyKey": "claude-haiku-5-5",
+      "family": "Claude Haiku 5.5",
+      "score": 36.5,
+      "tier": "rest",
+      "ids": [
+        "20829974-af06-497e-9f42-77fb958d43b9",
+        "41b5bf5e-daf6-42d9-b8d1-60e340a3028d",
+        "42908ae3-d3bd-4934-be19-fbff93d3fde8",
+        "7d064a11-6e78-4030-b535-cdf940615041",
+        "af26fff4-8120-41be-a5f0-86aaea023f20"
+      ]
+    },
+    {
+      "familyKey": "muse-ember",
+      "family": "Muse Ember",
+      "score": 36.1,
+      "tier": "rest",
+      "ids": [
+        "7a64ffc4-36c3-4369-981e-73abdd6ff5e2",
+        "dbf63365-127f-41ee-9e51-81173adb3502"
+      ]
+    },
+    {
+      "familyKey": "grok-4-7",
+      "family": "Grok 4.7",
+      "score": 35.4,
+      "tier": "rest",
+      "ids": [
+        "208c16f0-8c5b-4524-ac8a-ac74c02e80a9",
+        "272f5f03-aea9-4675-a244-2b753b618cdf",
+        "59627802-1546-422c-9a65-65b61c022d36"
+      ]
+    },
+    {
+      "familyKey": "tencent-hy4",
+      "family": "Tencent Hy4",
+      "score": 34.6,
+      "tier": "rest",
+      "ids": [
+        "d274918e-ea82-4951-8b37-8ed9ab898dbc"
+      ]
+    },
+    {
+      "familyKey": "qwen3-8",
+      "family": "Qwen3.8 Max (0902)",
+      "score": 33.7,
+      "tier": "rest",
+      "ids": [
+        "b112af07-3bd5-4647-b09f-b23204361bb2"
+      ]
+    },
+    {
+      "familyKey": "deepseek-v4-1-flash",
+      "family": "DeepSeek V4.1 Flash 1017",
+      "score": 32.4,
+      "tier": "rest",
+      "ids": [
+        "5720fd2f-873a-4765-8640-a153b38bd64d",
+        "c3b66080-fdcb-48e4-8ade-6baf77921c7c",
+        "f151fd0b-2139-40cf-a3ec-995e8cedc592"
+      ]
+    },
+    {
+      "familyKey": "gpt-5-6-terra",
+      "family": "GPT-5.6 Terra",
+      "score": 32.2,
+      "tier": "rest",
+      "ids": [
+        "bcf8db0a-3bb6-4d82-9516-0f57370c85a6"
+      ]
+    },
+    {
+      "familyKey": "glm-5-3",
+      "family": "GLM-5.3",
+      "score": 31.6,
+      "tier": "rest",
+      "ids": [
+        "cc1e488b-8ba4-464d-875d-690166b15ad3",
+        "cd684ea4-b475-4269-b001-d469d06d8a7a"
+      ]
+    },
+    {
+      "familyKey": "grok-4-6",
+      "family": "Grok 4.6",
+      "score": 31,
+      "tier": "rest",
+      "ids": [
+        "d6f43d0a-e8c4-447c-9ff7-5cf0a9d59aa3"
+      ]
+    },
+    {
+      "familyKey": "gemini-3-8-flash",
+      "family": "Gemini 3.8 Flash",
+      "score": 30.7,
+      "tier": "rest",
+      "ids": [
+        "744fa3c1-42a7-4995-b138-fb6be11f463c",
+        "8a999846-4c1d-4ce7-a8b7-1310a7166fd7",
+        "f6db039b-0f3b-485c-9d7f-982988e44f26"
+      ]
+    },
+    {
+      "familyKey": "inkling-2-small",
+      "family": "Inkling 2 Small",
+      "score": 30.7,
+      "tier": "rest",
+      "ids": [
+        "e2ed7885-d46b-4da7-a873-f12f88af0081"
+      ]
+    },
+    {
+      "familyKey": "mimo-v2-6-pro",
+      "family": "MiMo-V2.6-Pro",
+      "score": 29.9,
+      "tier": "rest",
+      "ids": [
+        "24d8fdfe-6241-424e-b7b7-1b6efb06e4fb"
+      ]
+    },
+    {
+      "familyKey": "ling-3-1-flash",
+      "family": "Ling 3.1 Flash 1019",
+      "score": 29.7,
+      "tier": "rest",
+      "ids": [
+        "539ed227-38f4-4bea-a015-117057c14b18"
+      ]
+    },
+    {
+      "familyKey": "minimax-m3-1-flash",
+      "family": "MiniMax-M3.1-Flash",
+      "score": 29.1,
+      "tier": "rest",
+      "ids": [
+        "d49c8680-e29b-400e-9511-824f7ddebe07"
+      ]
+    },
+    {
+      "familyKey": "step-5",
+      "family": "Step 5 Preview",
+      "score": 28.5,
+      "tier": "rest",
+      "ids": [
+        "094ea3e3-ce41-419e-8bd1-723389663158"
+      ]
+    },
+    {
+      "familyKey": "qwen3-8-flash-next",
+      "family": "Qwen3.8-Flash-Next",
+      "score": 28.5,
+      "tier": "rest",
+      "ids": [
+        "9ac3908c-9eb2-44db-8c01-3ec7da6fc2ae"
+      ]
+    },
+    {
+      "familyKey": "joyai-vl",
+      "family": "JoyAI-VL-Preview",
+      "score": 27.9,
+      "tier": "rest",
+      "ids": [
+        "5ca91b0e-0e47-4793-ace9-2ca763106e62"
+      ]
+    },
+    {
+      "familyKey": "gpt-6-luna",
+      "family": "GPT-6 Luna",
+      "score": 27.9,
+      "tier": "rest",
+      "ids": [
+        "19813eb2-460a-475c-af65-810bb8660fec",
+        "36667da0-9222-4967-adbb-f7efa15ad213",
+        "63cb48ea-0b0c-4e07-8ded-6d28dec4fa28",
+        "6fb13851-40ce-4bda-ad3f-6b38e0c5daa7",
+        "7d1229bc-deea-4717-ba5b-f59a35d991e3",
+        "bf9708d8-933d-44f6-affa-b696a7a650c9"
+      ]
+    },
+    {
+      "familyKey": "glm-5-3-flash",
+      "family": "GLM-5.3-Flash",
+      "score": 27.7,
+      "tier": "rest",
+      "ids": [
+        "19496b81-9f41-4214-a77a-1df803b3c5ae"
+      ]
+    },
+    {
+      "familyKey": "mimo-v2-6-flash",
+      "family": "MiMo-V2.6-Flash",
+      "score": 26.8,
+      "tier": "rest",
+      "ids": [
+        "127de816-57d3-4037-8484-480a613cd413"
+      ]
+    },
+    {
+      "familyKey": "mistral-large-4",
+      "family": "Mistral Large 4",
+      "score": 26.1,
+      "tier": "rest",
+      "ids": [
+        "27b24366-fd1a-44b7-8011-e24d7501318d",
+        "ea5019ae-b0b7-49a5-80b3-0e584807af0f"
+      ]
+    },
+    {
+      "familyKey": "mistral-large-4-preview",
+      "family": "Mistral Large 4 Preview",
+      "score": 25.2,
+      "tier": "rest",
+      "ids": [
+        "34fc646a-0174-470e-9e62-d8df452210b3"
+      ]
+    },
+    {
+      "familyKey": "muse-spark-open",
+      "family": "Muse Spark Open",
+      "score": 24.9,
+      "tier": "rest",
+      "ids": [
+        "3661c8fb-caf7-4118-aa18-65b84fea8e44"
+      ]
+    },
+    {
+      "familyKey": "agnes-2-5-pro-theta",
+      "family": "Agnes 2.5 Pro Theta",
+      "score": 24.1,
+      "tier": "rest",
+      "ids": [
+        "d4dd600d-0d8e-4d6e-ad18-0cb8f7d6c4d0"
+      ]
+    },
+    {
+      "familyKey": "gpt-5-6-luna",
+      "family": "GPT-5.6 Luna",
+      "score": 23.8,
+      "tier": "rest",
+      "ids": [
+        "426d24c8-49ae-482a-b4a8-20f1c53f21c1"
+      ]
+    },
+    {
+      "familyKey": "ling-3-2-air",
+      "family": "Ling-3.2-air",
+      "score": 23.4,
+      "tier": "rest",
+      "ids": [
+        "f232d373-e666-488c-b0f2-39ef90321f64"
+      ]
+    },
+    {
+      "familyKey": "deepseek-v4-pro",
+      "family": "DeepSeek V4 Pro 0813",
+      "score": 23.1,
+      "tier": "rest",
+      "ids": [
+        "83173329-c09a-41f1-a028-a282a5f908d7",
+        "d4f5b250-be37-4801-85e6-32fda4179337",
+        "e94c7595-a320-4c88-8f07-d9fd50fc4595"
+      ]
+    },
+    {
+      "familyKey": "nanbeige4-3-33b",
+      "family": "Nanbeige4.3-33B",
+      "score": 20.4,
+      "tier": "rest",
+      "ids": [
+        "4cef9716-27a3-4ac3-9620-cd75135d7bbf"
+      ]
+    },
+    {
+      "familyKey": "qwen3-8-27b",
+      "family": "Qwen3.8 27B",
+      "score": 20.1,
+      "tier": "rest",
+      "ids": [
+        "353c92f3-2148-4c2d-9231-aa7e1322a1fd",
+        "6657d7de-a2a9-40bc-a32f-86e80ad63698",
+        "7e30585f-fad7-40df-a8cb-03c1d96df38a",
+        "b01dee41-c62b-48ed-8d16-984adc405e5c"
+      ]
+    },
+    {
+      "familyKey": "inkling-2-mini",
+      "family": "Inkling 2 Mini",
+      "score": 20.1,
+      "tier": "rest",
+      "ids": [
+        "da3ba2f4-f4f1-43b6-95dc-8e9fa2a48402"
+      ]
+    },
+    {
+      "familyKey": "minimax-m3",
+      "family": "MiniMax-M3",
+      "score": 19,
+      "tier": "rest",
+      "ids": [
+        "277f939a-985b-4b37-859d-b3eabc7c0b26"
+      ]
+    },
+    {
+      "familyKey": "jt-4-1-flash-236b-a21b",
+      "family": "JT-4.1 Flash 236B A21B",
+      "score": 19,
+      "tier": "rest",
+      "ids": [
+        "b268d7c1-5a0b-41c1-9590-1d89e66cf156"
+      ]
+    },
+    {
+      "familyKey": "k2-horizon-375b-a23b",
+      "family": "K2 Horizon 375B A23B",
+      "score": 17.8,
+      "tier": "rest",
+      "ids": [
+        "bb3d7e75-8e22-4082-b9d6-1db0803e042f"
+      ]
+    },
+    {
+      "familyKey": "reflection-beam",
+      "family": "Beam 1.0",
+      "score": 17.7,
+      "tier": "rest",
+      "ids": [
+        "69468cce-7b5c-414a-b498-41df4c34df85"
+      ]
+    },
+    {
+      "familyKey": "kimi-k3",
+      "family": "Kimi K3",
+      "score": 17.4,
+      "tier": "rest",
+      "ids": [
+        "512d17ef-13d2-4f65-bf9b-154b0dec7e8d"
+      ]
+    },
+    {
+      "familyKey": "solar-pro4",
+      "family": "Solar Pro 4",
+      "score": 14.2,
+      "tier": "rest",
+      "ids": [
+        "15c4cbd7-b9aa-42c8-9ce5-5abbde0e6963"
+      ]
+    },
+    {
+      "familyKey": "k2-horizon-32b",
+      "family": "K2 Horizon 32B",
+      "score": 13.9,
+      "tier": "rest",
+      "ids": [
+        "9034b7fc-11d6-433e-9b71-ec8520c487dd"
+      ]
+    },
+    {
+      "familyKey": "k2-horizon-mova-36b-a4b",
+      "family": "K2 Horizon MoVA 36B A4B",
+      "score": 13.8,
+      "tier": "rest",
+      "ids": [
+        "53b9e276-e360-4a39-9076-1a19d72c25fe"
+      ]
+    },
+    {
+      "familyKey": "apodex-1-1",
+      "family": "Apodex 1.1",
+      "score": 13.7,
+      "tier": "rest",
+      "ids": [
+        "08242385-ee91-4de6-be7f-271a6d9780ce"
+      ]
+    },
+    {
+      "familyKey": "nemotron-3-5-super-vl",
+      "family": "Nemotron 3.5 Super VL",
+      "score": 13.6,
+      "tier": "rest",
+      "ids": [
+        "e2c0623e-c855-4a61-bb66-be1f1ed43234"
+      ]
+    },
+    {
+      "familyKey": "inkling-small",
+      "family": "Inkling Small",
+      "score": 12.9,
+      "tier": "rest",
+      "ids": [
+        "7261504e-503c-4a66-a9d3-a3272cdf9ad6",
+        "f586801a-2cff-4e77-8322-577cd57bbdd1"
+      ]
+    },
+    {
+      "familyKey": "inkling",
+      "family": "Inkling",
+      "score": 12.5,
+      "tier": "rest",
+      "ids": [
+        "0de09623-2b1a-4c8d-86ef-7f5245d4e24b",
+        "ba83cb41-370c-4331-9e7e-3074d6cc66c4"
+      ]
+    },
+    {
+      "familyKey": "nvidia-nemotron-3-ultra-550b-a55b",
+      "family": "Nemotron 3 Ultra 550B A55B",
+      "score": 11.8,
+      "tier": "rest",
+      "ids": [
+        "5b52def2-ac9b-4465-ad80-91ea8079e253"
+      ]
+    },
+    {
+      "familyKey": "gemini-3-5-flash-lite",
+      "family": "Gemini 3.5 Flash-Lite",
+      "score": 11.7,
+      "tier": "rest",
+      "ids": [
+        "093b9df2-ebee-4309-943f-5a7e88360adf"
+      ]
+    },
+    {
+      "familyKey": "k2-horizon-7b",
+      "family": "K2 Horizon 7B",
+      "score": 10.6,
+      "tier": "rest",
+      "ids": [
+        "122a1fa1-976a-4089-87a2-5a0a13e2a52c"
+      ]
+    },
+    {
+      "familyKey": "a-x-k2",
+      "family": "A.X-K2",
+      "score": 9,
+      "tier": "rest",
+      "ids": [
+        "8215372b-66ff-457b-855e-e8abeafc9571"
+      ]
+    },
+    {
+      "familyKey": "k2-horizon-3-7b",
+      "family": "K2 Horizon 3.7B",
+      "score": 8,
+      "tier": "rest",
+      "ids": [
+        "31da3a71-0773-47d9-8560-9f19f069926b"
+      ]
+    },
+    {
+      "familyKey": "k-exaone-2-0",
+      "family": "K-EXAONE 2.0",
+      "score": 7.6,
+      "tier": "rest",
+      "ids": [
+        "18721247-4e56-4cf7-9a9d-c71cc60c0961"
+      ]
+    },
+    {
+      "familyKey": "claude-4-5-haiku",
+      "family": "Claude 4.5 Haiku",
+      "score": 7.4,
+      "tier": "rest",
+      "ids": [
+        "a6340098-d7ae-462d-b372-0a0a67fc44b4"
+      ]
+    },
+    {
+      "familyKey": "muse-glimmer",
+      "family": "Muse Glimmer",
+      "score": 6.3,
+      "tier": "rest",
+      "ids": [
+        "583f98fb-c4b8-4df3-8d40-60ac0ed69882"
+      ]
+    },
+    {
+      "familyKey": "command-a-plus",
+      "family": "Command A+",
+      "score": 6.2,
+      "tier": "rest",
+      "ids": [
+        "2e9ff877-fd2c-4ce7-b631-7ca1bdb6d13e"
+      ]
+    },
+    {
+      "familyKey": "gemini-3-1-flash-lite-preview",
+      "family": "Gemini 3.1 Flash-Lite",
+      "score": 6.2,
+      "tier": "rest",
+      "ids": [
+        "598190f8-dc9c-4fea-a7ea-4b81c402ab18"
+      ]
+    },
+    {
+      "familyKey": "lfm3-1-7b",
+      "family": "LFM3-1.7B",
+      "score": 6,
+      "tier": "rest",
+      "ids": [
+        "c76e1f60-9766-4ac5-8717-2837a05924af"
+      ]
+    },
+    {
+      "familyKey": "nemotron-3-5-lightning",
+      "family": "Nemotron 3.5 Lightning",
+      "score": 5.5,
+      "tier": "rest",
+      "ids": [
+        "29976311-665a-4b2f-ac72-557c33e0758e"
+      ]
+    },
+    {
+      "familyKey": "gemma-4-e4b",
+      "family": "Gemma 4 E4B",
+      "score": 4.8,
+      "tier": "rest",
+      "ids": [
+        "d80eb0f1-f62e-4d31-99d2-7a925eb126b0"
+      ]
+    },
+    {
+      "familyKey": "mistral-medium-3-5",
+      "family": "Mistral Medium 3.5",
+      "score": 4.6,
+      "tier": "rest",
+      "ids": [
+        "dd059b25-d82a-4ead-82a4-4adceaaec48b"
+      ]
+    },
+    {
+      "familyKey": "gemma-4-31b",
+      "family": "Gemma 4 31B",
+      "score": 4.4,
+      "tier": "rest",
+      "ids": [
+        "cd26a386-4873-46ff-b853-d239050025a2"
+      ]
+    },
+    {
+      "familyKey": "mistral-small-4",
+      "family": "Mistral Small 4",
+      "score": 4.3,
+      "tier": "rest",
+      "ids": [
+        "3fd96175-4ef1-434c-8795-f873aec2abc1"
+      ]
+    },
+    {
+      "familyKey": "gpt-oss-120b",
+      "family": "gpt-oss-120b",
+      "score": 3.8,
+      "tier": "rest",
+      "ids": [
+        "f0083258-8646-45b8-8082-7aaf6c2ea82a"
+      ]
+    },
+    {
+      "familyKey": "north-mini-code",
+      "family": "North Mini Code",
+      "score": 3.4,
+      "tier": "rest",
+      "ids": [
+        "1e9907e0-ffac-4595-b006-962e4f1da7cf"
+      ]
+    },
+    {
+      "familyKey": "k2-horizon-0-9b",
+      "family": "K2 Horizon 0.9B",
+      "score": 2.7,
+      "tier": "rest",
+      "ids": [
+        "9e9fb958-87f5-4835-a761-26102ef25898"
+      ]
+    },
+    {
+      "familyKey": "nvidia-nemotron-3-nano-4b",
+      "family": "NVIDIA Nemotron 3 Nano 4B",
+      "score": 1.8,
+      "tier": "rest",
+      "ids": [
+        "9ee13921-62a4-425a-a22b-df3302198d93"
+      ]
+    },
+    {
+      "familyKey": "lfm3-vl-2b",
+      "family": "LFM3-VL-2B",
+      "score": 1.7,
+      "tier": "rest",
+      "ids": [
+        "2b17227e-a229-474f-a86d-0dacb76212ca"
+      ]
+    }
+  ]
+}

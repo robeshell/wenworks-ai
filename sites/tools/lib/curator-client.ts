@@ -1,0 +1,256 @@
+import { contentBlocks, ENABLED_CONTENT_BLOCK_IDS, type ContentBlockId, type ContentItem, type ContentLink, type ContentPayloadByBlock, type PromptExample, type PromptVariable } from "./content-blocks";
+
+export const CURATOR_API = process.env.NEXT_PUBLIC_CURATOR_API_URL || "http://127.0.0.1:4317";
+
+class CuratorError extends Error {
+  code?: string;
+  status: number;
+
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = "CuratorError";
+    this.status = status;
+    this.code = code;
+  }
+}
+
+export async function curatorRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${CURATOR_API}${path}`, init);
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const body = payload as { error?: string; code?: string };
+    throw new CuratorError(body.error || `请求失败：${response.status}`, response.status, body.code);
+  }
+  return payload as T;
+}
+
+export type CatalogItem = {
+  id: string;
+  slug: string;
+  name: string;
+  url: string;
+  logo?: string;
+  kind: "tool" | "skill" | "open-source" | "site";
+  category: string;
+  tags: string[];
+  status: "active" | "archived";
+  verdict: { en: string; zh: string };
+  summary: { en: string; zh: string };
+};
+
+export type CuratorIngestBlock = "tool" | "skill" | "project" | "site" | "prompt";
+
+export type CuratorContentItem = ContentItem<ContentPayloadByBlock[ContentBlockId]> & {
+  revision?: {
+    id: number;
+    kind: "import" | "manual" | "ai_candidate";
+    status: "current" | "candidate" | "superseded" | "abandoned";
+    createdAt: string;
+    note: string;
+  };
+};
+
+export type BuildJob = {
+  status: "idle" | "running" | "ok" | "error";
+  log?: string;
+  error?: string;
+  publicUrl?: string;
+};
+
+export type AgentTool = "pi";
+
+export type AgentInfo = {
+  id: AgentTool;
+  label: string;
+  available: boolean;
+  defaultModelLabel?: string;
+  /** `group` keeps a large gateway catalogue readable. */
+  models: Array<{ id: string; label: string; group?: string }>;
+};
+
+export type PiProjectConfig = {
+  configured: boolean;
+  baseUrl: string;
+  defaultModel: string;
+  contextWindow: number;
+  maxTokens: number;
+  hasApiKey: boolean;
+  apiKeyHint: string;
+};
+
+export type CuratorDraft = {
+  name: string;
+  slug: string;
+  url: string;
+  kind: CatalogItem["kind"] | "site" | "prompt";
+  blockType?: CuratorIngestBlock;
+  category: string;
+  tags: string[];
+  verdict: CatalogItem["verdict"];
+  summary: CatalogItem["summary"];
+  description?: CatalogItem["summary"];
+  confidence: number;
+  rationale: string;
+  sourceLogoUrl?: string;
+  /** Agent 写的是中文正文；bodyEn 由服务端的翻译轮次补上，可能为空。 */
+  body?: string;
+  bodyEn?: string;
+  links?: ContentLink[];
+  prompt?: string;
+  variables?: PromptVariable[];
+  examples?: PromptExample[];
+};
+
+export type CuratorRunPhase = "prepare" | "run" | "complete";
+
+/** Chinese phase names shared by the ingest timeline and the Agent drawer.
+ *  旧键（fetch/extract/…）用于回放历史运行的事件。 */
+export const PHASE_LABEL: Record<CuratorRunPhase | "fetch" | "extract" | "compare" | "generate" | "validate" | "asset", string> = {
+  prepare: "准备",
+  run: "思考中",
+  complete: "完成",
+  fetch: "读取页面",
+  extract: "提取信息",
+  compare: "对照目录",
+  generate: "生成草稿",
+  validate: "检查内容",
+  asset: "准备素材",
+};
+
+export type CuratorRunEvent = {
+  runId: string;
+  sequence: number;
+  timestamp: string;
+  phase: CuratorRunPhase;
+  type:
+    | "phase.started"
+    | "phase.progress"
+    | "agent.log"
+    | "evidence.added"
+    | "draft.patch"
+    | "warning.added"
+    | "phase.completed"
+    | "run.failed"
+    | "run.cancelled"
+    | "run.completed";
+  level: "info" | "success" | "warning" | "error";
+  message: string;
+  data?: Record<string, unknown>;
+};
+
+export type CuratorRun = {
+  id: string;
+  status: "queued" | "running" | "awaiting_review" | "saved" | "failed" | "cancelled";
+  phase: CuratorRunPhase;
+  createdAt: string;
+  updatedAt: string;
+  input?: { url: string; note: string; promptText?: string; block?: "auto" | CuratorIngestBlock; mode?: "ingest" | "conversation" | "reprocess"; contentId?: string; conversationId?: string; model?: string };
+  draft?: CuratorDraft;
+  source?: { title: string; description: string; finalUrl: string; logoUrl?: string };
+  agent?: { mode: "embedded" | "rules"; tool?: AgentTool; model?: string; message?: string };
+  error?: string;
+  eventCount: number;
+  candidateId?: number;
+};
+
+export type ActivityEntry = {
+  at: string;
+  type:
+    | "resource.created"
+    | "resource.saved"
+    | "resource.archived"
+    | "resource.restored"
+    | "resource.deleted"
+    | "logo.frozen"
+    | "site.saved";
+  message: string;
+  slug?: string;
+  name?: string;
+};
+
+export type ConversationMessageData = {
+  operationId?: string;
+  pending?: boolean;
+  changes?: Array<{ id: number; note: string; kind: string }>;
+  runId?: string;
+  status?: string;
+  error?: string | null;
+  tool?: string;
+  draft?: CuratorDraft | null;
+};
+
+export type ConversationMessage = {
+  id: number;
+  role: "user" | "assistant";
+  kind: string;
+  text: string;
+  data: ConversationMessageData | null;
+  runId?: string;
+  createdAt: string;
+};
+
+export type Conversation = {
+  id: string;
+  title: string;
+  contentId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  messages: ConversationMessage[];
+};
+
+// 与服务端 contentPayloadFromDraft 同规则：把运行草稿折算成条目 payload，
+// 供会话结果「采用到编辑器」时做差量预览。
+export function draftPayload(draft: CuratorDraft, current: Record<string, unknown>): Record<string, unknown> {
+  // tags 是条目级字段，不在 payload 里；差量预览按一个扁平记录比对，
+  // 采用时由编辑器再拆回去（见 ContentEditor 的 onAdopt）。
+  const base: Record<string, unknown> = { ...current, ...(draft.category ? { category: draft.category } : {}), ...(draft.tags?.length ? { tags: draft.tags } : {}) };
+  const block = draft.blockType || "tool";
+  if (block === "tool") {
+    return { ...base, ...(draft.sourceLogoUrl?.startsWith("/logos/") ? { logo: draft.sourceLogoUrl } : {}), tagline: draft.verdict, summary: draft.summary, ...(draft.description ? { description: draft.description } : {}), url: draft.url };
+  }
+  if (block === "site") {
+    return { ...base, ...(draft.sourceLogoUrl?.startsWith("/logos/") ? { logo: draft.sourceLogoUrl } : {}), summary: draft.summary, ...(draft.description ? { description: draft.description } : {}), url: draft.url };
+  }
+  if (block === "prompt") {
+    return { ...base, summary: draft.summary, prompt: (draft.prompt || "").trim(), variables: draft.variables || [], examples: draft.examples || [], links: draft.links?.length ? draft.links : base.links || [] };
+  }
+  const currentBody = current.body as { zh?: string; en?: string } | string | undefined;
+  const keptEn = typeof currentBody === "object" ? currentBody?.en || "" : "";
+  return {
+    ...base,
+    summary: draft.summary,
+    body: { zh: (draft.body || "").trim(), en: (draft.bodyEn || keptEn).trim() },
+    links: draft.links?.length ? draft.links : base.links || [],
+  };
+}
+
+export type RunRecordStats = {
+  count: number;
+  bytes: number;
+  oldest: string;
+};
+
+export type SaveResult = {
+  target: string;
+  destination?: "catalog" | "candidate";
+  slug?: string;
+  candidateId?: number;
+  message: string;
+  publicUrl?: string;
+};
+
+export function curatorEventUrl(runId: string): string {
+  return `${CURATOR_API}/runs/${encodeURIComponent(runId)}/events`;
+}
+
+export const KIND_LABEL: Record<CatalogItem["kind"], string> = {
+  tool: "AI 产品",
+  skill: "技能",
+  "open-source": "开源项目",
+  site: "站点",
+};
+
+/** Short block names shared by the library, the editor and the dashboard. */
+export const BLOCK_LABELS: Record<CuratorIngestBlock, string> = {
+  ...Object.fromEntries(ENABLED_CONTENT_BLOCK_IDS.map((id) => [id, contentBlocks[id].label.zh])),
+} as Record<CuratorIngestBlock, string>;

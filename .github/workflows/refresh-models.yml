@@ -1,0 +1,48 @@
+name: Refresh model data
+
+# 每天两次从 Artificial Analysis 和 OpenRouter 刷新模型数据（免费 API 每天 100 次）。
+# 需要仓库 Secret：AA_API_KEY。提交之后由 Deploy site 重新发布。
+on:
+  schedule:
+    - cron: "0 0,12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: sites/models
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: sites/models/package-lock.json
+      - run: npm ci
+      - name: Fetch prices, rankings and popularity
+        run: npm run fetch
+        env:
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
+      - name: Commit and push if changed
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data public/logos
+          if git diff --staged --quiet; then
+            echo "No data changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh model data"
+          git pull --rebase origin main
+          git push

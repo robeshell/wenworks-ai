@@ -1,0 +1,223 @@
+{
+  "items": [
+    {
+      "id": "chatgpt",
+      "slug": "chatgpt",
+      "name": "ChatGPT",
+      "url": "https://chatgpt.com/",
+      "logo": "/logos/chatgpt.png",
+      "cover": "/covers/chatgpt-b2902a7be0.webp",
+      "category": "chat",
+      "tags": [
+        "freemium",
+        "web",
+        "app"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "把零散材料整理成可交付文件",
+        "en": "Turn source material into working documents"
+      },
+      "summary": {
+        "zh": "带上文件和要求，整理报告、表格或演示文稿。",
+        "en": "Bring files and a brief to produce a report, spreadsheet, or presentation."
+      },
+      "description": {
+        "zh": "从问题、草稿或文件开始对话，补充背景后继续修改。需要完整报告、表格或演示文稿时，可切换到 Work，让它整理资料并生成可下载、可继续修改的文件。\n\n适合手头已有材料，但还需要分析和组织输出的日常工作。可从网页或桌面端开始；有免费及付费方案，具体工具受套餐、平台和地区影响，Work 与 Codex 共用用量限制。",
+        "en": "Start with a question, draft, or file, then refine the result through conversation. For a report, spreadsheet, or presentation, Work can gather context and create a file you can review and download.\n\nChoose it when scattered material needs analysis and a finished document. Web and desktop access are available. Features depend on your plan, platform, and region; Work shares usage limits with Codex."
+      }
+    },
+    {
+      "id": "claude",
+      "slug": "claude",
+      "name": "Claude",
+      "url": "https://claude.ai/",
+      "logo": "/logos/claude.png",
+      "cover": "/covers/claude-1b0f4fad93.webp",
+      "category": "chat",
+      "tags": [
+        "freemium",
+        "web",
+        "app"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "在对话旁反复修改文档与原型",
+        "en": "Refine documents and prototypes beside the chat"
+      },
+      "summary": {
+        "zh": "描述想法，生成独立预览，再逐轮修改内容。",
+        "en": "Describe an idea, inspect it in Artifacts, and refine it through follow-up requests."
+      },
+      "description": {
+        "zh": "把文稿或想法交给 Claude，在对话中讨论结构和细节。Artifacts 会把较完整的内容放到独立窗口，便于查看并继续修改文档、图表或交互原型。\n\n适合需要边讨论边打磨同一份内容的人，可从网页、桌面或手机使用。免费方案可使用 Artifacts，但需启用代码执行与文件创建；付费方案增加用量，仍有使用限制。",
+        "en": "Discuss a draft or idea with Claude, then inspect substantial output in a separate Artifacts window. Follow-up requests can revise documents, visualizations, or interactive prototypes while the conversation stays alongside the result.\n\nChoose it for work that benefits from repeated discussion and revision. Artifacts are available on the free plan but require code execution and file creation to be enabled. Paid plans increase usage; limits still apply."
+      }
+    },
+    {
+      "id": "cursor",
+      "slug": "cursor",
+      "name": "Cursor",
+      "url": "https://cursor.com/",
+      "logo": "/logos/cursor.png",
+      "cover": "/covers/cursor-009ceb751b.webp",
+      "category": "coding",
+      "tags": [
+        "freemium",
+        "web",
+        "app",
+        "cli"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "在编辑器里让助手接手改代码",
+        "en": "Delegate code changes inside the editor"
+      },
+      "summary": {
+        "zh": "打开项目，让 Agent 查找文件、修改代码并运行命令。",
+        "en": "Open a project and ask Agent to find files, edit code, and run commands."
+      },
+      "description": {
+        "zh": "在编辑器侧栏描述需求，Agent 会搜索项目文件、修改代码并调用终端。它可以连续执行多个步骤，你也能在同一个项目里接着手动编辑，或通过检查点撤回 Agent 的文件改动。\n\n适合希望把 AI 协作放进日常编辑环境的开发者，也有网页 Agent 和命令行入口。免费方案的 Agent 用量有限，付费方案提高额度；检查点不能代替 Git 版本管理。",
+        "en": "Ask Agent for a change from the editor sidepane. It can search project files, make edits, and run terminal commands while you continue working in the same project. Checkpoints let you restore file changes from an Agent session.\n\nChoose it when AI assistance should sit inside your everyday editing workflow. Web agents and a CLI are also available. The free plan has limited Agent usage, and checkpoints do not replace Git."
+      }
+    },
+    {
+      "id": "claude-code",
+      "slug": "claude-code",
+      "name": "Claude Code",
+      "url": "https://claude.com/product/claude-code",
+      "logo": "/logos/resource-95f9d0a9eee12535f5084978.png",
+      "cover": "/covers/claude-code-8dc40f1947.webp",
+      "category": "coding",
+      "tags": [
+        "paid",
+        "usage-based",
+        "web",
+        "app",
+        "cli"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "直接在你代码库里干活的 Claude 编码 Agent",
+        "en": "Work with Claude directly in your codebase."
+      },
+      "summary": {
+        "zh": "Claude Code 是 Anthropic 推出的 AI 编程工具，可以用自然语言让它理解代码库、编写和修改代码、排查问题及运行测试。",
+        "en": "Claude Code is an AI coding tool from Anthropic. It lets you use natural language to understand a codebase, write and edit code, troubleshoot issues, and run tests."
+      },
+      "description": {
+        "zh": "官方定位是「在你的代码库里直接和 Claude 协作」：build、debug、ship 都能在终端、IDE、网页、Slack 等入口完成。终端版用一行 curl 安装（支持 macOS、Linux、Windows），另外还有 VS Code（含 Cursor、Devin Desktop）与 JetBrains 插件、桌面 App、浏览器与 iOS/Android App，也能在 Slack 里布置编码任务；它靠 agentic search 几秒读完整个仓库并讲清结构与依赖，做跨多文件的改动，并接 GitHub、GitLab 与命令行工具，把读 issue、写代码、跑测试、提 PR 串成一条流程。\n\n官方列出的适用场景包括新人上手与代码解释、把 issue 变成 PR、重构与实现新功能、修 bug 与补测试；较新的能力有 dynamic workflows（把难题拆到数十到数百个并行 subagent，并在结果交给你之前自查）、agent view（一处管理所有 Claude Code 会话）、routines（配置一次，可按定时、API 调用或事件触发）和 computer use（自己打开应用、操作浏览器、跑开发工具）。收费方面，Pro（年付 $17/月，月付 $20）与 Max 5x（$100/月）、Max 20x（$200/月）自带额度但有 usage limits，Team/Enterprise 需 premium seat，Console 账户按标准 API 价格计费；Opus 5 的 fast mode 处于研究预览，定价 $10/$50 每百万 token。安全上它在你本地终端运行、直连模型 API，不需要后端服务器或远程代码索引，修改文件或执行命令前会先征求许可；还可通过 CLAUDE.md 和 MCP server（如 GitHub）扩展能力。",
+        "en": "Anthropic pitches it as working with Claude directly inside your codebase: build, debug, and ship from the terminal, IDE, web, and Slack. The terminal CLI installs with a single curl command and runs on macOS, Linux, and Windows, alongside VS Code (plus Cursor and Devin Desktop) and JetBrains extensions, a desktop app, browser and iOS/Android apps, and Slack task kickoff. Agentic search maps and explains an entire repo in seconds, it makes multi-file edits, and it hooks into GitHub, GitLab, and your command line tools to carry an issue through writing code, running tests, and opening the PR.\n\nOfficial use cases are codebase onboarding, turning issues into PRs, refactors and new features, plus routine bug fixes and tests. Newer capabilities listed include dynamic workflows (spreading hard tasks across tens to hundreds of parallel subagents that check their own work before it reaches you), agent view (one place to manage all sessions), routines (configure once, then run on a schedule, an API call, or an event), and computer use (it opens apps, drives the browser, and runs dev tools). Access comes through Claude Pro ($17/month annual, $20 monthly) or Max 5x ($100) and Max 20x ($200) with usage limits, a Team/Enterprise premium seat, or a Console account at standard API pricing; fast mode for Opus 5 is in research preview at $10/$50 per million tokens. It runs locally in your terminal and talks straight to model APIs with no backend server or remote code index, and asks permission before editing files or running commands; CLAUDE.md files and MCP servers (such as GitHub) extend what it can do."
+      }
+    },
+    {
+      "id": "recraft-studio",
+      "slug": "recraft-studio",
+      "name": "Recraft Studio",
+      "url": "https://www.recraft.ai/",
+      "logo": "/logos/recraft.png",
+      "cover": "/covers/recraft-studio-92e2d4d17e.webp",
+      "category": "image",
+      "tags": [
+        "freemium",
+        "web",
+        "app"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "生成能继续编辑的矢量素材",
+        "en": "Generate editable vector assets"
+      },
+      "summary": {
+        "zh": "做图标与插画，调整风格和配色后继续用于设计。",
+        "en": "Create icons and illustrations, then refine their style and palette for a design."
+      },
+      "description": {
+        "zh": "描述需要的图标或插画，在 Studio 中生成素材，再调整风格和配色。它能生成可编辑矢量图，也有图像编辑和样机工具，适合需要把素材继续纳入设计稿的工作。\n\n可从网页或移动端开始创作。免费生成的图片会公开，且不含商用许可；付费期间生成的图片可保持私密并取得相应商用权，升级不会追溯改变旧免费图片的权限。",
+        "en": "Describe an icon or illustration, generate an asset in Studio, then refine its style and palette. Editable vector output, image editing, and mockups make it a candidate for assets that need further design work.\n\nWeb and mobile access are available. Free-plan images are public and cannot be used commercially. Images generated during a paid subscription have commercial rights; upgrading does not change the rights of earlier free images."
+      }
+    },
+    {
+      "id": "runway",
+      "slug": "runway",
+      "name": "Runway",
+      "url": "https://runway.com/product",
+      "logo": "/logos/runway.png",
+      "cover": "/covers/runway-0369d38a10.webp",
+      "category": "video",
+      "tags": [
+        "freemium",
+        "web",
+        "app"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "生成镜头并修改已有视频",
+        "en": "Generate shots and edit existing video"
+      },
+      "summary": {
+        "zh": "用文字或参考素材做视频，也能调整画面元素与光线。",
+        "en": "Use prompts or reference material to make video and change elements or lighting in existing footage."
+      },
+      "description": {
+        "zh": "输入提示词或参考素材生成视频，也能对已有片段提出修改要求，例如改变光线、背景或画面中的元素。生成和修改工具集中在同一工作区，适合试做镜头与调整素材。\n\n首批以视频工作流收录，可通过网页及移动端进入。免费方案只有一次性额度，消耗后不会自动补回，且生成视频带水印；可用模型和工具随套餐变化，持续制作通常需要付费。",
+        "en": "Generate video from a prompt or reference material, or ask for changes to existing footage such as lighting, backgrounds, and objects. The shared workspace brings generation and editing together for shot exploration and revisions.\n\nWeb and mobile apps are available. The free plan includes a one-time credit allocation that does not replenish, and generated videos have a watermark. Available models and tools depend on the plan."
+      }
+    },
+    {
+      "id": "gemini-notebook",
+      "slug": "gemini-notebook",
+      "name": "Gemini Notebook",
+      "url": "https://notebook.google.com/",
+      "logo": "/logos/gemini-notebook.png",
+      "cover": "/covers/gemini-notebook-b4bc1dee51.webp",
+      "category": "research",
+      "tags": [
+        "freemium",
+        "web",
+        "app"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "围绕资料提问并回看引用出处",
+        "en": "Question your sources and trace the citations"
+      },
+      "summary": {
+        "zh": "导入文档、网页或音频，整理带来源的答案与学习材料。",
+        "en": "Add documents, web pages, or audio to build cited answers and study material."
+      },
+      "description": {
+        "zh": "把文档、网页、视频链接或音频加入笔记本，再围绕这些来源提问。回答带有引用，资料还能整理成简报、导图或音频概览，适合阅读一组材料并反复回查出处。\n\n原 NotebookLM 官方入口目前以 Gemini Notebook 呈现。需要 Google 账户及受支持地区；有基础用量，也可订阅提高上限。额度与任务复杂度等因素有关，长材料和复杂生成不能简单按聊天次数估算。",
+        "en": "Add documents, web pages, video links, or audio to a notebook, then ask questions grounded in those sources. Cited answers, briefings, mind maps, and audio overviews suit repeated reading and checking of a defined collection.\n\nThe former NotebookLM entry now presents Gemini Notebook. A Google account and supported region are required. Standard access has limits, and paid plans raise them. Usage depends on factors including task complexity."
+      }
+    },
+    {
+      "id": "elevenlabs",
+      "slug": "elevenlabs",
+      "name": "ElevenLabs",
+      "url": "https://elevenlabs.io/text-to-speech",
+      "logo": "/logos/elevenlabs.png",
+      "cover": "/covers/elevenlabs-ff74d9e0fb.webp",
+      "category": "audio",
+      "tags": [
+        "freemium",
+        "web",
+        "api"
+      ],
+      "status": "active",
+      "verdict": {
+        "zh": "把文稿转成可调语气的配音",
+        "en": "Turn scripts into expressive voiceovers"
+      },
+      "summary": {
+        "zh": "选择声音生成旁白，调整节奏与表达后导出音频。",
+        "en": "Choose a voice for a script, adjust its delivery, and export narration."
+      },
+      "description": {
+        "zh": "粘贴旁白文稿、选择声音后生成语音，可以调整表达方式与节奏，再导出音频。网页即可开始，也能通过 API 接入自己的流程，适合为讲解、课程或视频准备配音。\n\n免费方案有用量限制，生成内容仅限非商业用途，公开分享需署名；商用配音需使用符合条款的付费方案内容，并拥有相应输入权利。",
+        "en": "Paste a script, select a voice, and generate speech with adjustable delivery and pacing. Export the audio for a narrated explanation, lesson, or video. You can start on the web or integrate the API into an existing workflow.\n\nFree usage is limited to non-commercial content and requires attribution when shared. Commercial work requires eligible paid-plan output and rights to the input; the license does not cover every beta service."
+      }
+    }
+  ]
+}
