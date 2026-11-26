@@ -1,0 +1,116 @@
+name: Weekly digest
+
+# 每周一 08:17（Asia/Taipei）生成新一期并发布。
+# 手动触发时可以选"只预览"：照常生成，但不提交也不发布，产物在这次运行的 Artifacts 里。
+# 推送到 main 以外的分支也会跑一遍预览，用来在合并前检查。
+on:
+  schedule:
+    - cron: "17 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      preview:
+        description: 只预览，不提交也不发布
+        type: boolean
+        default: false
+      week:
+        description: 要生成哪一周：填这一周里任意一天（YYYY-MM-DD）。留空是上一个完整的周
+        type: string
+        required: false
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  PREVIEW: ${{ github.event_name == 'push' || inputs.preview == true }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 模型梯队的数据和比对规则都来自模型站的仓库，只取用得到的部分。
+      - name: Checkout model data
+        uses: actions/checkout@v4
+        with:
+          repository: robeshell/wenworks-ai-models
+          path: .sources/models
+          sparse-checkout: |
+            data
+            lib/tiers.ts
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test
+        run: node --test scripts/*.test.mjs
+
+      - name: Collect this issue
+        env:
+          WEEK: ${{ inputs.week }}
+        run: |
+          if [ -n "$WEEK" ]; then
+            node scripts/collect.mjs "--week=$WEEK"
+          else
+            node scripts/collect.mjs
+          fi
+
+      - name: Build
+        env:
+          PRODUCTION: ${{ env.PREVIEW == 'true' && '0' || '1' }}
+        run: node scripts/build.mjs
+
+      - name: Commit the issue
+        if: env.PREVIEW != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/issues state
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+          else
+            git commit -m "chore: weekly digest"
+            git push
+          fi
+
+      - name: Upload preview
+        if: env.PREVIEW == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview
+          path: |
+            out
+            data/issues
+            state
+          include-hidden-files: true
+
+      - name: Upload Pages artifact
+        if: env.PREVIEW != 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    if: github.event_name != 'push' && inputs.preview != true
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

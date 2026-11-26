@@ -1,0 +1,10 @@
+{
+  "name": "wenworks-ai",
+  "private": true,
+  "description": "Wenworks AI 总入口与每周简报",
+  "scripts": {
+    "collect": "node scripts/collect.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test scripts/*.test.mjs"
+  }
+}
