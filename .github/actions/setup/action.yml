@@ -1,0 +1,17 @@
+name: Setup
+description: 装好 Node 和两个 Next.js 部分（models、tools）的依赖。首页和 Agent 导航没有依赖。
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: |
+          sites/models/package-lock.json
+          sites/tools/package-lock.json
+    - name: Install
+      shell: bash
+      run: |
+        npm ci --prefix sites/models
+        npm ci --prefix sites/tools

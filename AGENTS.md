@@ -26,11 +26,8 @@
 ## 改完要做的检查
 
 ```bash
-node scripts/sync-shared.mjs --check
-npm test --prefix sites/home
-npm test --prefix sites/models && npm run lint --prefix sites/models
-npm test --prefix sites/tools && npm run lint --prefix sites/tools
-node scripts/build-all.mjs
+npm run check                 # 共用页头是否一致 + 三个部分的测试 + 两个 Next.js 部分的 lint
+node scripts/build-all.mjs    # 或 npm run build
 ```
 
 构建后把 `dist/` 起一个静态服务器，用浏览器看改到的页面，至少看 1280px 和 375px。跨部分的改动（页头、路径）要四个部分都点一遍，并留意请求里有没有 404：最常见的错误是某个资源路径漏了 `/models` 或 `/tools` 前缀。

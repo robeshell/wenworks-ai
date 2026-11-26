@@ -46,8 +46,8 @@ async function describe(root, files) {
   return { titles, images, lists };
 }
 
-/** Cloudflare Workers Builds deploys every push to main; this opens its
- *  deployment list for the site's Worker (named in wrangler.jsonc). */
+/** Every push to main runs the "Deploy site" workflow, which builds and
+ *  publishes the whole site; this is where its runs are listed. */
 export const DEPLOY_URL = "https://github.com/robeshell/wenworks-ai/actions/workflows/deploy.yml";
 
 /** What the 上线 button would ship, without touching anything. */

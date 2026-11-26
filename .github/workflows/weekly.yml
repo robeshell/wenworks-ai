@@ -31,17 +31,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            sites/models/package-lock.json
-            sites/tools/package-lock.json
-      - name: Install
-        run: |
-          npm ci --prefix sites/models
-          npm ci --prefix sites/tools
+      - uses: ./.github/actions/setup
       - name: Collect this week's issue and build the whole site
         env:
           WEEK: ${{ inputs.week }}

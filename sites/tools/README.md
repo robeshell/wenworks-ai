@@ -1,8 +1,8 @@
 # Wenworks AI · 工具精选
 
-一份有立场的精选清单，给做东西的人：只收真正值得用的工具、素材与站点、技能、开源项目和提示词，每条都用一句话说清它为什么在这里。中文为主，另有英文版。它是 Wenworks AI 的三个站之一，另外两个是[模型](https://models.wenworks.app/)和 [Agent 导航](https://agents.wenworks.app/)，三个站共用一套视觉规范（[design/wenworks-ai-design.md](design/wenworks-ai-design.md)）。原名 Vectortrove。
+一份有立场的精选清单，给做东西的人：只收真正值得用的工具、素材与站点、技能、开源项目和提示词，每条都用一句话说清它为什么在这里。中文为主，另有英文版。它是 [Wenworks AI](https://ai.wenworks.app) 的 `/tools/` 部分，和首页、[模型](https://ai.wenworks.app/models/)、[Agent 导航](https://ai.wenworks.app/agents/)在同一个仓库里，共用一套视觉规范（[design/wenworks-ai-design.md](../../design/wenworks-ai-design.md)）。原名 Vectortrove。
 
-**线上地址：<https://tools.wenworks.app/>**
+**线上地址：<https://ai.wenworks.app/tools/>**（英文版 <https://ai.wenworks.app/tools/en/>）
 
 ![工具精选首页](docs/images/home.webp)
 
@@ -12,12 +12,12 @@
 |---|---|---|
 | 给谁用 | 读者 | 维护者（在本机） |
 | 做什么 | 按板块浏览资源，每条一张官网封面、分类、名称和一句判断 | 收录链接、让 Agent 起草、编辑、补封面、发布到公开目录 |
-| 在哪 | `app/(zh)/`（中文，根路径）与 `app/en/`（英文，`/en/`），共用 `components/SiteRoutes.tsx`；静态导出，部署在 Cloudflare | `app/curator/` + 本地服务 `scripts/curator-server.mjs`，不随站点部署 |
+| 在哪 | `app/(zh)/`（中文，`/tools/`）与 `app/en/`（英文，`/tools/en/`），共用 `components/SiteRoutes.tsx`；静态导出，随整站发布到 GitHub Pages | `app/curator/` + 本地服务 `scripts/curator-server.mjs`，不随站点部署 |
 
 数据只朝一个方向流动：
 
 ```
-Curator 编辑 → .curator/content.sqlite → 导出 data/ 与 content/ → git push → Cloudflare 构建发布
+Curator 编辑 → .curator/content.sqlite → 导出 data/ 与 content/ → git push → GitHub Actions 构建发布
 ```
 
 SQLite 是唯一的编辑源，只在本机；公开站只读导出的 JSON 和 Markdown，从不访问数据库。
@@ -26,12 +26,12 @@ SQLite 是唯一的编辑源，只在本机；公开站只读导出的 JSON 和 
 
 ## 本地运行
 
-需要 Node 24。
+需要 Node 24，在 `sites/tools/` 下运行。
 
 ```bash
 npm install
-npm run dev          # 只看公开站：http://localhost:3000（中文），/en/ 是英文
-npm run curator      # 公开站 + Curator：http://localhost:3000/curator/
+npm run dev          # 只看公开站：http://localhost:3000/tools/（中文），/tools/en/ 是英文
+npm run curator      # 公开站 + Curator：http://localhost:3000/tools/curator/
 ```
 
 `npm run curator` 同时启动 Next 开发服务器和 Curator 本地服务（只监听 `127.0.0.1:4317`）。第一次用要在 **设置** 里填 AI 连接的网关地址、API Key 和模型，配置存在 `.curator/pi-config.json`，不会提交。
@@ -43,7 +43,7 @@ npm run curator      # 公开站 + Curator：http://localhost:3000/curator/
 1. **收录**：在工作台顶部粘贴链接，可以一次多条。Agent 读取官网、生成双语草稿，同时抓 logo 和封面。已在资源库的链接会自动跳过。
 2. **核对**：在资源的工作区里改字段，或者直接让右侧助手改。类型选错了可以转换。
 3. **发布到公开目录**：保存时选择加入公开目录，服务会立即重新导出 `data/` 和 `content/`。
-4. **上线**：工作台右侧会显示有多少公开文件还没提交。提交并推送到 `main`，GitHub Actions 自动构建发布。
+4. **上线**：工作台右侧会显示有多少公开文件还没提交。提交并推送到 `main`，仓库根目录的 `deploy.yml` 自动构建整个站并发布。
 
 工作台的「待处理」列出每条资源缺什么（缺封面、缺分类、缺英文正文、卡片文案会被截断……），点进去补齐即可。
 
@@ -91,32 +91,25 @@ npm run curator:covers -- --write --force --source claude=https://claude.com/ --
 ## 技术栈
 
 - Next.js 16（App Router，构建时 `output: "export"`）、React 19、TypeScript
-- 公开站：手写 CSS，无 UI 库；Geist 字体；明暗双主题；页面转场用 React `<ViewTransition>` 和 transitions.dev 的动效 token
+- 公开站：手写 CSS，无 UI 库；IBM Plex Sans / Mono；只有浅色，没有深色模式
 - Curator：Mantine 9，Node 内置 `http` 与 `node:sqlite`；AI 调用基于 [Vercel AI SDK](https://ai-sdk.dev)（`ai` + `@ai-sdk/anthropic`，走兼容 Anthropic Messages 的网关），工具、编辑规则（[skills/curator-ingest/SKILL.md](skills/curator-ingest/SKILL.md)）和任务队列都在本仓库
 
-## 部署
+## 发布
 
-站点托管在 Cloudflare Workers 的静态资源上（[`wrangler.jsonc`](wrangler.jsonc)），域名 `tools.wenworks.app`。Worker 的名字仍是 `vectortrove`（Workers Builds 绑定的是这个名字，不要改）。旧域名 `vectortrove.com` 和 `shortlist.vectortrove.com` 已经停用，没有跳转。Cloudflare 连着这个 GitHub 仓库，推送到 `main` 就自动构建（`npm run lint && npm run build`）并执行 `npx wrangler deploy` 上传 `out/`。Curator 里的「上线」按钮做的就是提交内容并推送。
+这一部分不单独部署。仓库根目录的 `scripts/build-all.mjs` 运行这里的 `npm run build`，把 `out/` 放进整站的 `dist/tools/`，并删掉 `curator/`（管理界面只在本机用）；`.github/workflows/deploy.yml` 在合并到 `main` 后把 `dist/` 发布到 GitHub Pages。Curator 里的「上线」按钮做的就是提交内容并推送。
 
-- `public/.assetsignore` 随构建复制进 `out/`，让 wrangler 不上传 `out/curator/`（本地管理界面）。
-- 中文在根路径、英文在 `/en/`。`public/_redirects` 把旧的 `/zh/...` 链接 301 到去掉前缀的新地址。
-- Node 版本由 `.node-version` 指定。
+- `next.config.ts` 固定带 `basePath: "/tools"`。`next/link` 会自动加前缀，普通的 `<a>`、`<img>` 要自己拼 `process.env.NEXT_PUBLIC_BASE_PATH`。
+- 中文在 `/tools/`、英文在 `/tools/en/`，站内路径都由 `lib/i18n.ts` 的 `localePath` 生成。
+- `NEXT_PUBLIC_SITE_URL` 是规范链接、站点地图和分享卡片用的地址，默认 `https://ai.wenworks.app/tools`，线上构建不设置它。
 
-搜索与分享相关的文件都在构建时生成，不需要额外操作：
+搜索与分享相关的文件都在构建时生成：
 
 - `app/sitemap.ts` 输出 `sitemap.xml`，列出首页和全部详情页的中英两版，并互相标注语言版本；工具没有详情页，换过地址的旧链接也不收录。
-- `app/robots.ts` 输出 `robots.txt`，指向站点地图并屏蔽 `/curator/`。
+- `app/robots.ts` 输出 `robots.txt`。
 - 每个页面都带规范链接、中英互指（hreflang）和分享卡片（Open Graph / Twitter）。详情页用条目自己的封面，其他页面用 `public/og.png`。这些逻辑在 `lib/seo.ts`。
-
-两个可选的构建变量，在 Cloudflare 的构建设置里配置：
-
-| 变量 | 用途 |
-|---|---|
-| `NEXT_PUBLIC_SITE_URL` | 规范链接、站点地图和分享卡片用的完整域名，默认 `https://tools.wenworks.app` |
+- `app/catalog.json/route.ts` 输出 `/tools/catalog.json`，首页的「本周动态」用它找出新收录的条目。
 
 CI 里没有本地数据库，所以不跑导出，直接用已提交的 `data/` 和 `content/`——发布前记得先把导出的文件提交。线上只有公开站的静态文件，不含 Curator、数据库、Agent 记录或任何密钥。
-
-首次部署：Cloudflare 控制台 → Workers & Pages → 创建 → 导入 Git 仓库，构建命令填 `npm run lint && npm run build`，部署命令保持 `npx wrangler deploy`。自定义域名由 `wrangler.jsonc` 的 `routes` 自动绑定。也可以在本机 `npx wrangler login` 后 `npm run deploy` 手动构建并发布。
 
 ## 更多文档
 
@@ -124,4 +117,4 @@ CI 里没有本地数据库，所以不跑导出，直接用已提交的 `data/`
 - [docs/curator.md](docs/curator.md)：Curator 运行手册
 - [docs/data-model.md](docs/data-model.md)：内容模型和状态
 - [docs/roadmap.md](docs/roadmap.md)：产品规划
-- [design-qa.md](design-qa.md) / [curator-design-qa.md](curator-design-qa.md)：界面改动与验证记录
+- [docs/design-qa.md](docs/design-qa.md) / [docs/curator-design-qa.md](docs/curator-design-qa.md)：界面改动与验证记录

@@ -1,7 +1,7 @@
 {
-  "name": "wenworks-ai",
+  "name": "wenworks-ai-home",
   "private": true,
-  "description": "Wenworks AI 每周简报",
+  "description": "Wenworks AI 首页：本周动态",
   "scripts": {
     "collect": "node scripts/collect.mjs",
     "build": "node scripts/build.mjs",

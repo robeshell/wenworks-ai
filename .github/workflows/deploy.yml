@@ -32,28 +32,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            sites/models/package-lock.json
-            sites/tools/package-lock.json
+      - name: Setup
+        uses: ./.github/actions/setup
 
-      - name: Install
-        run: |
-          npm ci --prefix sites/models
-          npm ci --prefix sites/tools
-
-      - name: Test
-        run: |
-          node scripts/sync-shared.mjs --check
-          npm test --prefix sites/home
-          npm test --prefix sites/models
-          npm test --prefix sites/tools
-          npm run lint --prefix sites/models
-          npm run lint --prefix sites/tools
+      - name: Test and lint
+        run: npm run check
 
       - name: Build the whole site
         env:
