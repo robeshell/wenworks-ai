@@ -5,8 +5,8 @@
   "scripts": {
     "build": "node scripts/build-all.mjs",
     "sync": "node scripts/sync-shared.mjs",
-    "test": "node scripts/sync-shared.mjs --check && npm test --prefix sites/home && npm test --prefix sites/models && npm test --prefix sites/tools",
-    "lint": "npm run lint --prefix sites/models && npm run lint --prefix sites/tools",
+    "test": "node scripts/sync-shared.mjs --check && npm test --prefix sites/home && npm test --prefix sites/models && npm test --prefix sites/tools && npm test --prefix admin",
+    "lint": "npm run lint --prefix sites/models && npm run lint --prefix sites/tools && npm run typecheck --prefix admin",
     "check": "npm test && npm run lint",
     "serve": "python3 -m http.server 4500 -d dist"
   }

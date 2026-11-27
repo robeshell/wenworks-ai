@@ -1,5 +1,5 @@
 name: Setup
-description: 装好 Node 和两个 Next.js 部分（models、tools）的依赖。首页和 Agent 导航没有依赖。
+description: 装好 Node、两个 Next.js 部分（models、tools）和管理后台（admin）的依赖。首页和 Agent 导航没有依赖。
 runs:
   using: composite
   steps:
@@ -10,8 +10,10 @@ runs:
         cache-dependency-path: |
           sites/models/package-lock.json
           sites/tools/package-lock.json
+          admin/package-lock.json
     - name: Install
       shell: bash
       run: |
         npm ci --prefix sites/models
         npm ci --prefix sites/tools
+        npm ci --prefix admin

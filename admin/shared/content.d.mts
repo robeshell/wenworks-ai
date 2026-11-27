@@ -1,0 +1,38 @@
+export type Kind = 'tool' | 'site' | 'skill' | 'project' | 'prompt';
+export type Status = 'draft' | 'active' | 'archived';
+export type Localized = { zh: string; en: string };
+export type Entry = {
+  id: string;
+  kind: Kind;
+  slug: string;
+  title: string;
+  status: Status;
+  category: string;
+  tags: string[];
+  sourceUrl: string;
+  payload: Record<string, any>;
+  sortOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
+  updatedBy?: string;
+};
+export type Alias = { blockType: string; slug: string; targetBlockType: string; targetSlug: string; targetId: string };
+export type Change = { path: string; change: 'added' | 'modified' | 'removed'; content?: string };
+export type Issue = { code: string; label: string };
+
+export const KINDS: Kind[];
+export const KIND_LABEL: Record<Kind, string>;
+export const STATUS_LABEL: Record<Status, string>;
+export const TOOLS_ROOT: string;
+export const TOOLS_FILE: string;
+export const ALIASES_FILE: string;
+export const TAXONOMY_FILE: string;
+export const MARKDOWN_PATH: RegExp;
+export function markdownPath(kind: Kind, slug: string): string;
+export function entryFromTool(tool: any, sortOrder: number): Entry;
+export function entryFromMarkdown(text: string, sortOrder: number): Entry;
+export function publicFiles(entries: Entry[], aliases?: Alias[]): Record<string, string>;
+export function planPublish(next: Record<string, string>, current: Record<string, string>): Change[];
+export function planPublishBySha(next: Record<string, string>, current: Record<string, string>): Promise<Change[]>;
+export function entryIssues(entry: Pick<Entry, 'kind' | 'title' | 'slug' | 'category' | 'payload'>): Issue[];
+export function gitBlobSha(content: string): Promise<string>;

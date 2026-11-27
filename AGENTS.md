@@ -19,6 +19,10 @@
 - 页头里"Wenworks AI"指向 `/`，三个入口指向 `/models/`、`/agents/`、`/tools/`，都是普通链接。
 - 整个站只有一个统计代码（Cloudflare Web Analytics），只在发布构建里出现。
 
+## 管理后台
+
+`admin/` 是管理后台（admin.wenworks.app），单独部署到 Cloudflare，不参与网站构建。它在"发布"时往 `main` 提交工具精选的内容文件（提交说明以 `content:` 开头），和定时任务一样属于数据提交。改它之前先读 `admin/AGENTS.md`。
+
 ## 共用页头
 
 页头样式只有一份：`shared/site-header.css`。四个部分的样式文件里各有一段带标记的副本，由 `node scripts/sync-shared.mjs` 写入。不要直接改副本；CI 会用 `--check` 检查它们是否一致。

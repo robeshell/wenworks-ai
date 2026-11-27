@@ -1,0 +1,78 @@
+:root {
+  --line: #e5e5e5;
+  --mute: #737373;
+  --accent: #ec5b13;
+}
+body {
+  background: #fafafa;
+  color: #171717;
+}
+.num {
+  font-family: var(--mantine-font-family-monospace);
+  font-variant-numeric: tabular-nums;
+}
+/* 侧栏：当前所在页左边一道橙色 */
+.nav-link[data-active] {
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: #f5f5f5;
+  color: #171717;
+  font-weight: 500;
+}
+.nav-group {
+  padding: 1rem 0.75rem 0.375rem;
+  color: var(--mute);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.stat-value {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 1.875rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.thumb {
+  display: block;
+  width: 56px;
+  height: 32px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: #f5f5f5;
+}
+.thumb-empty {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 32px;
+  border: 1px dashed #d4d4d4;
+  color: #a3a3a3;
+  font-size: 0.6875rem;
+}
+.markdown {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.markdown h2,
+.markdown h3 {
+  margin: 1.25em 0 0.5em;
+  font-size: 1rem;
+}
+.markdown pre {
+  overflow: auto;
+  padding: 0.75rem;
+  background: #f5f5f5;
+  font-size: 0.8125rem;
+}
+.markdown code {
+  font-family: var(--mantine-font-family-monospace);
+  font-size: 0.85em;
+}
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
