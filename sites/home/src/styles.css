@@ -457,7 +457,14 @@ a {
   }
 }
 
-/* 首页：三个入口 */
+/* 首页：三个入口，一行 */
+.front-hero {
+  padding: 2rem 0 1.25rem;
+}
+.front-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  letter-spacing: -0.02em;
+}
 .doors {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -467,114 +474,83 @@ a {
 .door {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.25rem 1.25rem 1rem;
+  gap: 0.125rem;
+  padding: 0.75rem 1rem;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-}
-.door h2 {
-  margin: 0;
-  font-size: 1.375rem;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-}
-.door h2 a {
   text-decoration: none;
+  transition: background-color 180ms ease;
 }
-.door h2 span {
+.door:hover {
+  background: var(--soft);
+}
+.door b {
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+.door b span {
   color: var(--accent);
 }
-.door h2 a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.door-what {
-  margin: 0;
-  color: var(--mute);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-}
-.door-fact {
-  margin: 0.25rem 0 0;
-}
-.door-fact dt {
+.door > span {
+  overflow: hidden;
   color: var(--mute);
   font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.door-fact dd {
-  margin: 0.125rem 0 0;
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-.door .chips,
-.door-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.door .chips li {
-  font-size: 0.875rem;
-}
-.door-list li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.4375rem 0;
-  border-top: 1px solid var(--line);
-  font-size: 0.9375rem;
-}
-.door-list a {
-  text-decoration: none;
-}
-.door-list a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.door-list .num {
-  flex: none;
-  font-size: 0.8125rem;
-}
-.door-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
-  margin: auto 0 0;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--line);
-  font-size: 0.875rem;
-}
-.door-links a {
-  text-underline-offset: 3px;
-}
-@media (max-width: 56rem) {
+@media (max-width: 40rem) {
   .doors {
     grid-template-columns: 1fr;
   }
+  .door {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .door b {
+    flex: none;
+  }
 }
-/* 首页：热点分两栏 */
+/* 首页：热点分两栏，一条一行 */
+.front {
+  margin-top: 0.5rem;
+  border-top: 0;
+}
+.front section {
+  padding: 1.5rem 0;
+}
 .cols {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem 2.5rem;
+  gap: 1.5rem 2.5rem;
 }
 .cols h3 {
   margin-top: 0;
 }
-.cols h3 .quiet {
-  font-weight: 400;
-  letter-spacing: 0;
-}
 .hot li {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--line);
   font-size: 0.9375rem;
-  line-height: 1.5;
+}
+.hot li > a,
+.hot .line {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .hot .side {
   font-size: 0.8125rem;
 }
-.front .more a + a {
-  margin-left: 1.25rem;
+.front .count a {
+  text-decoration: none;
+}
+.front .count a:hover {
+  text-decoration: underline;
 }
 @media (max-width: 64rem) {
   .cols {
