@@ -2,6 +2,7 @@
 
 `admin.wenworks.app`：在浏览器里维护网站内容，哪台电脑都能用。
 
+- **工作台**：待发布、收件箱、草稿和上次发布的数字；网站发布和三个定时任务在 GitHub Actions 上最近一次的结果（失败会标红）；最近的保存、发布和收件箱动态。
 - **工具精选**：五个板块的条目，编辑、修改记录、上传 logo 和封面。
 - **收件箱**：贴链接，AI（经 OpenRouter）读网页按 `sites/tools/skills/curator-ingest/SKILL.md` 的口径起草；审核后收录成草稿，或放到首页讨论。
 - **Agent 导航**：推荐文章、学习路线和上手清单、对照表（基本情况、价格、功能对照），即 `sites/agents/data/editorial.json`。页面从各家的文档目录（`data/<agent>.txt`）里按标题挑。

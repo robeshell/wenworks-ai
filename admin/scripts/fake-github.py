@@ -19,6 +19,10 @@ class H(BaseHTTPRequestHandler):
         path, _, query = self.path.partition('?')
         m = re.match(r'/repos/[^/]+/[^/]+(/.*)', path); p = m.group(1)
         try:
+            if p.startswith('/actions/workflows/'):
+                # A fixed run per workflow; the model refresh "fails", to show how failures look.
+                wf = p.split('/')[3]
+                return self.send({'workflow_runs': [{'status': 'completed', 'conclusion': 'failure' if wf == 'refresh-models.yml' else 'success', 'run_started_at': '2026-11-27T00:00:00Z', 'event': 'schedule', 'html_url': f'https://github.com/example/actions/{wf}'}]})
             if p.startswith('/git/ref/heads/'):
                 return self.send({'object': {'sha': git('rev-parse', 'refs/heads/' + p.split('/')[-1]).decode().strip()}})
             if p.startswith('/git/commits/'):
