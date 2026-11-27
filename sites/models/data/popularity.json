@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-27T05:51:19.664Z",
+  "updatedAt": "2026-11-27T20:29:02.709Z",
   "source": "OpenRouter",
   "window": "top-weekly",
   "items": [
@@ -47,8 +47,8 @@
       "provider": "DeepSeek",
       "providerSlug": "deepseek",
       "contextLength": 1048576,
-      "inputPerMillion": 0.14,
-      "outputPerMillion": 0.42,
+      "inputPerMillion": 0.051,
+      "outputPerMillion": 0.5670000000000001,
       "inputModalities": [
         "text",
         "image"
@@ -122,8 +122,8 @@
       "provider": "MiniMax",
       "providerSlug": "minimax",
       "contextLength": 1048576,
-      "inputPerMillion": 0.15,
-      "outputPerMillion": 0.6,
+      "inputPerMillion": 0.075,
+      "outputPerMillion": 0.3,
       "inputModalities": [
         "text",
         "image",
@@ -289,7 +289,7 @@
       "provider": "DeepSeek",
       "providerSlug": "deepseek",
       "contextLength": 1048576,
-      "inputPerMillion": 0.047,
+      "inputPerMillion": 0.045599999999999995,
       "outputPerMillion": 0.3,
       "inputModalities": [
         "text"
@@ -394,17 +394,19 @@
     },
     {
       "rank": 22,
-      "id": "stepfun/step-5-preview",
-      "canonicalSlug": "stepfun/step-5-preview-20261008",
-      "name": "Step 5 Preview",
-      "provider": "StepFun",
-      "providerSlug": "stepfun",
-      "contextLength": 1000000,
-      "inputPerMillion": 1,
-      "outputPerMillion": 2.7,
+      "id": "google/gemini-4-neon",
+      "canonicalSlug": "google/gemini-4-neon-20261118",
+      "name": "Gemini 4 Neon",
+      "provider": "Google",
+      "providerSlug": "google",
+      "contextLength": 1048576,
+      "inputPerMillion": 3,
+      "outputPerMillion": 15,
       "inputModalities": [
-        "text",
+        "audio",
+        "file",
         "image",
+        "text",
         "video"
       ],
       "outputModalities": [
@@ -434,19 +436,17 @@
     },
     {
       "rank": 24,
-      "id": "google/gemini-4-neon",
-      "canonicalSlug": "google/gemini-4-neon-20261118",
-      "name": "Gemini 4 Neon",
-      "provider": "Google",
-      "providerSlug": "google",
-      "contextLength": 1048576,
-      "inputPerMillion": 3,
-      "outputPerMillion": 15,
+      "id": "stepfun/step-5-preview",
+      "canonicalSlug": "stepfun/step-5-preview-20261008",
+      "name": "Step 5 Preview",
+      "provider": "StepFun",
+      "providerSlug": "stepfun",
+      "contextLength": 1000000,
+      "inputPerMillion": 1,
+      "outputPerMillion": 2.7,
       "inputModalities": [
-        "audio",
-        "file",
-        "image",
         "text",
+        "image",
         "video"
       ],
       "outputModalities": [
@@ -510,25 +510,6 @@
     },
     {
       "rank": 28,
-      "id": "qwen/qwen3.8-flash",
-      "canonicalSlug": "qwen/qwen3.8-flash-20260826",
-      "name": "Qwen3.8 Flash",
-      "provider": "Qwen",
-      "providerSlug": "qwen",
-      "contextLength": 1000000,
-      "inputPerMillion": 0.15,
-      "outputPerMillion": 0.47,
-      "inputModalities": [
-        "text",
-        "image",
-        "video"
-      ],
-      "outputModalities": [
-        "text"
-      ]
-    },
-    {
-      "rank": 29,
       "id": "meta/muse-ember",
       "canonicalSlug": "meta/muse-ember-20261109",
       "name": "Muse Ember",
@@ -549,7 +530,7 @@
       ]
     },
     {
-      "rank": 30,
+      "rank": 29,
       "id": "openai/gpt-6.1-terra",
       "canonicalSlug": "openai/gpt-6.1-terra-20261026",
       "name": "GPT-6.1 Terra",
@@ -562,6 +543,25 @@
         "file",
         "image",
         "text"
+      ],
+      "outputModalities": [
+        "text"
+      ]
+    },
+    {
+      "rank": 30,
+      "id": "qwen/qwen3.8-flash",
+      "canonicalSlug": "qwen/qwen3.8-flash-20260826",
+      "name": "Qwen3.8 Flash",
+      "provider": "Qwen",
+      "providerSlug": "qwen",
+      "contextLength": 1000000,
+      "inputPerMillion": 0.15,
+      "outputPerMillion": 0.47,
+      "inputModalities": [
+        "text",
+        "image",
+        "video"
       ],
       "outputModalities": [
         "text"
@@ -641,17 +641,17 @@
     },
     {
       "rank": 35,
-      "id": "qwen/qwen4-max",
-      "canonicalSlug": "qwen/qwen4-max-20261115",
-      "name": "Qwen4 Max",
-      "provider": "Qwen",
-      "providerSlug": "qwen",
-      "contextLength": 1000000,
-      "inputPerMillion": 1.4249999999999998,
-      "outputPerMillion": 4.2749999999999995,
+      "id": "google/gemma-4-26b-a4b-it",
+      "canonicalSlug": "google/gemma-4-26b-a4b-it-20260403",
+      "name": "Gemma 4 26B A4B",
+      "provider": "Google",
+      "providerSlug": "google",
+      "contextLength": 262144,
+      "inputPerMillion": 0.0675,
+      "outputPerMillion": 0.22499999999999998,
       "inputModalities": [
-        "text",
         "image",
+        "text",
         "video"
       ],
       "outputModalities": [
@@ -660,18 +660,18 @@
     },
     {
       "rank": 36,
-      "id": "google/gemma-4-26b-a4b-it",
-      "canonicalSlug": "google/gemma-4-26b-a4b-it-20260403",
-      "name": "Gemma 4 26B A4B",
-      "provider": "Google",
-      "providerSlug": "google",
-      "contextLength": 262144,
-      "inputPerMillion": 0.0765,
-      "outputPerMillion": 0.255,
+      "id": "anthropic/claude-fable-5.2",
+      "canonicalSlug": "anthropic/claude-fable-5.2-20261109",
+      "name": "Claude Fable 5.2",
+      "provider": "Anthropic",
+      "providerSlug": "anthropic",
+      "contextLength": 1000000,
+      "inputPerMillion": 8,
+      "outputPerMillion": 40,
       "inputModalities": [
-        "image",
         "text",
-        "video"
+        "image",
+        "file"
       ],
       "outputModalities": [
         "text"
@@ -679,6 +679,23 @@
     },
     {
       "rank": 37,
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "canonicalSlug": "deepseek/deepseek-v4-pro-20260813",
+      "name": "DeepSeek V4 Pro 0813",
+      "provider": "DeepSeek",
+      "providerSlug": "deepseek",
+      "contextLength": 1048576,
+      "inputPerMillion": 0.0999,
+      "outputPerMillion": 5,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ]
+    },
+    {
+      "rank": 38,
       "id": "xiaomi/mimo-v2.6-pro",
       "canonicalSlug": "xiaomi/mimo-v2.6-pro-20260921",
       "name": "MiMo-V2.6-Pro",
@@ -698,36 +715,19 @@
       ]
     },
     {
-      "rank": 38,
-      "id": "deepseek/deepseek-v4-pro-0813",
-      "canonicalSlug": "deepseek/deepseek-v4-pro-20260813",
-      "name": "DeepSeek V4 Pro 0813",
-      "provider": "DeepSeek",
-      "providerSlug": "deepseek",
-      "contextLength": 1048576,
-      "inputPerMillion": 0.0999,
-      "outputPerMillion": 5,
-      "inputModalities": [
-        "text"
-      ],
-      "outputModalities": [
-        "text"
-      ]
-    },
-    {
       "rank": 39,
-      "id": "anthropic/claude-fable-5.2",
-      "canonicalSlug": "anthropic/claude-fable-5.2-20261109",
-      "name": "Claude Fable 5.2",
-      "provider": "Anthropic",
-      "providerSlug": "anthropic",
+      "id": "qwen/qwen4-max",
+      "canonicalSlug": "qwen/qwen4-max-20261115",
+      "name": "Qwen4 Max",
+      "provider": "Qwen",
+      "providerSlug": "qwen",
       "contextLength": 1000000,
-      "inputPerMillion": 8,
-      "outputPerMillion": 40,
+      "inputPerMillion": 1.4249999999999998,
+      "outputPerMillion": 4.2749999999999995,
       "inputModalities": [
         "text",
         "image",
-        "file"
+        "video"
       ],
       "outputModalities": [
         "text"
@@ -741,8 +741,8 @@
       "provider": "DeepSeek",
       "providerSlug": "deepseek",
       "contextLength": 1048576,
-      "inputPerMillion": 0.888188,
-      "outputPerMillion": 1.5082,
+      "inputPerMillion": 0.64403,
+      "outputPerMillion": 1.5651000000000002,
       "inputModalities": [
         "text"
       ],
@@ -752,25 +752,6 @@
     },
     {
       "rank": 41,
-      "id": "qwen/qwen3.6-35b-a3b",
-      "canonicalSlug": "qwen/qwen3.6-35b-a3b-20260415",
-      "name": "Qwen3.6 35B A3B",
-      "provider": "Qwen",
-      "providerSlug": "qwen",
-      "contextLength": 262144,
-      "inputPerMillion": 0.09999999999999999,
-      "outputPerMillion": 0.8899999999999999,
-      "inputModalities": [
-        "text",
-        "image",
-        "video"
-      ],
-      "outputModalities": [
-        "text"
-      ]
-    },
-    {
-      "rank": 42,
       "id": "google/gemini-4-argon",
       "canonicalSlug": "google/gemini-4-argon-20261013",
       "name": "Gemini 4 Argon",
@@ -784,6 +765,25 @@
         "file",
         "image",
         "text",
+        "video"
+      ],
+      "outputModalities": [
+        "text"
+      ]
+    },
+    {
+      "rank": 42,
+      "id": "qwen/qwen3.6-35b-a3b",
+      "canonicalSlug": "qwen/qwen3.6-35b-a3b-20260415",
+      "name": "Qwen3.6 35B A3B",
+      "provider": "Qwen",
+      "providerSlug": "qwen",
+      "contextLength": 262144,
+      "inputPerMillion": 0.09999999999999999,
+      "outputPerMillion": 0.8899999999999999,
+      "inputModalities": [
+        "text",
+        "image",
         "video"
       ],
       "outputModalities": [
@@ -813,24 +813,6 @@
     },
     {
       "rank": 44,
-      "id": "thinkingmachines/inkling-2-small",
-      "canonicalSlug": "thinkingmachines/inkling-2-small-20261107",
-      "name": "Inkling 2 Small",
-      "provider": "Thinking Machines",
-      "providerSlug": "thinkingmachines",
-      "contextLength": 1048576,
-      "inputPerMillion": 0.3,
-      "outputPerMillion": 1,
-      "inputModalities": [
-        "text",
-        "image"
-      ],
-      "outputModalities": [
-        "text"
-      ]
-    },
-    {
-      "rank": 45,
       "id": "google/gemma-4-31b-it",
       "canonicalSlug": "google/gemma-4-31b-it-20260402",
       "name": "Gemma 4 31B",
@@ -843,6 +825,24 @@
         "image",
         "text",
         "video"
+      ],
+      "outputModalities": [
+        "text"
+      ]
+    },
+    {
+      "rank": 45,
+      "id": "thinkingmachines/inkling-2-small",
+      "canonicalSlug": "thinkingmachines/inkling-2-small-20261107",
+      "name": "Inkling 2 Small",
+      "provider": "Thinking Machines",
+      "providerSlug": "thinkingmachines",
+      "contextLength": 1048576,
+      "inputPerMillion": 0.15,
+      "outputPerMillion": 0.5,
+      "inputModalities": [
+        "text",
+        "image"
       ],
       "outputModalities": [
         "text"
@@ -890,25 +890,6 @@
     },
     {
       "rank": 48,
-      "id": "minimax/minimax-m3",
-      "canonicalSlug": "minimax/minimax-m3-20260531",
-      "name": "MiniMax M3",
-      "provider": "MiniMax",
-      "providerSlug": "minimax",
-      "contextLength": 1048576,
-      "inputPerMillion": 0.3,
-      "outputPerMillion": 1.2,
-      "inputModalities": [
-        "text",
-        "image",
-        "video"
-      ],
-      "outputModalities": [
-        "text"
-      ]
-    },
-    {
-      "rank": 49,
       "id": "google/gemini-4-hydrogen",
       "canonicalSlug": "google/gemini-4-hydrogen-20261112",
       "name": "Gemini 4 Hydrogen",
@@ -929,6 +910,25 @@
       ]
     },
     {
+      "rank": 49,
+      "id": "minimax/minimax-m3",
+      "canonicalSlug": "minimax/minimax-m3-20260531",
+      "name": "MiniMax M3",
+      "provider": "MiniMax",
+      "providerSlug": "minimax",
+      "contextLength": 1048576,
+      "inputPerMillion": 0.3,
+      "outputPerMillion": 1.2,
+      "inputModalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "outputModalities": [
+        "text"
+      ]
+    },
+    {
       "rank": 50,
       "id": "thinkingmachines/inkling-2-mini",
       "canonicalSlug": "thinkingmachines/inkling-2-mini-20261120",
@@ -936,8 +936,8 @@
       "provider": "Thinking Machines",
       "providerSlug": "thinkingmachines",
       "contextLength": 1048576,
-      "inputPerMillion": 0.075,
-      "outputPerMillion": 0.3,
+      "inputPerMillion": 0.06,
+      "outputPerMillion": 0.24,
       "inputModalities": [
         "text",
         "image"
