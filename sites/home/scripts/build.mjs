@@ -78,6 +78,9 @@ function loadNote(issue) {
   return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
 }
 
+/** Every link in the page body opens in a new tab; the header keeps moving within the site. */
+const newTabs = (html) => html.replace(/<a (?![^>]*\btarget=)/g, '<a target="_blank" rel="noopener" ');
+
 function page({ title, description, pathName, body, ogType = 'website', active = '' }) {
   const nav = [['front', '/', '首页'], ['archive', '/weekly/', '每周动态'], ['feed', '/feed.xml', 'RSS']];
   const url = `${SITES.home}${pathName}`;
@@ -119,7 +122,7 @@ function page({ title, description, pathName, body, ogType = 'website', active =
   </div>
 </header>
 <main class="site-content">
-${body}
+${newTabs(body)}
 </main>
 <footer class="site-foot"><p>本页由数据自动生成：三个部分的最新内容，加上 Hacker News 和 GitHub 的公开数据。只列标题和链接，不转载正文。</p></footer>
 <script>{const n=document.getElementById('site-nav'),b=document.getElementById('site-menu'),set=o=>{n.dataset.open=o;b.setAttribute('aria-expanded',o)};b.addEventListener('click',()=>set(n.dataset.open!=='true'));document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)})}</script>

@@ -41,6 +41,13 @@ jobs:
       - name: Test and lint
         run: npm run check
 
+      - name: Keep hot-topic translations between runs
+        uses: actions/cache@v4
+        with:
+          path: sites/home/.cache
+          key: hot-translations-${{ github.run_id }}
+          restore-keys: hot-translations-
+
       - name: Build the whole site
         env:
           PRODUCTION: ${{ env.PUBLISH == 'true' && '1' || '0' }}

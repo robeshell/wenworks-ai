@@ -9,12 +9,19 @@
 // Each source is read on its own. When one fails, the items it had last time
 // are kept, so the page never loses a column because of one bad request.
 // Only titles, numbers and links are stored.
+//
+// Titles and repository descriptions are machine-translated into Chinese by
+// Google Translate's keyless web endpoint, with MyMemory's free API (no key) as
+// the fallback; neither is a language model and neither needs a key. Translations are cached in .cache/translations.json,
+// which CI keeps between runs, so each run only sends what is new. When a
+// translation fails the English stays.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FILE = path.join(ROOT, 'data', 'hot.json');
+const CACHE = path.join(ROOT, '.cache', 'translations.json');
 const DAY = 86400000;
 
 // Case matters for the short ones: "AI" is a topic, "ai" is a syllable.
@@ -53,7 +60,8 @@ export function pickRepos(repos, limit = 8) {
     .map((r) => ({
       name: r.full_name,
       url: r.html_url,
-      description: clip((r.description || '').trim(), 110),
+      // Kept whole so it translates as a sentence; the page cuts it to one line.
+      description: clip((r.description || '').trim(), 300),
       stars: r.stargazers_count ?? 0,
       language: r.language || '',
       date: (r.created_at || '').slice(0, 10),
@@ -92,6 +100,65 @@ async function github(now) {
   return pickRepos(found);
 }
 
+const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&#039;': "'" };
+const decode = (text) => text.replace(/&(amp|lt|gt|quot|#0?39);/g, (m) => ENTITIES[m] ?? m);
+
+/** A translation is usable when it is Chinese, differs from the source and is not a service warning. */
+export function usable(text, source) {
+  const t = decode(String(text ?? '')).trim();
+  if (!t || t === source.trim() || /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID/i.test(t)) return null;
+  return /[\u4e00-\u9fff]/.test(t) ? t : null;
+}
+
+/** Google's answer is nested arrays: [[[translated, source, ...], ...], ...]. */
+export const readGoogle = (answer) => (Array.isArray(answer?.[0]) ? answer[0].map((part) => (Array.isArray(part) ? part[0] ?? '' : '')).join('') : '');
+export const readMyMemory = (answer) => (Number(answer?.responseStatus) === 200 ? answer?.responseData?.translatedText : '');
+
+const TRANSLATORS = [
+  async (q) => readGoogle(await getJson(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(q)}`)),
+  async (q) => readMyMemory(await getJson(`https://api.mymemory.translated.net/get?langpair=en%7Czh-CN&q=${encodeURIComponent(q)}`)),
+];
+
+async function translateOne(source) {
+  for (const ask of TRANSLATORS) {
+    try {
+      const text = usable(await ask(source.slice(0, 450)), source);
+      if (text) return text;
+    } catch {}
+  }
+  return null;
+}
+
+/** Adds titleZh / descriptionZh to the items, using and refreshing the cache. */
+async function translate(out) {
+  let cache = {};
+  try {
+    cache = JSON.parse(fs.readFileSync(CACHE, 'utf8'));
+  } catch {}
+  const wanted = [
+    ...out.hn.items.map((item) => [item, 'title', 'titleZh']),
+    ...out.github.items.filter((item) => item.description).map((item) => [item, 'description', 'descriptionZh']),
+  ];
+  let asked = 0;
+  let failed = 0;
+  for (const [item, from, to] of wanted) {
+    const source = item[from];
+    if (!cache[source] && failed < 3) {
+      asked += 1;
+      const text = await translateOne(source);
+      if (text) cache[source] = text;
+      else failed += 1;
+    }
+    if (cache[source]) item[to] = cache[source];
+  }
+  // Keep only what is on the page now, so the cache does not grow without end.
+  const keep = Object.fromEntries(wanted.map(([item, from]) => item[from]).filter((s) => cache[s]).map((s) => [s, cache[s]]));
+  fs.mkdirSync(path.dirname(CACHE), { recursive: true });
+  fs.writeFileSync(CACHE, JSON.stringify(keep, null, 2) + '\n');
+  console.log(`translated: ${Object.keys(keep).length} of ${wanted.length} (${asked} asked, ${failed} failed)`);
+  if (failed) console.log('::warning title=hot translation::some titles stay in English this time');
+}
+
 async function main() {
   const now = Date.now();
   let previous = {};
@@ -109,6 +176,7 @@ async function main() {
       out[key] = previous[key] ?? { updatedAt: null, items: [] };
     }
   }
+  await translate(out);
   fs.mkdirSync(path.dirname(FILE), { recursive: true });
   fs.writeFileSync(FILE, JSON.stringify(out, null, 2) + '\n');
   console.log(`hot: ${out.hn.items.length} stories, ${out.github.items.length} repositories`);

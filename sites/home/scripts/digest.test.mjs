@@ -162,7 +162,7 @@ test('every line of the thread fits 140 Chinese characters', () => {
 
 // ---- front page ----
 import { catalogCounts, day, frontHtml, modelsNow, newestArticles, recentLines } from './lib/front.mjs';
-import { aboutAi, pickRepos, pickStories } from './hot.mjs';
+import { aboutAi, pickRepos, pickStories, readGoogle, readMyMemory, usable } from './hot.mjs';
 
 test('hot: only AI stories are kept, most points first, with a discussion link', () => {
   assert.ok(aboutAi('OpenAI cuts GPT usage'));
@@ -182,13 +182,13 @@ test('hot: only AI stories are kept, most points first, with a discussion link',
 
 test('hot: repositories are deduplicated, forks dropped, long descriptions clipped', () => {
   const repos = pickRepos([
-    { full_name: 'a/one', html_url: 'https://github.com/a/one', stargazers_count: 10, description: 'x'.repeat(300) },
+    { full_name: 'a/one', html_url: 'https://github.com/a/one', stargazers_count: 10, description: 'x'.repeat(400) },
     { full_name: 'a/one', html_url: 'https://github.com/a/one', stargazers_count: 10 },
     { full_name: 'b/two', html_url: 'https://github.com/b/two', stargazers_count: 50, description: null },
     { full_name: 'c/fork', html_url: 'https://github.com/c/fork', stargazers_count: 99, fork: true },
   ]);
   assert.deepEqual(repos.map((r) => r.name), ['b/two', 'a/one']);
-  assert.equal(repos[1].description.length, 110);
+  assert.equal(repos[1].description.length, 300);
   assert.equal(repos[0].description, '');
 });
 
@@ -223,4 +223,20 @@ test('front: recent lines are one sentence each, newest first', () => {
   assert.deepEqual(lines.map((l) => l.tag), ['文章', '模型', '工具']);
   assert.ok(lines[1].html.includes('梯队没有变动'));
   assert.deepEqual(recentLines({ models: null }), []);
+});
+
+test('hot: translations are read from either service and checked before use', () => {
+  assert.equal(readGoogle([[['你好，', 'Hello, '], ['世界', 'world']], null, 'en']), '你好，世界');
+  assert.equal(readGoogle(null), '');
+  assert.equal(readMyMemory({ responseStatus: 200, responseData: { translatedText: '你好' } }), '你好');
+  assert.equal(readMyMemory({ responseStatus: 429, responseData: { translatedText: 'MYMEMORY WARNING: ...' } }), '');
+  assert.equal(usable('MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS', 'x'), null);
+  assert.equal(usable('Same text', 'Same text'), null);
+  assert.equal(usable('Still English', 'Other'), null);
+  assert.equal(usable('Tom&#39;s 模型', 'x'), "Tom's 模型");
+});
+
+test('front: Chinese titles link to the source with the original on hover', () => {
+  const html = frontHtml({ models: null, docs: [], catalog: null, issue: null, hot: { updatedAt: '2026-11-27T00:00:00Z', hn: { items: [{ title: 'Hello AI', titleZh: '你好 AI', url: 'https://example.com/', points: 1, comments: 0 }] }, github: { items: [] } } });
+  assert.ok(html.includes('title="Hello AI">你好 AI</a>'));
 });
