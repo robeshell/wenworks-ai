@@ -2,6 +2,9 @@
 @import "./transitions/library.css";
 
 :root {
+  /* IBM Plex comes from Google Fonts (a <link> in app/layout.tsx). */
+  --font-plex-sans: "IBM Plex Sans";
+  --font-plex-mono: "IBM Plex Mono";
   /* Wenworks AI shared palette: black, white and grey, with one orange accent.
      See design/wenworks-ai-design.md. No dark mode. */
   color-scheme: light;

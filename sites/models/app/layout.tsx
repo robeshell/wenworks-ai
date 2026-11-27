@@ -1,18 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
-
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 // Absolute site URL (set by the Pages workflow). Link previews on X need an
 // absolute image URL, so the share card is only declared when it is known.
@@ -45,9 +32,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-CN"
-      className={`${plexSans.variable} ${plexMono.variable} h-full`}
+      className="h-full"
       suppressHydrationWarning
     >
+      <head>
+        {/* Fonts load in the browser, like the other parts of the site; the build does not download them. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* This is the root layout of the App Router, so the font reaches every page; the rule is about pages/_document. */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
+      </head>
       <body className="min-h-full font-sans antialiased">
         {children}
         {process.env.NODE_ENV === "production" ? (

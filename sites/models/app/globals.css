@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* IBM Plex comes from Google Fonts (a <link> in app/layout.tsx). */
+  --font-plex-sans: "IBM Plex Sans";
+  --font-plex-mono: "IBM Plex Mono";
   --color-background: #ffffff;
   --color-foreground: #171717;
   --color-muted: #f5f5f5;
