@@ -10,6 +10,7 @@
 //   node scripts/build-all.mjs --only=home     build some parts (comma separated)
 //   node scripts/build-all.mjs --collect       also collect this week's issue before building home
 //   node scripts/build-all.mjs --week=2026-11-18   with --collect: the week containing that date
+//   node scripts/build-all.mjs --hot           also refresh the front page's hot topics (Hacker News, GitHub) first
 //
 // PRODUCTION=1 turns the page-view beacon on. CHROME points at a Chrome binary
 // for the agents prerender when `google-chrome` is not on the PATH.
@@ -60,12 +61,16 @@ if (wants('agents')) {
 }
 
 if (wants('home')) {
+  // The tools catalog is a build product; the home part reads the one just built when there is one.
+  const catalog = path.join(DIST, 'tools', 'catalog.json');
+  const env = fs.existsSync(catalog) ? { TOOLS_CATALOG_FILE: catalog } : {};
   if (process.argv.includes('--collect')) {
-    const catalog = path.join(DIST, 'tools', 'catalog.json');
     const week = arg('week');
-    run(site('home'), 'node', ['scripts/collect.mjs', ...(week ? [`--week=${week}`] : [])], fs.existsSync(catalog) ? { TOOLS_CATALOG_FILE: catalog } : {});
+    run(site('home'), 'node', ['scripts/collect.mjs', ...(week ? [`--week=${week}`] : [])], env);
   }
-  run(site('home'), 'node', ['scripts/build.mjs']);
+  // A failed refresh keeps the items from last time, so it never stops the build.
+  if (process.argv.includes('--hot')) run(site('home'), 'node', ['scripts/hot.mjs']);
+  run(site('home'), 'node', ['scripts/build.mjs'], env);
   // The home part owns the root: copy its files in without touching the other parts.
   for (const entry of fs.readdirSync(path.join(site('home'), 'out'))) place(path.join(site('home'), 'out', entry), path.join(DIST, entry));
 }

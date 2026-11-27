@@ -159,3 +159,57 @@ test('every line of the thread fits 140 Chinese characters', () => {
   assert.equal(weight('汉字ab'), 3);
   assert.equal(weight('看 https://example.com/a/very/long/path?x=1'), 1 + 0.5 + 11.5);
 });
+
+// ---- front page ----
+import { catalogCounts, day, frontHtml, modelsNow, newestArticles } from './lib/front.mjs';
+import { aboutAi, pickRepos, pickStories } from './hot.mjs';
+
+test('hot: only AI stories are kept, most points first, with a discussion link', () => {
+  assert.ok(aboutAi('OpenAI cuts GPT usage'));
+  assert.ok(aboutAi('Why AI agents fail'));
+  assert.ok(!aboutAi('Maintaining a rail network'));
+  assert.ok(!aboutAi('A new business model for trains'));
+  const picked = pickStories([
+    { objectID: '1', title: 'Rust 2.0 released', points: 900 },
+    { objectID: '2', title: 'Claude writes a compiler', points: 100, url: 'https://example.com/a', num_comments: 5, created_at: '2026-11-26T01:00:00Z' },
+    { objectID: '3', title: 'Ask HN: which LLM do you use?', points: 300 },
+    { objectID: '3', title: 'Ask HN: which LLM do you use?', points: 300 },
+  ]);
+  assert.deepEqual(picked.map((s) => s.title), ['Ask HN: which LLM do you use?', 'Claude writes a compiler']);
+  assert.equal(picked[0].url, 'https://news.ycombinator.com/item?id=3');
+  assert.equal(picked[1].discussion, 'https://news.ycombinator.com/item?id=2');
+});
+
+test('hot: repositories are deduplicated, forks dropped, long descriptions clipped', () => {
+  const repos = pickRepos([
+    { full_name: 'a/one', html_url: 'https://github.com/a/one', stargazers_count: 10, description: 'x'.repeat(300) },
+    { full_name: 'a/one', html_url: 'https://github.com/a/one', stargazers_count: 10 },
+    { full_name: 'b/two', html_url: 'https://github.com/b/two', stargazers_count: 50, description: null },
+    { full_name: 'c/fork', html_url: 'https://github.com/c/fork', stargazers_count: 99, fork: true },
+  ]);
+  assert.deepEqual(repos.map((r) => r.name), ['b/two', 'a/one']);
+  assert.equal(repos[1].description.length, 110);
+  assert.equal(repos[0].description, '');
+});
+
+test('front: reads the board, the newest articles and the catalog', () => {
+  const now = modelsNow({ updatedAt: '2026-11-24T22:12:35Z', entries: [{ family: 'B', score: 60, tier: 'T1' }, { family: 'A', score: 64.8, tier: 'T1' }, { family: 'C', score: 40, tier: 'T3' }] }, { newEntries: [1], promoted: [], demoted: [1] });
+  assert.equal(now.leader.family, 'A');
+  assert.equal(now.tier1.length, 2);
+  assert.equal(now.moves, 2);
+  assert.equal(modelsNow(null, null), null);
+  assert.deepEqual(newestArticles([{ title: 'old', url: 'https://x/1', date: '2026-01-01' }, { title: 'none', url: 'https://x/2' }, { title: 'new', url: 'https://x/3', date: '2026-11-01' }]).map((a) => a.title), ['new', 'old', 'none']);
+  assert.deepEqual(catalogCounts({ items: [{ kind: 'site' }, { kind: 'tool' }, { kind: 'site' }] }), { total: 3, kinds: [{ kind: 'tool', n: 1 }, { kind: 'site', n: 2 }] });
+  assert.equal(catalogCounts(null), null);
+  assert.equal(day('2026-11-25'), '11月25日');
+  assert.equal(day('2026-11-24T22:12:35Z'), '11月25日');
+});
+
+test('front: a missing source leaves its block out and titles are escaped', () => {
+  const bare = frontHtml({ models: null, docs: [], catalog: null, hot: null, issue: null });
+  assert.ok(bare.includes('href="/models/"') && bare.includes('href="/agents/"') && bare.includes('href="/tools/"'));
+  assert.ok(!bare.includes('id="hot"') && !bare.includes('id="weekly"'));
+  const full = frontHtml({ models: null, docs: [], catalog: null, issue: null, hot: { updatedAt: '2026-11-27T00:00:00Z', hn: { items: [{ title: '<b>AI</b>', url: 'javascript:alert(1)', discussion: 'https://news.ycombinator.com/item?id=1', points: 1200, comments: 3 }] }, github: { items: [] } } });
+  assert.ok(full.includes('&lt;b&gt;AI&lt;/b&gt;') && !full.includes('javascript:'));
+  assert.ok(full.includes('1,200'));
+});
