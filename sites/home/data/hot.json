@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-27T00:10:49.688Z",
+  "updatedAt": "2026-11-27T00:38:02.252Z",
   "hn": {
-    "updatedAt": "2026-11-27T00:10:49.688Z",
+    "updatedAt": "2026-11-27T00:38:02.252Z",
     "items": [
       {
         "title": "LLM agents work for their parent companies, not for you",
@@ -9,15 +9,17 @@
         "discussion": "https://news.ycombinator.com/item?id=50627340",
         "points": 1029,
         "comments": 413,
-        "date": "2026-11-24"
+        "date": "2026-11-24",
+        "titleZh": "LLM代理人为他们的母公司工作，而不是为你工作"
       },
       {
         "title": "The New York Times warns photographers not to update Photoshop over AI features",
         "url": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features",
         "discussion": "https://news.ycombinator.com/item?id=50647673",
-        "points": 648,
-        "comments": 516,
-        "date": "2026-11-25"
+        "points": 649,
+        "comments": 517,
+        "date": "2026-11-25",
+        "titleZh": "《纽约时报》警告摄影师不要因为 AI 功能而更新 Photoshop"
       },
       {
         "title": "Much shorter version of GRH Lean verification from Anthropic",
@@ -25,31 +27,35 @@
         "discussion": "https://news.ycombinator.com/item?id=50648050",
         "points": 545,
         "comments": 346,
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "titleZh": "Anthropic 的 GRH Lean 验证的更短版本"
       },
       {
         "title": "Ask HN: Anthropic is accusing my company of distilling. How can I prove I'm not?",
         "url": "https://news.ycombinator.com/item?id=50630809",
         "discussion": "https://news.ycombinator.com/item?id=50630809",
-        "points": 464,
+        "points": 465,
         "comments": 356,
-        "date": "2026-11-24"
+        "date": "2026-11-24",
+        "titleZh": "问 HN：Anthropic 指控我公司进行蒸馏。我怎样才能证明我不是？"
       },
       {
         "title": "Models Can Communicate via Inference Servers Despite Being Sandboxed",
         "url": "https://www.lesswrong.com/posts/7wzWuLP3HhyBLmKfo/models-can-communicate-via-inference-servers-despite-being",
         "discussion": "https://news.ycombinator.com/item?id=50637686",
-        "points": 464,
+        "points": 465,
         "comments": 217,
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "titleZh": "尽管处于沙盒中，模型仍可以通过推理服务器进行通信"
       },
       {
         "title": "OpenAI cuts GPT-6.2 usage: Astra hits limits 40% faster, Sol 25% faster",
         "url": "https://twitter.com/thsottiaux/status/2125784147889393806",
         "discussion": "https://news.ycombinator.com/item?id=50651117",
-        "points": 461,
+        "points": 462,
         "comments": 259,
-        "date": "2026-11-26"
+        "date": "2026-11-26",
+        "titleZh": "OpenAI 减少了 GPT-6.2 的使用：Astra 达到极限的速度加快了 40%，Sol 的速度加快了 25%"
       },
       {
         "title": "Anthropic breaks below $83 IPO price",
@@ -57,15 +63,17 @@
         "discussion": "https://news.ycombinator.com/item?id=50627836",
         "points": 433,
         "comments": 798,
-        "date": "2026-11-24"
+        "date": "2026-11-24",
+        "titleZh": "Anthropic 跌破 83 美元 IPO 价格"
       },
       {
         "title": "PenGPT: A Generative Transformer for Handwriting and Sketches",
         "url": "https://greydanus.github.io/2026/11/12/pengpt/",
         "discussion": "https://news.ycombinator.com/item?id=50637056",
-        "points": 401,
+        "points": 402,
         "comments": 78,
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "titleZh": "PenGPT：手写和草图生成转换器"
       },
       {
         "title": "GPT-6 models demonstrate intrinsic protein-design capabilities",
@@ -73,7 +81,8 @@
         "discussion": "https://news.ycombinator.com/item?id=50634658",
         "points": 356,
         "comments": 97,
-        "date": "2026-11-24"
+        "date": "2026-11-24",
+        "titleZh": "GPT-6 模型展示了内在的蛋白质设计能力"
       },
       {
         "title": "Tidal bans AI-generated music",
@@ -81,68 +90,76 @@
         "discussion": "https://news.ycombinator.com/item?id=50630309",
         "points": 337,
         "comments": 344,
-        "date": "2026-11-24"
+        "date": "2026-11-24",
+        "titleZh": "Tidal 禁止人工智能生成的音乐"
       }
     ]
   },
   "github": {
-    "updatedAt": "2026-11-27T00:10:49.688Z",
+    "updatedAt": "2026-11-27T00:38:02.252Z",
     "items": [
       {
         "name": "erkamyaman/rust-anything",
         "url": "https://github.com/erkamyaman/rust-anything",
-        "description": "Rewrite your app in Rust, piece by piece, checked against the original at every step. Works with TypeScript,…",
-        "stars": 10209,
+        "description": "Rewrite your app in Rust, piece by piece, checked against the original at every step. Works with TypeScript, JavaScript, Python, Go, Ruby, Java, C, PHP, C#, Kotlin and PowerShell.",
+        "stars": 10214,
         "language": "Rust",
-        "date": "2026-11-16"
+        "date": "2026-11-16",
+        "descriptionZh": "用 Rust 一点一点重写你的应用程序，每一步都与原始版本进行检查。适用于 TypeScript、JavaScript、Python、Go、Ruby、Java、C、PHP、C#、Kotlin 和 PowerShell。"
       },
       {
         "name": "EL4CTEO/fast-anything",
         "url": "https://github.com/EL4CTEO/fast-anything",
-        "description": "Don't rewrite it in Rust. Rewrite the 5% that's slow: profile Python, Node or Ruby apps, port the hot functio…",
-        "stars": 4228,
+        "description": "Don't rewrite it in Rust. Rewrite the 5% that's slow: profile Python, Node or Ruby apps, port the hot functions with your coding agent, prove they behave the same.",
+        "stars": 4232,
         "language": "Rust",
-        "date": "2026-11-21"
+        "date": "2026-11-21",
+        "descriptionZh": "不要用 Rust 重写它。重写缓慢的 5%：分析 Python、Node 或 Ruby 应用程序，使用编码代理移植热门功能，证明它们的行为相同。"
       },
       {
         "name": "sybil-solutions/inference-optimisation-skill",
         "url": "https://github.com/sybil-solutions/inference-optimisation-skill",
-        "description": "Agent skill for hill-climbing local LLM serving speed (decode, speculative decoding, prefill, KV, startup, TT…",
-        "stars": 2818,
+        "description": "Agent skill for hill-climbing local LLM serving speed (decode, speculative decoding, prefill, KV, startup, TTFT) on any hardware and quantization",
+        "stars": 2820,
         "language": "Python",
-        "date": "2026-11-16"
+        "date": "2026-11-16",
+        "descriptionZh": "在任何硬件和量化上爬山本地 LLM 服务速度（解码、推测解码、预填充、KV、启动、TTFT）的代理技能"
       },
       {
         "name": "pierridotite/mobile-agent-testers",
         "url": "https://github.com/pierridotite/mobile-agent-testers",
-        "description": "20 AI testers on 20 different phones, in parallel, on GitHub's free runners: Claude Code agents on iOS Simula…",
-        "stars": 2512,
+        "description": "20 AI testers on 20 different phones, in parallel, on GitHub's free runners: Claude Code agents on iOS Simulators and Android emulators that find broken flows, translation, layout and accessibility bugs",
+        "stars": 2513,
         "language": "Python",
-        "date": "2026-11-16"
+        "date": "2026-11-16",
+        "descriptionZh": "20 位 AI 测试人员在 20 部不同的手机上并行地在 GitHub 的免费运行程序上进行测试：iOS 模拟器和 Android 模拟器上的 Claude 代码代理，可发现中断的流程、翻译、布局和可访问性错误"
       },
       {
         "name": "INK-Q/agy-fast",
         "url": "https://github.com/INK-Q/agy-fast",
-        "description": "Non-invasive MCP accelerator plugin for Google Antigravity (CLI/Desktop/IDE): cuts LLM turns (-34%), token qu…",
-        "stars": 1709,
+        "description": "Non-invasive MCP accelerator plugin for Google Antigravity (CLI/Desktop/IDE): cuts LLM turns (-34%), token quota (-31%), and upload traffic (-40%) without affecting native UI or diffs.",
+        "stars": 1712,
         "language": "TypeScript",
-        "date": "2026-11-19"
+        "date": "2026-11-19",
+        "descriptionZh": "适用于 Google Antigravity（CLI/桌面/IDE）的非侵入式 MCP 加速器插件：减少 LLM 周转率 (-34%)、代币配额 (-31%) 和上传流量 (-40%)，而不影响本机 UI 或差异。"
       },
       {
         "name": "alesha-pro/llm.asm",
         "url": "https://github.com/alesha-pro/llm.asm",
-        "description": "Qwen3-0.6B inference (12 KB), bare-metal bootable OS (22 KB), and from-scratch Mini-GPT trainer with live Bra…",
-        "stars": 1506,
+        "description": "Qwen3-0.6B inference (12 KB), bare-metal bootable OS (22 KB), and from-scratch Mini-GPT trainer with live Braille TUI (32 KB) in 100% pure x86-64 NASM assembly. Zero C, zero libc, zero dependencies.",
+        "stars": 1520,
         "language": "Assembly",
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "descriptionZh": "Qwen3-0.6B 推理 (12 KB)、裸机可启动操作系统 (22 KB) 以及带有实时盲文 TUI (32 KB) 的从头开始的 Mini-GPT 训练器，采用 100% 纯 x86-64 NASM 组件。零 C、零 libc、零依赖。"
       },
       {
         "name": "qianyiai/KuroCat",
         "url": "https://github.com/qianyiai/KuroCat",
-        "description": "KuroCat — Free open-source 3D/2D desktop typing cat & AI coding companion (Bongo Cat alternative · Tauri v2 +…",
-        "stars": 1343,
+        "description": "KuroCat — Free open-source 3D/2D desktop typing cat & AI coding companion (Bongo Cat alternative · Tauri v2 + Rust + MCP · Claude/Codex/DeepSeek/OBS · Win/Mac/Linux/Android)｜开源3D桌面打字小黑猫与AI伴侣",
+        "stars": 1349,
         "language": "TypeScript",
-        "date": "2026-11-21"
+        "date": "2026-11-21",
+        "descriptionZh": "KuroCat — 免费开源 3D/2D 桌面打字猫和 AI 编码伴侣（Bongo Cat 替代品 · Tauri v2 + Rust + MCP · Claude/Codex/DeepSeek/OBS · Win/Mac/Linux/Android）｜开源3D桌面壁纸小黑猫与AI伙伴"
       },
       {
         "name": "sous-labs/songe",
@@ -150,7 +167,8 @@
         "description": "A training engine for your local model, using your idle compute",
         "stars": 904,
         "language": "Python",
-        "date": "2026-11-20"
+        "date": "2026-11-20",
+        "descriptionZh": "使用空闲计算来训练本地模型的引擎"
       }
     ]
   }

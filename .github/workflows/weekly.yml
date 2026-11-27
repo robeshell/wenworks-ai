@@ -32,6 +32,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - name: Keep hot-topic translations between runs
+        uses: actions/cache@v4
+        with:
+          path: sites/home/.cache
+          key: hot-translations-${{ github.run_id }}
+          restore-keys: hot-translations-
+
       - name: Collect this week's issue and build the whole site
         env:
           WEEK: ${{ inputs.week }}
