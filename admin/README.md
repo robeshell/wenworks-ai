@@ -40,15 +40,18 @@ npm run build && npx wrangler dev       # http://localhost:8787
 
 ## 部署
 
-`.github/workflows/admin.yml` 在 `admin/` 有改动并合并到 `main` 后部署：建表或升级表结构 → 数据库为空时从仓库导入一次 → 部署 Worker 和界面。
+Cloudflare Workers Builds 直接连着本仓库（Workers & Pages → wenworks-admin → Settings → Build）：`main` 有新提交就在 `admin/` 下构建并部署。
 
-第一次上线前需要在 Cloudflare 和 GitHub 各做一次设置（见下方"上线前的设置"）。
+- 构建命令：`npm run build`
+- 部署命令：`npx wrangler d1 migrations apply wenworks-admin --remote && node scripts/seed-if-empty.mjs && npx wrangler deploy`
 
-## 上线前的设置
+部署命令依次做三件事：升级表结构；数据库为空时从仓库导入一次（以后不会再导入，不会覆盖后台的修改）；部署 Worker 和界面。
 
-- **登录**已经配好：Cloudflare Zero Trust 团队 `wenworks.cloudflareaccess.com`，应用「Wenworks AI 管理后台」只放行站长的邮箱，用邮箱验证码登录。团队域名和应用的 AUD 写在 `wrangler.jsonc` 的 `vars` 里。
-- **部署**需要 GitHub 仓库 Secret `CLOUDFLARE_API_TOKEN`：Cloudflare 里用「编辑 Cloudflare Workers」模板新建，再加上「D1：编辑」和 wenworks.app 的「DNS：编辑」。账户 ID 直接写在 `admin.yml` 里。
-- **发布**需要 Worker 密钥 `GITHUB_TOKEN`：GitHub 细粒度令牌，只授权本仓库，Contents 读写。
+## 线上的设置
+
+- **登录**：Cloudflare Zero Trust 团队 `wenworks.cloudflareaccess.com`，应用「Wenworks AI 管理后台」只放行站长的邮箱，用邮箱验证码登录，会话 30 天。团队域名和应用的 AUD 写在 `wrangler.jsonc` 的 `vars` 里，不是密钥。不要打开 Workers & Pages 页面右侧"Cloudflare Access"那个账户级开关，它会把账户里所有 Worker 都锁上。
+- **发布**：Worker 密钥 `GITHUB_TOKEN`，GitHub 细粒度令牌，只授权本仓库，Contents 读写。在 Worker 的 Settings → Variables and Secrets 里配置；部署不会覆盖它。
+- **数据库**：D1 `wenworks-admin`。
 
 ## 和 Curator 的关系
 

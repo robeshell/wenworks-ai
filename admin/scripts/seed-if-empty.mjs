@@ -1,4 +1,4 @@
-// First deploy only: when the remote database has no entries yet, import the
+// Run by the deploy command (see README). First deploy only: when the remote database has no entries yet, import the
 // tools catalog from the repository. Later runs see entries and do nothing, so
 // edits made in the admin are never overwritten.
 import { execFileSync } from 'node:child_process';
