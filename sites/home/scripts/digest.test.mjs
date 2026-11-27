@@ -260,20 +260,18 @@ test('hot: product names come back after translation', () => {
 
 import { pickMust, readMust } from './lib/must.mjs';
 
-test('recommended: the hand-picked list is read from the agents template, agents in turn', () => {
-  const template = `<script>\nconst X=1;\nconst MUST=[\n {a:'claude',t:'C1',u:'https://a/1',w:'一'},\n {a:'claude',t:'C2',u:'https://a/2',w:'二'},\n {a:'codex',t:'X1',u:'https://b/1',w:'三'},\n {a:'grok',t:'bad',u:'javascript:x'},\n];\nconst START={};`;
-  const list = readMust(template);
+test('recommended: the hand-picked list is read from editorial.json, agents in turn', () => {
+  const list = readMust({ must: [{ a: 'claude', t: 'C1', u: 'https://a/1', w: '一' }, { a: 'claude', t: 'C2', u: 'https://a/2', w: '二' }, { a: 'codex', t: 'X1', u: 'https://b/1', w: '三' }, { a: 'grok', t: 'bad', u: 'javascript:x' }] });
   assert.equal(list.length, 3);
   assert.deepEqual(pickMust(list).map((m) => m.title), ['C1', 'X1', 'C2']);
   assert.equal(pickMust(list)[1].src, 'Codex');
-  assert.deepEqual(readMust('no list here'), []);
-  assert.deepEqual(readMust('const MUST=[ broken(\n];'), []);
+  assert.deepEqual(readMust(null), []);
   const html = frontHtml({ models: null, docs: [], catalog: null, hot: null, issue: null, recommended: [{ title: 'T', titleZh: '标题', url: 'https://a/1', why: '理由', src: 'Codex' }] });
   assert.ok(html.includes('推荐文章') && html.includes('title="T">标题</a>') && html.includes('<span class="why">理由</span>'));
 });
 
-test('recommended: the real template still has a list to read', async () => {
+test('recommended: the agents part still has a list to read', async () => {
   const fs = await import('node:fs');
-  const list = readMust(fs.readFileSync(new URL('../../agents/src/template.html', import.meta.url), 'utf8'));
+  const list = readMust(JSON.parse(fs.readFileSync(new URL('../../agents/data/editorial.json', import.meta.url), 'utf8')));
   assert.ok(list.length >= 4);
 });

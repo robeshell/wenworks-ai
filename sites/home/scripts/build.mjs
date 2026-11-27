@@ -42,14 +42,6 @@ const readJson = (file, fallback = null) => {
   }
 };
 
-const readText = (file) => {
-  try {
-    return fs.readFileSync(file, 'utf8');
-  } catch {
-    return '';
-  }
-};
-
 /** Everything the front page shows besides the issues. A source that cannot be read leaves its block out. */
 function loadFront() {
   const historyDir = path.join(MODELS_DIR, 'data', 'history');
@@ -70,7 +62,7 @@ function loadFront() {
     hot,
     picks: readJson(path.join(ROOT, 'data', 'picks.json'), []),
     articles: withTranslations(newestArticles(readJson(path.join(AGENTS_DIR, 'data', 'articles.json'), [])), hot),
-    recommended: withTranslations(pickMust(readMust(readText(path.join(AGENTS_DIR, 'src', 'template.html')))), hot),
+    recommended: withTranslations(pickMust(readMust(readJson(path.join(AGENTS_DIR, 'data', 'editorial.json')))), hot),
   };
 }
 

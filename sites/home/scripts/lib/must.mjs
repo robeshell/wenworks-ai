@@ -1,22 +1,11 @@
-// The hand-picked articles ("值得读的官方文章") live in the agents part's page
-// template as `const MUST=[...]`. Read them from there so the list has one home.
-import vm from 'node:vm';
-
+// The hand-picked articles ("值得读的官方文章") live in the agents part's
+// data/editorial.json under "must". Read them from there so the list has one home.
 const AGENT_NAME = { claude: 'Claude Code', codex: 'Codex', antigravity: 'Antigravity CLI', grok: 'Grok' };
 
-/** The MUST list from the template text, or [] when it cannot be found or read. */
-export function readMust(template) {
-  const start = template.indexOf('const MUST=[');
-  if (start < 0) return [];
-  const end = template.indexOf('\n];', start);
-  if (end < 0) return [];
-  try {
-    // A plain array literal of strings; evaluated in an empty context with a time limit.
-    const list = vm.runInNewContext(`(${template.slice(start + 'const MUST='.length, end + 2)})`, {}, { timeout: 100 });
-    return Array.isArray(list) ? list.filter((m) => m && typeof m.t === 'string' && /^https?:\/\//.test(m.u)) : [];
-  } catch {
-    return [];
-  }
+/** The picked articles from editorial.json's parsed content, or [] when there are none. */
+export function readMust(editorial) {
+  const list = editorial?.must;
+  return Array.isArray(list) ? list.filter((m) => m && typeof m.t === 'string' && /^https?:\/\//.test(m.u)) : [];
 }
 
 /** A few picks, taking each agent's list in turn so one agent does not fill the block. */

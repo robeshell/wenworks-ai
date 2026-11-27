@@ -11,7 +11,7 @@
 // Only titles, numbers and links are stored.
 //
 // The newest official article titles (from the agents part's data/articles.json)
-// and the hand-picked ones (MUST in its page template) are translated here too,
+// and the hand-picked ones ("must" in its data/editorial.json) are translated here too,
 // so the front page shows them in Chinese.
 //
 // Titles and repository descriptions are machine-translated into Chinese by
@@ -29,7 +29,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FILE = path.join(ROOT, 'data', 'hot.json');
 const CACHE = path.join(ROOT, '.cache', 'translations.json');
 const ARTICLES = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents', 'data', 'articles.json');
-const TEMPLATE = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents', 'src', 'template.html');
+const EDITORIAL = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents', 'data', 'editorial.json');
 const DAY = 86400000;
 
 // Case matters for the short ones: "AI" is a topic, "ai" is a syllable.
@@ -212,7 +212,7 @@ async function main() {
   }
   // The hand-picked articles on the front page are translated the same way.
   try {
-    for (const m of pickMust(readMust(fs.readFileSync(TEMPLATE, 'utf8')))) if (!articles.some((a) => a.url === m.url)) articles.push({ url: m.url, title: m.title });
+    for (const m of pickMust(readMust(JSON.parse(fs.readFileSync(EDITORIAL, 'utf8'))))) if (!articles.some((a) => a.url === m.url)) articles.push({ url: m.url, title: m.title });
   } catch {}
   out.articles = { items: articles };
   await translate(out);
