@@ -46,11 +46,9 @@ npm run build && npx wrangler dev       # http://localhost:8787
 
 ## 上线前的设置
 
-1. **GitHub 仓库 Secrets**（Settings → Secrets and variables → Actions）：
-   - `CLOUDFLARE_API_TOKEN`：Cloudflare 里新建一个 API 令牌，权限给"Workers 脚本：编辑""D1：编辑""Workers 路由：编辑"和 wenworks.app 区域的"DNS：编辑"。
-   - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账户 ID。
-2. **登录**：Cloudflare Zero Trust → Access → 应用程序 → 添加自托管应用，域名填 `admin.wenworks.app`，策略只允许你的邮箱。然后把应用的 AUD 标签和团队域名（`https://<团队名>.cloudflareaccess.com`）作为 Worker 的密钥 `ACCESS_AUD`、`ACCESS_TEAM_DOMAIN` 加上。没有这两个密钥时，接口一律拒绝访问。
-3. **发布用的令牌**：GitHub 新建一个细粒度令牌，只授权 `robeshell/wenworks-ai`，权限 Contents 读写；作为 Worker 的密钥 `GITHUB_TOKEN` 加上。
+- **登录**已经配好：Cloudflare Zero Trust 团队 `wenworks.cloudflareaccess.com`，应用「Wenworks AI 管理后台」只放行站长的邮箱，用邮箱验证码登录。团队域名和应用的 AUD 写在 `wrangler.jsonc` 的 `vars` 里。
+- **部署**需要 GitHub 仓库 Secret `CLOUDFLARE_API_TOKEN`：Cloudflare 里用「编辑 Cloudflare Workers」模板新建，再加上「D1：编辑」和 wenworks.app 的「DNS：编辑」。账户 ID 直接写在 `admin.yml` 里。
+- **发布**需要 Worker 密钥 `GITHUB_TOKEN`：GitHub 细粒度令牌，只授权本仓库，Contents 读写。
 
 ## 和 Curator 的关系
 

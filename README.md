@@ -49,7 +49,7 @@ npm run serve                             # 在 http://localhost:4500 看 dist/
 | `deploy.yml` | 合并到 `main`；两个数据任务跑完之后；每天四次定时 | 测试、刷新首页热点、构建整个站、发布。推送到其他分支时只构建，产物在 Artifacts 里 |
 | `refresh-models.yml` | 每天 UTC 00:00、12:00 | 刷新模型数据并提交。需要仓库 Secret `AA_API_KEY` |
 | `update-agents.yml` | 每天 UTC 22:17 | 比对各家官方文档目录、更新官方文章列表并提交 |
-| `admin.yml` | `admin/` 有改动并合并到 `main` | 部署管理后台到 Cloudflare。需要 Secrets `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID` |
+| `admin.yml` | `admin/` 有改动并合并到 `main` | 部署管理后台到 Cloudflare。需要 Secret `CLOUDFLARE_API_TOKEN` |
 | `weekly.yml` | 每周一 UTC 00:17（台北 08:17） | 汇总上一周的动态，提交并发布。手动触发可以只预览 |
 
 ## 约束

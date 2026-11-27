@@ -22,7 +22,10 @@
   "vars": {
     "GITHUB_REPO": "robeshell/wenworks-ai",
     "GITHUB_BRANCH": "main",
-    "SITE_URL": "https://ai.wenworks.app"
+    "SITE_URL": "https://ai.wenworks.app",
+    // Cloudflare Access：团队域名和「Wenworks AI 管理后台」这个应用的 AUD 标签。都不是密钥。
+    "ACCESS_TEAM_DOMAIN": "https://wenworks.cloudflareaccess.com",
+    "ACCESS_AUD": "0eaf60d38507b363e0d7ae976619ea6e6a8c5f37bbb115b75306678a37e91820"
   }
-  // 密钥（wrangler secret put）：GITHUB_TOKEN；Access：ACCESS_TEAM_DOMAIN、ACCESS_AUD。
+  // 唯一的密钥（Cloudflare 后台或 wrangler secret put）：GITHUB_TOKEN，发布用。
 }
