@@ -1,6 +1,6 @@
 import { AppShell, Badge, Burger, Group, NavLink, ScrollArea, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCloudUpload, IconExternalLink, IconHome, IconInbox, IconLayoutDashboard, IconSettings, IconStack2 } from '@tabler/icons-react';
+import { IconBook, IconCloudUpload, IconExternalLink, IconHome, IconInbox, IconLayoutDashboard, IconRoute, IconSettings, IconStack2, IconTable } from '@tabler/icons-react';
 import { useApi } from '../api';
 import type { Overview } from '../types';
 import type { ReactNode } from 'react';
@@ -51,6 +51,10 @@ export function Layout({ children }: { children: ReactNode }) {
           {KINDS.map((k) => (
             <Item key={k} to={`/content?kind=${k}`} label={KIND_LABEL[k]} icon={<span style={{ width: 18 }} />} active={kind === k} onClick={close} />
           ))}
+          <div className="nav-group">Agent 导航</div>
+          <Item to="/agents/must" label="推荐文章" icon={<IconBook size={18} stroke={1.5} />} active={pathname === '/agents/must'} onClick={close} />
+          <Item to="/agents/paths" label="学习路线和清单" icon={<IconRoute size={18} stroke={1.5} />} active={pathname === '/agents/paths'} onClick={close} />
+          <Item to="/agents/tables" label="对照表" icon={<IconTable size={18} stroke={1.5} />} active={pathname === '/agents/tables'} onClick={close} />
           <div className="nav-group">首页</div>
           <Item to="/picks" label="值得看的讨论" icon={<IconHome size={18} stroke={1.5} />} active={pathname === '/picks'} onClick={close} />
           <div className="nav-group">上线</div>

@@ -27,7 +27,60 @@ export const PICKS_FILE = 'sites/home/data/picks.json';
 export const ASSET_PATH = /^\/(covers|logos)\/[A-Za-z0-9._-]+\.(webp|png|jpg|jpeg|svg)$/;
 export const assetRepoPath = (path) => `${TOOLS_ROOT}/public${path}`;
 /** The repository files the admin writes, apart from images. */
-export const isOwnedFile = (path) => path === TOOLS_FILE || path === ALIASES_FILE || path === PICKS_FILE || MARKDOWN_PATH.test(path);
+export const isOwnedFile = (path) => path === TOOLS_FILE || path === ALIASES_FILE || path === PICKS_FILE || path === EDITORIAL_FILE || MARKDOWN_PATH.test(path);
+
+/** The agents part's hand-written content: learning paths, checklists, comparison and price tables, picked articles. */
+export const EDITORIAL_FILE = 'sites/agents/data/editorial.json';
+export const AGENT_IDS = ['claude', 'codex', 'antigravity', 'grok'];
+export const AGENT_NAME = { claude: 'Claude Code', codex: 'Codex', antigravity: 'Antigravity CLI', grok: 'Grok' };
+
+/** editorial.json with one entry per line inside each section, so diffs stay readable. */
+export function editorialFile(data) {
+  const lines = ['{'];
+  const keys = Object.keys(data);
+  keys.forEach((k, ki) => {
+    const v = data[k];
+    const tail = ki < keys.length - 1 ? ',' : '';
+    if (Array.isArray(v)) lines.push(`  ${JSON.stringify(k)}: [`, ...v.map((x, i) => `    ${JSON.stringify(x)}${i < v.length - 1 ? ',' : ''}`), `  ]${tail}`);
+    else lines.push(`  ${JSON.stringify(k)}: {`, ...Object.entries(v).map(([kk, x], i, a) => `    ${JSON.stringify(kk)}: ${JSON.stringify(x)}${i < a.length - 1 ? ',' : ''}`), `  }${tail}`);
+  });
+  lines.push('}');
+  return `${lines.join('\n')}\n`;
+}
+
+/** The feature comparison as one row per feature with a cell per agent: CMP holds Claude and Codex, CMP2 the other two. */
+export function comparisonRows(cmp, cmp2) {
+  return cmp.map((r) => {
+    const x = cmp2[r[0]] || [];
+    return { label: r[0], cells: { claude: [r[1] || '', r[2] || ''], codex: [r[3] || '', r[4] || ''], antigravity: x[0] ? [x[0][0] || '', x[0][1] || ''] : ['', ''], grok: x[1] ? [x[1][0] || '', x[1][1] || ''] : ['', ''] } };
+  });
+}
+export function comparisonData(rows) {
+  const cmp = rows.map((r) => [r.label, ...r.cells.claude, ...r.cells.codex]);
+  const cmp2 = {};
+  for (const r of rows) {
+    const a = r.cells.antigravity, g = r.cells.grok;
+    // An empty cell is null, as the file has always written it.
+    const cell = (c) => (c[0] || c[1] ? [c[0], c[1]] : null);
+    if (cell(a) || cell(g)) cmp2[r.label] = [cell(a), cell(g)];
+  }
+  return { cmp, cmp2 };
+}
+
+/** Pages of an agent's docs index (data/<agent>.txt: "# 分类", "## 分组", "标题|路径"). */
+export function docsIndex(text) {
+  const pages = [];
+  let section = '', group = '';
+  for (const line of String(text).split('\n')) {
+    if (line.startsWith('## ')) group = line.slice(3).trim();
+    else if (line.startsWith('# ')) { section = line.slice(2).trim(); group = ''; }
+    else if (line.includes('|')) {
+      const i = line.lastIndexOf('|');
+      pages.push({ title: line.slice(0, i).trim(), slug: line.slice(i + 1).trim(), group: [section, group].filter(Boolean).join(' · ') });
+    }
+  }
+  return pages;
+}
 
 /** picks.json: the order shown, empty fields left out. */
 export function picksFile(picks) {

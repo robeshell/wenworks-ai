@@ -68,3 +68,26 @@ test('a model draft is cleaned into an entry', () => {
   assert.equal(e.payload.body.zh, '## 它是什么\n\n正文');
   assert.equal(entryFromDraft(normalizeDraft({ kind: 'tool', name: 'X', url: 'https://x.dev' }, 'https://x.dev')).payload.url, 'https://x.dev');
 });
+
+import { comparisonData, comparisonRows, docsIndex, editorialFile } from '../shared/content.mjs';
+
+test('editorial.json is written back exactly as the repository has it', () => {
+  const text = fs.readFileSync(path.join(ROOT, 'sites/agents/data/editorial.json'), 'utf8');
+  assert.equal(editorialFile(JSON.parse(text)), text);
+});
+
+test('the feature comparison round-trips through one row per feature', () => {
+  const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'sites/agents/data/editorial.json'), 'utf8'));
+  const rows = comparisonRows(data.cmp, data.cmp2);
+  assert.equal(rows.length, data.cmp.length);
+  const back = comparisonData(rows);
+  assert.deepEqual(back.cmp, data.cmp);
+  // Every feature the site shows keeps its Antigravity and Grok cells.
+  for (const [label] of data.cmp) if (data.cmp2[label]) assert.deepEqual(back.cmp2[label], data.cmp2[label]);
+});
+
+test('docs index pages carry their group', () => {
+  const pages = docsIndex(fs.readFileSync(path.join(ROOT, 'sites/agents/data/claude.txt'), 'utf8'));
+  assert.ok(pages.length > 100);
+  assert.deepEqual(pages.find((p) => p.slug === 'quickstart'), { title: '快速入门', slug: 'quickstart', group: '快速入门 · 入门' });
+});

@@ -7,6 +7,9 @@ import { Dashboard } from './pages/Dashboard';
 import { Editor } from './pages/Editor';
 import { Entries } from './pages/Entries';
 import { Inbox } from './pages/Inbox';
+import { Must } from './pages/agents/Must';
+import { Paths } from './pages/agents/Paths';
+import { Tables } from './pages/agents/Tables';
 import { Picks } from './pages/Picks';
 import { Publish } from './pages/Publish';
 import { Settings } from './pages/Settings';
@@ -32,6 +35,9 @@ export function App() {
           <Route path="/content/:id" element={<Editor />} />
           <Route path="/inbox" element={<Inbox />} />
           <Route path="/picks" element={<Picks />} />
+          <Route path="/agents/must" element={<Must />} />
+          <Route path="/agents/paths" element={<Paths />} />
+          <Route path="/agents/tables" element={<Tables />} />
           <Route path="/publish" element={<Publish />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />

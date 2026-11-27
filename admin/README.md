@@ -4,6 +4,7 @@
 
 - **工具精选**：五个板块的条目，编辑、修改记录、上传 logo 和封面。
 - **收件箱**：贴链接，AI（经 OpenRouter）读网页按 `sites/tools/skills/curator-ingest/SKILL.md` 的口径起草；审核后收录成草稿，或放到首页讨论。
+- **Agent 导航**：推荐文章、学习路线和上手清单、对照表（基本情况、价格、功能对照），即 `sites/agents/data/editorial.json`。页面从各家的文档目录（`data/<agent>.txt`）里按标题挑。
 - **首页**：「值得看的讨论」那一栏（`sites/home/data/picks.json`）。
 - **发布**：把以上改动一次提交到仓库。
 
@@ -17,7 +18,8 @@
 ```
 
 - **保存只改数据库**，网站不变；**发布**才写进仓库。仓库因此保留着每次发布的完整内容，也是一份备份。
-- 发布写的文件：工具精选的 `tools.json`、`route-aliases.json`、`content/*.md`，上传的图片 `sites/tools/public/{covers,logos}/`，首页的 `sites/home/data/picks.json`。
+- 发布写的文件：工具精选的 `tools.json`、`route-aliases.json`、`content/*.md`，上传的图片 `sites/tools/public/{covers,logos}/`，首页的 `sites/home/data/picks.json`，以及在后台改过的 `sites/agents/data/editorial.json`。
+- `editorial.json` 的工作副本存在数据库里，后台没改过时自动跟随仓库；后台改过、同时仓库里的文件也被别处改了，就算冲突：发布时跳过这个文件，页面上提示以仓库为准重新载入，不会覆盖别处的修改。
 - 生成的文件和 Curator 导出的格式逐字相同：`sites/tools/data/tools.json`、`data/route-aliases.json`、`content/<板块>s/<地址名>.md`。`npm test` 会检查"从仓库导入再导出，文件一个字不变"。
 - 发布前会和仓库对比，只提交有变化的文件；如果预览后仓库又有了新提交，发布会被拒绝，刷新后再发。
 - 每次保存前的版本都存在修改记录里，可以在编辑页恢复。
