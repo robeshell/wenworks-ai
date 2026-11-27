@@ -552,7 +552,7 @@ a {
 .recent a:hover {
   text-decoration-color: currentColor;
 }
-/* 首页：热点分两栏，一条一行 */
+/* 首页：热点分两栏，两栏逐行对齐，条目之间只用留白 */
 .front {
   margin-top: 3rem;
 }
@@ -562,13 +562,23 @@ a {
 .cols {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2.5rem 3rem;
+  column-gap: 3rem;
+}
+.hot-col {
+  display: grid;
+  grid-row: span var(--rows, 6);
+  grid-template-rows: subgrid;
+  align-content: start;
+  counter-reset: hot;
+}
+.hot {
+  display: contents;
 }
 .issue .hot-col h3 {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
   letter-spacing: 0;
 }
 .hot-col h3 b {
@@ -579,16 +589,11 @@ a {
   font-size: 0.75rem;
   font-weight: 500;
 }
-.hot {
-  counter-reset: hot;
-  border-top: 1px solid var(--ink);
-}
 .hot li {
   display: flex;
   align-items: baseline;
   gap: 0.875rem;
-  padding: 0.875rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 0.75rem 0;
   counter-increment: hot;
 }
 .hot li::before {
@@ -608,6 +613,18 @@ a {
   flex: 1;
   line-height: 1.5;
   overflow-wrap: anywhere;
+}
+.front .hot a,
+.front .rows a {
+  text-decoration: none;
+}
+.front .hot a:hover,
+.front .rows a:hover {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+.hot .line > a {
+  font-weight: 500;
 }
 /* 项目简介在名字下面，最多两行 */
 .hot .desc {
@@ -629,8 +646,11 @@ a {
 .hot li:first-child .side {
   color: var(--accent);
 }
-.front .rows li {
-  padding: 0.875rem 0;
+/* 首页的官方文章：不画分隔线 */
+.front .rows li,
+.front .rows li:last-child {
+  padding: 0.5rem 0;
+  border: 0;
 }
 .front .count a {
   text-decoration: none;
@@ -641,6 +661,15 @@ a {
 @media (max-width: 64rem) {
   .cols {
     grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+  .hot-col {
+    display: block;
+  }
+  .hot {
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 }
 @media (max-width: 46rem) {

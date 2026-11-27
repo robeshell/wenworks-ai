@@ -61,7 +61,9 @@ const sec = (id, title, side, body) => `<section id="${id}"><div class="sec-head
 function hotHtml(hot, limit = 5) {
   const stories = (hot?.hn?.items ?? []).slice(0, limit);
   const repos = (hot?.github?.items ?? []).slice(0, limit);
-  const col = (tag, what, rows) => `<div class="hot-col"><h3><b>${tag}</b><span>${what}</span></h3>\n<ol class="hot">${rows.join('')}</ol></div>`;
+  // Both columns sit on the same rows, so item 1 lines up with item 1 however long each is.
+  const rowsUsed = 1 + Math.max(stories.length, repos.length);
+  const col = (tag, what, rows) => `<div class="hot-col" style="--rows:${rowsUsed}"><h3><b>${tag}</b><span>${what}</span></h3>\n<ol class="hot">${rows.join('')}</ol></div>`;
   const cols = [];
   if (stories.length) cols.push(col('Hacker News', '近三天的 AI 话题', stories.map((s) => `<li><span class="line">${zhLink(s.url, s.titleZh, s.title)}</span><span class="side num">${count(s.points)} 分</span></li>`)));
   if (repos.length) cols.push(col('GitHub', '近两周的新项目', repos.map((r) => `<li><span class="line">${link(r.url, r.name)}${r.description ? `<span class="desc"${r.descriptionZh ? ` title="${esc(r.description)}"` : ''}>${esc(r.descriptionZh || r.description)}</span>` : ''}</span><span class="side num">★ ${count(r.stars)}</span></li>`)));
