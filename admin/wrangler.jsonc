@@ -1,0 +1,28 @@
+{
+  // Wenworks AI 管理后台。界面是 dist/ 里的静态文件，/api/ 由 worker/index.ts 处理。
+  // 登录由 Cloudflare Access 负责，Worker 再校验一遍 Access 签发的令牌。
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wenworks-admin",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "wenworks-admin",
+      "database_id": "f98c0ad9-e4ca-4bc3-a389-147416f5292e",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "routes": [{ "pattern": "admin.wenworks.app", "custom_domain": true }],
+  "vars": {
+    "GITHUB_REPO": "robeshell/wenworks-ai",
+    "GITHUB_BRANCH": "main",
+    "SITE_URL": "https://ai.wenworks.app"
+  }
+  // 密钥（wrangler secret put）：GITHUB_TOKEN；Access：ACCESS_TEAM_DOMAIN、ACCESS_AUD。
+}

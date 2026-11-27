@@ -20,6 +20,10 @@ for (const id of ['claude', 'codex', 'antigravity', 'grok']) {
   html = html.replace(tag, () => read(`data/${id}.txt`).trim());
 }
 html = html.replace('@@NOTES@@', () => JSON.stringify(json('data/notes.json') || {}).replace(/</g, '\\u003c'));
+// Editorial content (learning paths, picked articles, checklists, comparison and price tables).
+const editorial = json('data/editorial.json');
+if (!editorial || !html.includes('@@EDITORIAL@@')) throw new Error('data/editorial.json or the @@EDITORIAL@@ tag is missing');
+html = html.replace('@@EDITORIAL@@', () => JSON.stringify(editorial).replace(/</g, '\\u003c'));
 write('docs/index.html', html);
 
 const updates = json('data/updates.json') || [];

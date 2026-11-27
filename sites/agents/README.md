@@ -6,9 +6,10 @@
 
 ## 结构
 
-- `src/template.html`：页面本体（样式、脚本、学习路线和对照表的数据）。站内地址都从脚本里的 `BASE='/agents'` 拼出来
+- `src/template.html`：页面本体（样式和脚本）。站内地址都从脚本里的 `BASE='/agents'` 拼出来
 - `data/*.txt`：每家的文档目录（`# 分类`、`## 分组`、`标题|路径`）
 - `data/snapshot.json`、`data/updates.json`：每日比对用的快照和变化记录
+- `data/editorial.json`：人工编排的内容（学习路线、推荐文章、上手清单、对照表、价格）
 - `data/articles.json`：各家官方文章列表
 - `scripts/update.mjs`：抓取各家公开的文档索引（llms.txt），和快照比对
 - `scripts/articles.mjs`：更新官方文章列表
