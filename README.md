@@ -11,7 +11,7 @@ https://ai.wenworks.app ：一个站，四个部分。
 
 四个部分各自构建，由 `scripts/build-all.mjs` 拼进 `dist/`，用 GitHub Actions 发布到 GitHub Pages。它们原来是四个仓库、四个子域名，现在合在这里。
 
-内容在管理后台 https://admin.wenworks.app 维护（`admin/`，Cloudflare Worker + D1），发布时写回本仓库。
+内容在管理后台 https://admin.wenworks.app 维护（`admin/`，Cloudflare Worker + D1，由 Cloudflare Workers Builds 从本仓库自动部署），发布时写回本仓库。
 
 ## 目录
 
@@ -49,7 +49,6 @@ npm run serve                             # 在 http://localhost:4500 看 dist/
 | `deploy.yml` | 合并到 `main`；两个数据任务跑完之后；每天四次定时 | 测试、刷新首页热点、构建整个站、发布。推送到其他分支时只构建，产物在 Artifacts 里 |
 | `refresh-models.yml` | 每天 UTC 00:00、12:00 | 刷新模型数据并提交。需要仓库 Secret `AA_API_KEY` |
 | `update-agents.yml` | 每天 UTC 22:17 | 比对各家官方文档目录、更新官方文章列表并提交 |
-| `admin.yml` | `admin/` 有改动并合并到 `main` | 部署管理后台到 Cloudflare。需要 Secret `CLOUDFLARE_API_TOKEN` |
 | `weekly.yml` | 每周一 UTC 00:17（台北 08:17） | 汇总上一周的动态，提交并发布。手动触发可以只预览 |
 
 ## 约束
