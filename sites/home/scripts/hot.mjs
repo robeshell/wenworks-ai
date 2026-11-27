@@ -10,6 +10,9 @@
 // are kept, so the page never loses a column because of one bad request.
 // Only titles, numbers and links are stored.
 //
+// The newest official article titles (from the agents part's data/articles.json)
+// are translated here too, so the front page shows them in Chinese.
+//
 // Titles and repository descriptions are machine-translated into Chinese by
 // Google Translate's keyless web endpoint, with MyMemory's free API (no key) as
 // the fallback; neither is a language model and neither needs a key. Translations are cached in .cache/translations.json,
@@ -18,10 +21,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { newestArticles } from './lib/front.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FILE = path.join(ROOT, 'data', 'hot.json');
 const CACHE = path.join(ROOT, '.cache', 'translations.json');
+const ARTICLES = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents', 'data', 'articles.json');
 const DAY = 86400000;
 
 // Case matters for the short ones: "AI" is a topic, "ai" is a syllable.
@@ -110,6 +115,24 @@ export function usable(text, source) {
   return /[\u4e00-\u9fff]/.test(t) ? t : null;
 }
 
+// Machine translation turns product names into words; put the names back.
+const NAMES = [
+  [/克劳德\s*代码/g, 'Claude Code'],
+  [/克劳德/g, 'Claude'],
+  [/人择/g, 'Anthropic'],
+  [/双子座/g, 'Gemini'],
+  [/开放人工智能/g, 'OpenAI'],
+  [/拥抱脸/g, 'Hugging Face'],
+  [/副驾驶/g, 'Copilot'],
+  [/反重力/g, 'Antigravity'],
+];
+// A space goes between a restored name and the Chinese next to it, as in the rest of the site.
+export const fixNames = (text) =>
+  NAMES.reduce((t, [from, to]) => t.replace(from, `\u0000${to}\u0000`), text)
+    .replace(/([\u4e00-\u9fff])\u0000/g, '$1 ')
+    .replace(/\u0000([\u4e00-\u9fff])/g, ' $1')
+    .replaceAll('\u0000', '');
+
 /** Google's answer is nested arrays: [[[translated, source, ...], ...], ...]. */
 export const readGoogle = (answer) => (Array.isArray(answer?.[0]) ? answer[0].map((part) => (Array.isArray(part) ? part[0] ?? '' : '')).join('') : '');
 export const readMyMemory = (answer) => (Number(answer?.responseStatus) === 200 ? answer?.responseData?.translatedText : '');
@@ -138,6 +161,7 @@ async function translate(out) {
   const wanted = [
     ...out.hn.items.map((item) => [item, 'title', 'titleZh']),
     ...out.github.items.filter((item) => item.description).map((item) => [item, 'description', 'descriptionZh']),
+    ...out.articles.items.map((item) => [item, 'title', 'titleZh']),
   ];
   let asked = 0;
   let failed = 0;
@@ -149,7 +173,7 @@ async function translate(out) {
       if (text) cache[source] = text;
       else failed += 1;
     }
-    if (cache[source]) item[to] = cache[source];
+    if (cache[source]) item[to] = fixNames(cache[source]);
   }
   // Keep only what is on the page now, so the cache does not grow without end.
   const keep = Object.fromEntries(wanted.map(([item, from]) => item[from]).filter((s) => cache[s]).map((s) => [s, cache[s]]));
@@ -176,6 +200,14 @@ async function main() {
       out[key] = previous[key] ?? { updatedAt: null, items: [] };
     }
   }
+  // The newest official articles: only url and title are kept, the front page matches them by url.
+  let articles = [];
+  try {
+    articles = newestArticles(JSON.parse(fs.readFileSync(ARTICLES, 'utf8')), 8).map(({ url, title }) => ({ url, title }));
+  } catch (error) {
+    console.log(`::warning title=hot articles skipped::${error instanceof Error ? error.message : error}`);
+  }
+  out.articles = { items: articles };
   await translate(out);
   fs.mkdirSync(path.dirname(FILE), { recursive: true });
   fs.writeFileSync(FILE, JSON.stringify(out, null, 2) + '\n');

@@ -161,8 +161,8 @@ test('every line of the thread fits 140 Chinese characters', () => {
 });
 
 // ---- front page ----
-import { catalogCounts, day, frontHtml, modelsNow, newestArticles, recentLines } from './lib/front.mjs';
-import { aboutAi, pickRepos, pickStories, readGoogle, readMyMemory, usable } from './hot.mjs';
+import { catalogCounts, day, frontHtml, modelsNow, newestArticles, recentLines, withTranslations } from './lib/front.mjs';
+import { aboutAi, fixNames, pickRepos, pickStories, readGoogle, readMyMemory, usable } from './hot.mjs';
 
 test('hot: only AI stories are kept, most points first, with a discussion link', () => {
   assert.ok(aboutAi('OpenAI cuts GPT usage'));
@@ -239,4 +239,20 @@ test('hot: translations are read from either service and checked before use', ()
 test('front: Chinese titles link to the source with the original on hover', () => {
   const html = frontHtml({ models: null, docs: [], catalog: null, issue: null, hot: { updatedAt: '2026-11-27T00:00:00Z', hn: { items: [{ title: 'Hello AI', titleZh: '你好 AI', url: 'https://example.com/', points: 1, comments: 0 }] }, github: { items: [] } } });
   assert.ok(html.includes('title="Hello AI">你好 AI</a>'));
+});
+
+test('front: official article titles take their translation by url', () => {
+  const articles = withTranslations([{ src: 'Blog', title: 'Hello', url: 'https://x/1', date: '2026-11-26' }, { src: 'Blog', title: 'Other', url: 'https://x/2' }], { articles: { items: [{ url: 'https://x/1', title: 'Hello', titleZh: '你好' }] } });
+  assert.equal(articles[0].titleZh, '你好');
+  assert.equal(articles[1].titleZh, undefined);
+  const html = frontHtml({ models: null, docs: [], catalog: null, issue: null, hot: null, articles });
+  assert.ok(html.includes('title="Hello">你好</a>') && html.includes('>Other</a>'));
+  assert.deepEqual(withTranslations([{ title: 'A', url: 'https://x/3' }], null), [{ title: 'A', url: 'https://x/3' }]);
+});
+
+test('hot: product names come back after translation', () => {
+  assert.equal(fixNames('克劳德代码质量报告的更新'), 'Claude Code 质量报告的更新');
+  assert.equal(fixNames('我们如何在产品中包含克劳德'), '我们如何在产品中包含 Claude');
+  assert.equal(fixNames('“克劳德”'), '“Claude”');
+  assert.equal(fixNames('人择 跌破 IPO 价格'), 'Anthropic 跌破 IPO 价格');
 });
