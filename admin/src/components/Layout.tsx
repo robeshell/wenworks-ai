@@ -1,6 +1,8 @@
-import { AppShell, Burger, Group, NavLink, ScrollArea, Text, UnstyledButton } from '@mantine/core';
+import { AppShell, Badge, Burger, Group, NavLink, ScrollArea, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCloudUpload, IconExternalLink, IconLayoutDashboard, IconSettings, IconStack2 } from '@tabler/icons-react';
+import { IconCloudUpload, IconExternalLink, IconHome, IconInbox, IconLayoutDashboard, IconSettings, IconStack2 } from '@tabler/icons-react';
+import { useApi } from '../api';
+import type { Overview } from '../types';
 import type { ReactNode } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router';
 import { KIND_LABEL, KINDS } from '../../shared/content.mjs';
@@ -16,6 +18,9 @@ export function Layout({ children }: { children: ReactNode }) {
   const [params] = useSearchParams();
   const { me, status } = useShared();
   const kind = pathname === '/content' ? params.get('kind') : null;
+  // Inbox count for the badge; refreshed whenever the page changes.
+  const overview = useApi<Overview>(`/overview?at=${encodeURIComponent(pathname)}`);
+  const inbox = overview.data?.inbox ?? 0;
   return (
     <AppShell header={{ height: 52 }} navbar={{ width: 232, breakpoint: 'sm', collapsed: { mobile: !opened } }} padding="xl">
       <AppShell.Header withBorder>
@@ -39,11 +44,15 @@ export function Layout({ children }: { children: ReactNode }) {
         <ScrollArea>
           <div className="nav-group">概览</div>
           <Item to="/" label="工作台" icon={<IconLayoutDashboard size={18} stroke={1.5} />} active={pathname === '/'} onClick={close} />
+          <div className="nav-group">收录</div>
+          <Item to="/inbox" label="收件箱" icon={<IconInbox size={18} stroke={1.5} />} active={pathname === '/inbox'} onClick={close} right={inbox ? <Badge size="sm" color="accent" variant="filled">{inbox}</Badge> : undefined} />
           <div className="nav-group">工具精选</div>
           <Item to="/content" label="全部条目" icon={<IconStack2 size={18} stroke={1.5} />} active={pathname === '/content' && !kind} onClick={close} />
           {KINDS.map((k) => (
             <Item key={k} to={`/content?kind=${k}`} label={KIND_LABEL[k]} icon={<span style={{ width: 18 }} />} active={kind === k} onClick={close} />
           ))}
+          <div className="nav-group">首页</div>
+          <Item to="/picks" label="值得看的讨论" icon={<IconHome size={18} stroke={1.5} />} active={pathname === '/picks'} onClick={close} />
           <div className="nav-group">上线</div>
           <Item to="/publish" label="发布" icon={<IconCloudUpload size={18} stroke={1.5} />} active={pathname === '/publish'} onClick={close} />
           <div className="nav-group">系统</div>

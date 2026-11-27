@@ -2,3 +2,5 @@
 DEV_USER=dev@localhost
 # 想在本地试发布，再填一个只能写本仓库的 GitHub 令牌：
 # GITHUB_TOKEN=
+# 想在本地试 AI 起草：填 OPENROUTER_API_KEY；或者用 OPENROUTER_URL 指向一个本地的模拟服务。
+# OPENROUTER_API_KEY=

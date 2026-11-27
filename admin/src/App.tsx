@@ -6,6 +6,8 @@ import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { Editor } from './pages/Editor';
 import { Entries } from './pages/Entries';
+import { Inbox } from './pages/Inbox';
+import { Picks } from './pages/Picks';
 import { Publish } from './pages/Publish';
 import { Settings } from './pages/Settings';
 import type { Status_, Taxonomy } from './types';
@@ -28,6 +30,8 @@ export function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/content" element={<Entries />} />
           <Route path="/content/:id" element={<Editor />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="/picks" element={<Picks />} />
           <Route path="/publish" element={<Publish />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />

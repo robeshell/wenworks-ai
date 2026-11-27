@@ -19,6 +19,14 @@ export async function api<T>(path: string, init: { method?: string; body?: unkno
   return data as T;
 }
 
+/** Uploads raw bytes (an image) with PUT. */
+export async function upload(path: string, blob: Blob): Promise<{ path: string; size: number }> {
+  const res = await fetch(`/api${path}`, { method: 'PUT', headers: { 'content-type': blob.type }, body: blob });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.error || `上传失败（${res.status}）`);
+  return data;
+}
+
 /** Loads a path once and again on reload(); keeps the last data while reloading. */
 export function useApi<T>(path: string | null) {
   const [data, setData] = useState<T | null>(null);

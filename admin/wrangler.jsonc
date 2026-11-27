@@ -5,6 +5,8 @@
   "name": "wenworks-admin",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
+  // 收录规则（Markdown）作为文本打进 Worker，AI 起草时用。
+  "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
   "assets": {
     "directory": "dist",
     "not_found_handling": "single-page-application",
@@ -27,5 +29,5 @@
     "ACCESS_TEAM_DOMAIN": "https://wenworks.cloudflareaccess.com",
     "ACCESS_AUD": "0eaf60d38507b363e0d7ae976619ea6e6a8c5f37bbb115b75306678a37e91820"
   }
-  // 唯一的密钥（Cloudflare 后台或 wrangler secret put）：GITHUB_TOKEN，发布用。
+  // 密钥（Cloudflare 后台或 wrangler secret put）：GITHUB_TOKEN 发布用；OPENROUTER_API_KEY AI 起草用。
 }

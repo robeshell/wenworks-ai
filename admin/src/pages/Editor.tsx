@@ -11,7 +11,8 @@ import { useShared } from '../App';
 import { StatusBadge } from '../components/bits';
 import { Bilingual, ExamplesEditor, LinksEditor, VariablesEditor } from '../components/fields';
 import { Markdown } from '../components/Markdown';
-import { assetUrl, exact, liveUrl, when } from '../format';
+import { exact, liveUrl, when } from '../format';
+import { ImageField } from '../components/ImageField';
 import type { FullEntry } from '../types';
 
 type Revision = { id: number; savedAt: string; savedBy: string; entry: Entry };
@@ -203,13 +204,9 @@ export function Editor() {
             </Section>
 
             {hasImages ? (
-              <Section title="图片" hint="现在先填图片路径；上传和自动截图在下一期加上。">
-                {(['cover', 'logo'] as const).map((key) => (
-                  <Stack key={key} gap={6}>
-                    <TextInput label={key === 'cover' ? '封面' : 'Logo'} value={p[key] ?? ''} onChange={(e) => setP(key, e.currentTarget.value)} placeholder={key === 'cover' ? '/covers/xxx.webp' : '/logos/xxx.png'} classNames={{ input: 'num' }} />
-                    {p[key] ? <img src={assetUrl(site.site, p[key])} alt="" style={{ maxWidth: key === 'cover' ? '100%' : 64, border: '1px solid var(--line)', background: '#f5f5f5' }} /> : null}
-                  </Stack>
-                ))}
+              <Section title="图片" hint="上传后记得保存；发布时图片和内容一起上线。">
+                <ImageField kind="cover" slug={draft.slug} value={p.cover} onChange={(v) => setP('cover', v)} />
+                <ImageField kind="logo" slug={draft.slug} value={p.logo} onChange={(v) => setP('logo', v)} />
               </Section>
             ) : null}
 
