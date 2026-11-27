@@ -2,6 +2,7 @@
 // of the paths are the interface's static files (dist/).
 import { ASSET_PATH, EDITORIAL_FILE, KINDS, PICKS_FILE, assetRepoPath, entryFromDraft, entryIssues, normalizeDraft, picksFile, planPublishBySha, publicFiles, type Draft, type Entry, type Kind, type Pick, type Status } from '../shared/content.mjs';
 import { draftFor, listModels } from './ai';
+import { rollback, rollbackCheck } from './rollback';
 import { agentDocs, editorialForPublish, editorialPublished, getEditorial, reload as reloadEditorial, saveSections } from './editorial';
 import { currentUser } from './auth';
 import { aliasesForExport, allEntries, getEntry, saveStatements } from './db';
@@ -346,8 +347,19 @@ async function api(request: Request, env: Env, user: string, url: URL): Promise<
   }
 
   if (pathname === '/api/publishes' && method === 'GET') {
-    const { results } = await env.DB.prepare('SELECT * FROM publishes ORDER BY id DESC LIMIT 50').all();
-    return json(results.map((r: any) => ({ ...r, files: JSON.parse(r.files) })));
+    const { results } = await env.DB.prepare('SELECT * FROM publishes ORDER BY id DESC LIMIT 50').all<any>();
+    const list = results.map((r) => ({ ...r, files: JSON.parse(r.files) as { path: string; change: string }[] }));
+    // A publish can be rolled back while no later publish changed the same files.
+    return json(list.map((r) => ({ ...r, blockedBy: list.filter((x) => x.id > r.id && x.files.some((f: { path: string }) => r.files.some((g: { path: string }) => g.path === f.path))).map((x) => x.id) })));
+  }
+  const rb = pathname.match(/^\/api\/publishes\/(\d+)\/rollback$/);
+  if (rb && method === 'POST') {
+    const id = Number(rb[1]);
+    await rollbackCheck(env, id);
+    // Unpublished edits to the same files would be overwritten: find them first.
+    const { changes } = await publishPlan(env);
+    const result = await rollback(env, id, user, now, changes.map((c) => c.path));
+    return json(result);
   }
 
   if (pathname === '/api/status') {

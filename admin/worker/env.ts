@@ -9,6 +9,8 @@ export interface Env {
   OPENROUTER_API_KEY?: string;
   /** Local development only: a stand-in for OpenRouter. */
   OPENROUTER_URL?: string;
+  /** Local development only: a stand-in for the GitHub API. */
+  GITHUB_API?: string;
   ACCESS_TEAM_DOMAIN?: string;
   ACCESS_AUD?: string;
   /** Local development only (.dev.vars). */

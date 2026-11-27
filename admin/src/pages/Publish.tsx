@@ -1,7 +1,7 @@
-import { Alert, Anchor, Badge, Button, Group, Modal, Paper, Stack, Table, Text, TextInput, Title } from '@mantine/core';
+import { Alert, Anchor, Badge, Button, Group, List, Modal, Paper, Stack, Table, Text, TextInput, Title, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconCloudUpload, IconRefresh } from '@tabler/icons-react';
+import { IconArrowBackUp, IconCloudUpload, IconRefresh } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import type { Kind } from '../../shared/content.mjs';
@@ -11,7 +11,8 @@ import { KindBadge } from '../components/bits';
 import { exact, when } from '../format';
 
 type Plan = { head: string; changes: { path: string; change: 'added' | 'modified' | 'removed'; entries: { id: string; title: string; kind: Kind }[] }[] };
-type Record_ = { id: number; published_at: string; published_by: string; commit_sha: string; message: string; files: { path: string; change: string }[] };
+type Record_ = { id: number; published_at: string; published_by: string; commit_sha: string; message: string; files: { path: string; change: string }[]; blockedBy: number[] };
+type Rollback = { record: { id: number; sha: string; message: string }; entries: number; drafted: number; picks: boolean; editorial: boolean; images: number };
 
 const CHANGE = { added: ['新增', 'teal'], modified: ['修改', 'blue'], removed: ['删除', 'red'] } as const;
 const short = (path: string) => path.replace(/^sites\/tools\//, '');
@@ -24,6 +25,25 @@ export function Publish() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [confirm, confirmCtl] = useDisclosure();
+  const [undo, setUndo] = useState<Record_ | null>(null);
+  const [undoing, setUndoing] = useState(false);
+  const rollback = async () => {
+    if (!undo) return;
+    setUndoing(true);
+    try {
+      const r = await api<Rollback>(`/publishes/${undo.id}/rollback`, { method: 'POST' });
+      const parts = [r.entries ? `${r.entries} 条内容恢复` : '', r.drafted ? `${r.drafted} 条退回草稿` : '', r.picks ? '首页推荐恢复' : '', r.editorial ? 'Agent 导航内容恢复' : '', r.images ? `${r.images} 张图片恢复` : ''].filter(Boolean);
+      notifications.show({ autoClose: 8000, title: '已在后台恢复', message: `${parts.join('，') || '内容和现在一致，没有需要恢复的'}。确认下面的改动后点发布，网站就回到那次发布之前的样子。` });
+      setMessage(`回退：${r.record.message || `发布 ${r.record.sha.slice(0, 7)}`}`);
+      setUndo(null);
+      plan.reload();
+      history.reload();
+    } catch (e) {
+      notifications.show({ color: 'red', autoClose: 10000, message: (e as Error).message });
+    } finally {
+      setUndoing(false);
+    }
+  };
   const changes = plan.data?.changes ?? [];
 
   const publish = async () => {
@@ -88,7 +108,7 @@ export function Publish() {
         <Title order={4} mb="md">发布记录</Title>
         {history.data?.length ? (
           <Table>
-            <Table.Thead><Table.Tr><Table.Th>时间</Table.Th><Table.Th>说明</Table.Th><Table.Th>文件</Table.Th><Table.Th>发布人</Table.Th><Table.Th>提交</Table.Th></Table.Tr></Table.Thead>
+            <Table.Thead><Table.Tr><Table.Th>时间</Table.Th><Table.Th>说明</Table.Th><Table.Th>文件</Table.Th><Table.Th>发布人</Table.Th><Table.Th>提交</Table.Th><Table.Th w={100} /></Table.Tr></Table.Thead>
             <Table.Tbody>
               {history.data.map((r) => (
                 <Table.Tr key={r.id}>
@@ -97,12 +117,28 @@ export function Publish() {
                   <Table.Td className="num">{r.files.length}</Table.Td>
                   <Table.Td><Text size="sm" c="dimmed">{r.published_by}</Text></Table.Td>
                   <Table.Td><Anchor href={`https://github.com/${status.repo}/commit/${r.commit_sha}`} target="_blank" rel="noopener" size="sm" className="num">{r.commit_sha.slice(0, 7)}</Anchor></Table.Td>
+                  <Table.Td>
+                    <Tooltip label={r.blockedBy.length ? '之后的发布也改过这些文件，先回退最近的那次' : '把这次发布改过的文件恢复到发布之前'} withArrow>
+                      <span><Button size="xs" variant="default" leftSection={<IconArrowBackUp size={14} />} disabled={!status.githubToken || r.blockedBy.length > 0} onClick={() => setUndo(r)}>回退</Button></span>
+                    </Tooltip>
+                  </Table.Td>
                 </Table.Tr>
               ))}
             </Table.Tbody>
           </Table>
         ) : <Text size="sm" c="dimmed">后台还没有发布过。</Text>}
       </Paper>
+
+      <Modal opened={Boolean(undo)} onClose={() => setUndo(null)} title="回退这次发布？" size="lg">
+        {undo ? (
+          <Stack>
+            <Text size="sm">{exact(undo.published_at)} 的发布{undo.message ? `「${undo.message}」` : ''}改过下面这些文件。后台会把它们恢复成那次发布之前的内容（每条都留修改记录，可以再改回来），然后由你在这一页确认发布。</Text>
+            <List size="sm" spacing={2}>{undo.files.map((f) => <List.Item key={f.path}><span className="num">{short(f.path)}</span> <Text span size="xs" c="dimmed">（{CHANGE[f.change as keyof typeof CHANGE]?.[0] ?? f.change}）</Text></List.Item>)}</List>
+            <Text size="xs" c="dimmed">那次发布新上线的条目会退回草稿；新加的图片留在仓库里不删。如果这些文件现在有还没发布的改动，会先提示你处理，不会直接覆盖。</Text>
+            <Group justify="flex-end"><Button variant="default" onClick={() => setUndo(null)}>取消</Button><Button color="accent" onClick={rollback} loading={undoing}>恢复到发布之前</Button></Group>
+          </Stack>
+        ) : null}
+      </Modal>
 
       <Modal opened={confirm} onClose={confirmCtl.close} title="发布到网站？">
         <Stack>
