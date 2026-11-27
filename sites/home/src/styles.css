@@ -562,17 +562,15 @@ a {
 .cols {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 3rem;
+  align-items: start;
+  gap: 2rem 3rem;
 }
 .hot-col {
-  display: grid;
-  grid-row: span var(--rows, 6);
-  grid-template-rows: subgrid;
-  align-content: start;
   counter-reset: hot;
 }
 .hot {
-  display: contents;
+  margin: 0;
+  padding: 0;
 }
 .issue .hot-col h3 {
   display: flex;
@@ -593,7 +591,7 @@ a {
   display: flex;
   align-items: baseline;
   gap: 0.875rem;
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
   counter-increment: hot;
 }
 .hot li::before {
@@ -626,16 +624,15 @@ a {
 .hot .line > a {
   font-weight: 500;
 }
-/* 项目简介在名字下面，最多两行 */
+/* 项目简介在名字下面，一行，完整内容悬停可看 */
 .hot .desc {
-  display: -webkit-box;
-  margin-top: 0.25rem;
+  display: block;
+  margin-top: 0.125rem;
   overflow: hidden;
   color: var(--mute);
   font-size: 0.875rem;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .hot .side {
   flex: none;
@@ -661,15 +658,6 @@ a {
 @media (max-width: 64rem) {
   .cols {
     grid-template-columns: 1fr;
-    row-gap: 2rem;
-  }
-  .hot-col {
-    display: block;
-  }
-  .hot {
-    display: block;
-    margin: 0;
-    padding: 0;
   }
 }
 @media (max-width: 46rem) {
