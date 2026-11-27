@@ -1,0 +1,157 @@
+{
+  "updatedAt": "2026-11-27T00:10:49.688Z",
+  "hn": {
+    "updatedAt": "2026-11-27T00:10:49.688Z",
+    "items": [
+      {
+        "title": "LLM agents work for their parent companies, not for you",
+        "url": "https://michaelharley.net/posts/2026/11/01/llm-agents-work-for-their-parent-companies-not-for-you/",
+        "discussion": "https://news.ycombinator.com/item?id=50627340",
+        "points": 1029,
+        "comments": 413,
+        "date": "2026-11-24"
+      },
+      {
+        "title": "The New York Times warns photographers not to update Photoshop over AI features",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features",
+        "discussion": "https://news.ycombinator.com/item?id=50647673",
+        "points": 648,
+        "comments": 516,
+        "date": "2026-11-25"
+      },
+      {
+        "title": "Much shorter version of GRH Lean verification from Anthropic",
+        "url": "https://github.com/lsernau/grh-lean",
+        "discussion": "https://news.ycombinator.com/item?id=50648050",
+        "points": 545,
+        "comments": 346,
+        "date": "2026-11-25"
+      },
+      {
+        "title": "Ask HN: Anthropic is accusing my company of distilling. How can I prove I'm not?",
+        "url": "https://news.ycombinator.com/item?id=50630809",
+        "discussion": "https://news.ycombinator.com/item?id=50630809",
+        "points": 464,
+        "comments": 356,
+        "date": "2026-11-24"
+      },
+      {
+        "title": "Models Can Communicate via Inference Servers Despite Being Sandboxed",
+        "url": "https://www.lesswrong.com/posts/7wzWuLP3HhyBLmKfo/models-can-communicate-via-inference-servers-despite-being",
+        "discussion": "https://news.ycombinator.com/item?id=50637686",
+        "points": 464,
+        "comments": 217,
+        "date": "2026-11-25"
+      },
+      {
+        "title": "OpenAI cuts GPT-6.2 usage: Astra hits limits 40% faster, Sol 25% faster",
+        "url": "https://twitter.com/thsottiaux/status/2125784147889393806",
+        "discussion": "https://news.ycombinator.com/item?id=50651117",
+        "points": 461,
+        "comments": 259,
+        "date": "2026-11-26"
+      },
+      {
+        "title": "Anthropic breaks below $83 IPO price",
+        "url": "https://www.bloomberg.com/news/articles/2026-11-24/anthropic-breaks-below-83-ipo-price-in-premarket-trading",
+        "discussion": "https://news.ycombinator.com/item?id=50627836",
+        "points": 433,
+        "comments": 798,
+        "date": "2026-11-24"
+      },
+      {
+        "title": "PenGPT: A Generative Transformer for Handwriting and Sketches",
+        "url": "https://greydanus.github.io/2026/11/12/pengpt/",
+        "discussion": "https://news.ycombinator.com/item?id=50637056",
+        "points": 401,
+        "comments": 78,
+        "date": "2026-11-25"
+      },
+      {
+        "title": "GPT-6 models demonstrate intrinsic protein-design capabilities",
+        "url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities/",
+        "discussion": "https://news.ycombinator.com/item?id=50634658",
+        "points": 356,
+        "comments": 97,
+        "date": "2026-11-24"
+      },
+      {
+        "title": "Tidal bans AI-generated music",
+        "url": "https://variety.com/2026/music/news/tidal-bans-ai-generated-music-1236956924/",
+        "discussion": "https://news.ycombinator.com/item?id=50630309",
+        "points": 337,
+        "comments": 344,
+        "date": "2026-11-24"
+      }
+    ]
+  },
+  "github": {
+    "updatedAt": "2026-11-27T00:10:49.688Z",
+    "items": [
+      {
+        "name": "erkamyaman/rust-anything",
+        "url": "https://github.com/erkamyaman/rust-anything",
+        "description": "Rewrite your app in Rust, piece by piece, checked against the original at every step. Works with TypeScript,…",
+        "stars": 10209,
+        "language": "Rust",
+        "date": "2026-11-16"
+      },
+      {
+        "name": "EL4CTEO/fast-anything",
+        "url": "https://github.com/EL4CTEO/fast-anything",
+        "description": "Don't rewrite it in Rust. Rewrite the 5% that's slow: profile Python, Node or Ruby apps, port the hot functio…",
+        "stars": 4228,
+        "language": "Rust",
+        "date": "2026-11-21"
+      },
+      {
+        "name": "sybil-solutions/inference-optimisation-skill",
+        "url": "https://github.com/sybil-solutions/inference-optimisation-skill",
+        "description": "Agent skill for hill-climbing local LLM serving speed (decode, speculative decoding, prefill, KV, startup, TT…",
+        "stars": 2818,
+        "language": "Python",
+        "date": "2026-11-16"
+      },
+      {
+        "name": "pierridotite/mobile-agent-testers",
+        "url": "https://github.com/pierridotite/mobile-agent-testers",
+        "description": "20 AI testers on 20 different phones, in parallel, on GitHub's free runners: Claude Code agents on iOS Simula…",
+        "stars": 2512,
+        "language": "Python",
+        "date": "2026-11-16"
+      },
+      {
+        "name": "INK-Q/agy-fast",
+        "url": "https://github.com/INK-Q/agy-fast",
+        "description": "Non-invasive MCP accelerator plugin for Google Antigravity (CLI/Desktop/IDE): cuts LLM turns (-34%), token qu…",
+        "stars": 1709,
+        "language": "TypeScript",
+        "date": "2026-11-19"
+      },
+      {
+        "name": "alesha-pro/llm.asm",
+        "url": "https://github.com/alesha-pro/llm.asm",
+        "description": "Qwen3-0.6B inference (12 KB), bare-metal bootable OS (22 KB), and from-scratch Mini-GPT trainer with live Bra…",
+        "stars": 1506,
+        "language": "Assembly",
+        "date": "2026-11-25"
+      },
+      {
+        "name": "qianyiai/KuroCat",
+        "url": "https://github.com/qianyiai/KuroCat",
+        "description": "KuroCat — Free open-source 3D/2D desktop typing cat & AI coding companion (Bongo Cat alternative · Tauri v2 +…",
+        "stars": 1343,
+        "language": "TypeScript",
+        "date": "2026-11-21"
+      },
+      {
+        "name": "sous-labs/songe",
+        "url": "https://github.com/sous-labs/songe",
+        "description": "A training engine for your local model, using your idle compute",
+        "stars": 904,
+        "language": "Python",
+        "date": "2026-11-20"
+      }
+    ]
+  }
+}

@@ -16,7 +16,7 @@ const link = (url, text) => `<a href="${esc(safeUrl(url))}">${esc(text)}</a>`;
 const score = (n) => Number(n).toFixed(1);
 const NO_CHANGE = '本周没有变化。';
 const FAILED = '这一节的数据本周没有取到，下期补上。';
-const TOOL_KIND = { tool: '工具', site: '站点', skill: '技能', project: '开源项目', prompt: '提示词' };
+export const TOOL_KIND = { tool: '工具', site: '站点', skill: '技能', project: '开源项目', prompt: '提示词' };
 
 export function issueUrl(number) {
   return `${SITES.home}/weekly/${number}/`;

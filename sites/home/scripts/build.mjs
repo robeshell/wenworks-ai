@@ -1,5 +1,9 @@
-// Build out/ from data/issues/*.json: the latest issue as the front page, the
-// archive, one page per issue, the RSS feed and one X thread per issue. Plain static files, no framework.
+// Build out/: the front page (the three parts of the site, what is being talked
+// about, the newest articles), the weekly archive with one page per issue, the
+// RSS feed and one X thread per issue. Plain static files, no framework.
+//
+// The front page reads the neighbouring parts' data straight from the repository
+// and data/hot.json (refreshed by scripts/hot.mjs).
 //
 //   node scripts/build.mjs
 //
@@ -7,13 +11,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { catalogCounts, frontHtml, modelsNow, newestArticles } from './lib/front.mjs';
 import { SITES, esc, issueFacts, issueHtml, issueSummary, issueTitle, issueUrl, thread } from './lib/render.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'out');
 const PRODUCTION = process.env.PRODUCTION === '1';
 const SITE_NAME = 'Wenworks AI';
-const DESCRIPTION = 'Wenworks AI：大模型梯队榜和选型、编程 Agent 官方文档导航、AI 工具精选。首页是本周动态：梯队变化、官方文章和新收录的工具。';
+const DESCRIPTION = 'Wenworks AI：大模型梯队榜和选型、编程 Agent 官方文档的中文导航、挑过的 AI 工具，加上每天更新的 AI 热点。';
+// The other parts live next to this one; the tools catalog is a build product of the tools part.
+const MODELS_DIR = path.resolve(ROOT, process.env.MODELS_DIR || '../models');
+const AGENTS_DIR = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents');
+const TOOLS_CATALOG_FILE = path.resolve(ROOT, process.env.TOOLS_CATALOG_FILE || '../../dist/tools/catalog.json');
+const AGENT_DOCS = [['claude', 'Claude Code', 'claude-code'], ['codex', 'Codex', 'codex'], ['antigravity', 'Antigravity CLI', 'antigravity-cli'], ['grok', 'Grok', 'grok']];
 const SHARE_IMAGE = 'https://ai.wenworks.app/models/share/tiers-latest.png';
 const BEACON = `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4dff1f86a3894509bbdf147ef75e6487"}'></script>`;
 
@@ -22,6 +32,36 @@ const write = (file, content) => {
   fs.mkdirSync(path.dirname(full), { recursive: true });
   fs.writeFileSync(full, content);
 };
+
+const readJson = (file, fallback = null) => {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    return fallback;
+  }
+};
+
+/** Everything the front page shows besides the issues. A source that cannot be read leaves its block out. */
+function loadFront() {
+  const historyDir = path.join(MODELS_DIR, 'data', 'history');
+  const latestSnapshot = fs.existsSync(historyDir) ? fs.readdirSync(historyDir).filter((f) => /^tiers-.*\.json$/.test(f)).sort().at(-1) : null;
+  const docs = AGENT_DOCS.map(([file, name, slug]) => {
+    try {
+      const pages = fs.readFileSync(path.join(AGENTS_DIR, 'data', `${file}.txt`), 'utf8').split('\n').filter((line) => line.includes('|') && !line.startsWith('#')).length;
+      return { name, url: `/agents/${slug}/`, pages };
+    } catch {
+      return null;
+    }
+  }).filter(Boolean);
+  return {
+    models: modelsNow(latestSnapshot ? readJson(path.join(historyDir, latestSnapshot)) : null, readJson(path.join(MODELS_DIR, 'data', 'tier-changes.json'))),
+    docs,
+    catalog: catalogCounts(readJson(TOOLS_CATALOG_FILE)),
+    hot: readJson(path.join(ROOT, 'data', 'hot.json')),
+    picks: readJson(path.join(ROOT, 'data', 'picks.json'), []),
+    articles: newestArticles(readJson(path.join(AGENTS_DIR, 'data', 'articles.json'), [])),
+  };
+}
 
 function loadIssues() {
   const dir = path.join(ROOT, 'data', 'issues');
@@ -39,7 +79,7 @@ function loadNote(issue) {
 }
 
 function page({ title, description, pathName, body, ogType = 'website', active = '' }) {
-  const nav = [['latest', '/', '最新'], ['archive', '/weekly/', '往期'], ['feed', '/feed.xml', 'RSS']];
+  const nav = [['front', '/', '首页'], ['archive', '/weekly/', '每周动态'], ['feed', '/feed.xml', 'RSS']];
   const url = `${SITES.home}${pathName}`;
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -74,14 +114,14 @@ function page({ title, description, pathName, body, ogType = 'website', active =
     <a href="/" class="site-brand">Wenworks AI</a>
     <nav class="site-switch" aria-label="Wenworks AI 站点"><a href="/models/">模型</a><a href="/agents/">Agent 导航</a><a href="/tools/">工具精选</a></nav>
     <span class="site-sep" aria-hidden="true"></span>
-    <nav id="site-nav" class="site-nav" aria-label="动态" data-open="false">${nav.map(([key, href, label]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
+    <nav id="site-nav" class="site-nav" aria-label="首页" data-open="false">${nav.map(([key, href, label]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
     <button type="button" class="site-menu-button" id="site-menu" aria-expanded="false" aria-controls="site-nav">菜单</button>
   </div>
 </header>
 <main class="site-content">
 ${body}
 </main>
-<footer class="site-foot"><p>本页由模型、Agent 导航、工具精选三部分的数据自动生成，每周一更新；只列标题和链接，不转载正文。</p></footer>
+<footer class="site-foot"><p>本页由数据自动生成：三个部分的最新内容，加上 Hacker News 和 GitHub 的公开数据。只列标题和链接，不转载正文。</p></footer>
 <script>{const n=document.getElementById('site-nav'),b=document.getElementById('site-menu'),set=o=>{n.dataset.open=o;b.setAttribute('aria-expanded',o)};b.addEventListener('click',()=>set(n.dataset.open!=='true'));document.addEventListener('keydown',e=>{if(e.key==='Escape')set(false)})}</script>
 ${PRODUCTION ? BEACON : ''}
 </body>
@@ -90,20 +130,12 @@ ${PRODUCTION ? BEACON : ''}
 }
 
 /** Masthead of an issue: number, dates and a one-line summary. */
-function hero(issue, { linkTitle = false } = {}) {
+function hero(issue) {
   const title = `本周动态 <em>${esc(issue.week.label.replace(/^\d+ 年 /, ''))}</em>`;
   return `<section class="hero">
 <p class="eyebrow num"><b>WENWORKS AI</b><span>每周一更新</span><span>第 ${issue.number} 期</span></p>
-<h1>${linkTitle ? `<a href="/weekly/${issue.number}/">${title}</a>` : title}</h1>
+<h1>${title}</h1>
 <p class="lede">${esc(issueSummary(issue))}</p>
-</section>`;
-}
-
-function emptyHero() {
-  return `<section class="hero">
-<p class="eyebrow num"><b>WEEKLY</b><span>每周一更新</span></p>
-<h1>本周动态</h1>
-<p class="lede">每周一汇总模型梯队的变化、新的官方文章和新收录的工具。第一期还没有发布。</p>
 </section>`;
 }
 
@@ -161,11 +193,11 @@ function main() {
   write('.nojekyll', '');
 
   write('index.html', page({
-    title: `${SITE_NAME} · 本周动态`,
-    description: latest ? `${latest.week.label}：${issueSummary(latest)}` : DESCRIPTION,
+    title: `${SITE_NAME} · 选模型、学 Agent、找工具`,
+    description: DESCRIPTION,
     pathName: '/',
-    active: 'latest',
-    body: latest ? `${hero(latest, { linkTitle: true })}\n${issueFacts(latest)}\n${issueArticle(latest)}\n${pager(latest, latest)}` : emptyHero(),
+    active: 'front',
+    body: frontHtml({ ...loadFront(), issue: latest }),
   }));
 
   write('weekly/index.html', page({

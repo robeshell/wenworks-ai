@@ -36,11 +36,12 @@ jobs:
         env:
           WEEK: ${{ inputs.week }}
           PRODUCTION: ${{ inputs.preview == true && '0' || '1' }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           if [ -n "$WEEK" ]; then
-            node scripts/build-all.mjs --collect "--week=$WEEK"
+            node scripts/build-all.mjs --hot --collect "--week=$WEEK"
           else
-            node scripts/build-all.mjs --collect
+            node scripts/build-all.mjs --hot --collect
           fi
       - name: Commit the issue
         if: inputs.preview != true

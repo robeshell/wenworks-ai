@@ -3,9 +3,12 @@ name: Deploy site
 # 把四个部分构建成一个站，发布到 GitHub Pages（ai.wenworks.app）。
 # - 合并到 main 之后
 # - 两个数据任务提交了新数据之后（它们用仓库自带的令牌推送，不会触发 push 事件）
+# - 每天四次定时重新发布，刷新首页的热点（Hacker News、GitHub 的公开数据，不提交进仓库）
 # - 推送到其他分支时只构建、不发布，产物在这次运行的 Artifacts 里
 on:
   push:
+  schedule:
+    - cron: "43 3,9,15,21 * * *"
   workflow_dispatch:
   workflow_run:
     workflows: ["Refresh model data", "Update agent docs index"]
@@ -41,7 +44,8 @@ jobs:
       - name: Build the whole site
         env:
           PRODUCTION: ${{ env.PUBLISH == 'true' && '1' || '0' }}
-        run: node scripts/build-all.mjs
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/build-all.mjs --hot
 
       - name: Upload preview
         if: env.PUBLISH != 'true'

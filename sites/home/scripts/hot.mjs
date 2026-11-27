@@ -1,0 +1,122 @@
+// Refresh data/hot.json: what people are talking about in AI right now, from
+// sources that are public and need no key.
+//
+//   node scripts/hot.mjs
+//
+//   Hacker News   stories of the last three days about AI, by points
+//   GitHub        repositories created in the last two weeks about AI, by stars
+//
+// Each source is read on its own. When one fails, the items it had last time
+// are kept, so the page never loses a column because of one bad request.
+// Only titles, numbers and links are stored.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const FILE = path.join(ROOT, 'data', 'hot.json');
+const DAY = 86400000;
+
+// Case matters for the short ones: "AI" is a topic, "ai" is a syllable.
+const EXACT = /\b(AI|AGI|LLMs?|GPTs?|RAG|MCP|xAI)\b/;
+const LOOSE = /\b(chatgpt|openai|anthropic|claude|gemini|deepmind|mistral|llama|deepseek|qwen|grok|copilot|codex|cursor|hugging ?face|agentic|coding agents?|language models?|foundation models?|machine learning|deep learning|neural net\w*|transformers?|diffusion|fine-?tun\w*|prompt(s|ing| injection| engineering)?|embeddings?|inference|chatbots?|vibe cod\w*)\b/i;
+export const aboutAi = (title) => EXACT.test(title) || LOOSE.test(title);
+
+/** The AI stories among Hacker News hits, most points first. */
+export function pickStories(hits, limit = 10) {
+  const seen = new Set();
+  return hits
+    .filter((h) => h?.title && aboutAi(h.title))
+    .sort((a, b) => (b.points ?? 0) - (a.points ?? 0))
+    .filter((h) => !seen.has(h.objectID) && seen.add(h.objectID))
+    .slice(0, limit)
+    .map((h) => ({
+      title: h.title,
+      url: h.url || `https://news.ycombinator.com/item?id=${h.objectID}`,
+      discussion: `https://news.ycombinator.com/item?id=${h.objectID}`,
+      points: h.points ?? 0,
+      comments: h.num_comments ?? 0,
+      date: (h.created_at || '').slice(0, 10),
+    }));
+}
+
+/** The most starred of the repositories found, one row each. */
+const clip = (text, max) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
+
+export function pickRepos(repos, limit = 8) {
+  const seen = new Set();
+  return repos
+    .filter((r) => r?.full_name && !r.fork && !r.archived)
+    .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
+    .filter((r) => !seen.has(r.full_name) && seen.add(r.full_name))
+    .slice(0, limit)
+    .map((r) => ({
+      name: r.full_name,
+      url: r.html_url,
+      description: clip((r.description || '').trim(), 110),
+      stars: r.stargazers_count ?? 0,
+      language: r.language || '',
+      date: (r.created_at || '').slice(0, 10),
+    }));
+}
+
+async function getJson(url, headers = {}) {
+  const response = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'wenworks-ai-home', ...headers }, signal: AbortSignal.timeout(20000) });
+  if (!response.ok) throw new Error(`${new URL(url).host} answered ${response.status}`);
+  return response.json();
+}
+
+async function hackerNews(now) {
+  const since = Math.floor((now - 3 * DAY) / 1000);
+  const pages = await Promise.all([0, 1].map((page) => getJson(`https://hn.algolia.com/api/v1/search?tags=story&numericFilters=created_at_i%3E${since},points%3E%3D60&hitsPerPage=100&page=${page}`)));
+  return pickStories(pages.flatMap((p) => p.hits ?? []));
+}
+
+async function github(now) {
+  const since = new Date(now - 14 * DAY).toISOString().slice(0, 10);
+  // The token GitHub Actions hands every run only raises the rate limit. A token
+  // that is refused (a local one for another service, say) is dropped and the
+  // request repeated without it.
+  let headers = process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {};
+  const search = (q) => getJson(`https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=15`, { accept: 'application/vnd.github+json', ...headers });
+  const found = [];
+  for (const topic of ['ai', 'llm', 'ai-agents', 'mcp', 'agent']) {
+    const q = `topic:${topic} created:>${since} stars:>50`;
+    const result = await search(q).catch((error) => {
+      if (!headers.authorization) throw error;
+      headers = {};
+      return search(q);
+    });
+    found.push(...(result.items ?? []));
+  }
+  return pickRepos(found);
+}
+
+async function main() {
+  const now = Date.now();
+  let previous = {};
+  try {
+    previous = JSON.parse(fs.readFileSync(FILE, 'utf8'));
+  } catch {}
+  const out = { updatedAt: new Date(now).toISOString() };
+  for (const [key, read] of [['hn', hackerNews], ['github', github]]) {
+    try {
+      const items = await read(now);
+      if (!items.length) throw new Error('no items came back');
+      out[key] = { updatedAt: out.updatedAt, items };
+    } catch (error) {
+      console.log(`::warning title=hot ${key} kept as it was::${error instanceof Error ? error.message : error}`);
+      out[key] = previous[key] ?? { updatedAt: null, items: [] };
+    }
+  }
+  fs.mkdirSync(path.dirname(FILE), { recursive: true });
+  fs.writeFileSync(FILE, JSON.stringify(out, null, 2) + '\n');
+  console.log(`hot: ${out.hn.items.length} stories, ${out.github.items.length} repositories`);
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
