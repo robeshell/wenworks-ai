@@ -11,7 +11,8 @@
 // Only titles, numbers and links are stored.
 //
 // The newest official article titles (from the agents part's data/articles.json)
-// are translated here too, so the front page shows them in Chinese.
+// and the hand-picked ones (MUST in its page template) are translated here too,
+// so the front page shows them in Chinese.
 //
 // Titles and repository descriptions are machine-translated into Chinese by
 // Google Translate's keyless web endpoint, with MyMemory's free API (no key) as
@@ -22,11 +23,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { newestArticles } from './lib/front.mjs';
+import { pickMust, readMust } from './lib/must.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FILE = path.join(ROOT, 'data', 'hot.json');
 const CACHE = path.join(ROOT, '.cache', 'translations.json');
 const ARTICLES = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents', 'data', 'articles.json');
+const TEMPLATE = path.resolve(ROOT, process.env.AGENTS_DIR || '../agents', 'src', 'template.html');
 const DAY = 86400000;
 
 // Case matters for the short ones: "AI" is a topic, "ai" is a syllable.
@@ -207,6 +210,10 @@ async function main() {
   } catch (error) {
     console.log(`::warning title=hot articles skipped::${error instanceof Error ? error.message : error}`);
   }
+  // The hand-picked articles on the front page are translated the same way.
+  try {
+    for (const m of pickMust(readMust(fs.readFileSync(TEMPLATE, 'utf8')))) if (!articles.some((a) => a.url === m.url)) articles.push({ url: m.url, title: m.title });
+  } catch {}
   out.articles = { items: articles };
   await translate(out);
   fs.mkdirSync(path.dirname(FILE), { recursive: true });

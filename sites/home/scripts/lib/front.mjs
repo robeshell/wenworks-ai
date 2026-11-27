@@ -90,15 +90,16 @@ function picksHtml(picks) {
  * The body of the front page.
  *   models   modelsNow(...) or null        docs      [{ name, url, pages }]
  *   catalog  catalogCounts(...) or null    hot       data/hot.json or null
- *   picks    hand-picked links (X posts)   articles  newestArticles(...)
+ *   picks    hand-picked links (X posts)   articles  newestArticles(...), for the recent lines
+ *   recommended  pickMust(...): the hand-picked articles
  *   issue    the latest weekly issue or null
  */
-export function frontHtml({ models, docs, catalog, hot, picks = [], articles = [], issue }) {
+export function frontHtml({ models, docs, catalog, hot, picks = [], articles = [], recommended = [], issue }) {
   const parts = [];
   const hotBody = hotHtml(hot);
   if (picks.length) parts.push(sec('picks', '值得看的讨论', `${picks.length} 条`, picksHtml(picks)));
   if (hotBody) parts.push(sec('hot', '热点', hot.updatedAt ? `${day(hot.updatedAt)}更新` : '', hotBody));
-  if (articles.length) parts.push(sec('articles', '官方文章', link('/agents/articles/', '全部 →'), `<ul class="rows">${articles.map((a) => `<li><span>${zhLink(a.url, a.titleZh, a.title)}</span><span class="side quiet">${esc(a.src)}${a.date ? ` · <span class="num">${esc(day(a.date))}</span>` : ''}</span></li>`).join('')}</ul>`));
+  if (recommended.length) parts.push(sec('recommended', '推荐文章', link('/agents/articles/', '全部 →'), `<ul class="rows picks">${recommended.map((a) => `<li><span>${zhLink(a.url, a.titleZh, a.title)}${a.why ? `<span class="why">${esc(a.why)}</span>` : ''}</span><span class="side quiet">${esc(a.src)}</span></li>`).join('')}</ul>`));
   return `<section class="hero front-hero">
 <h1>选模型、学 Agent、找工具</h1>
 </section>
