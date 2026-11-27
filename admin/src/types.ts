@@ -19,6 +19,13 @@ export type Overview = {
   editedSinceLastPublish: number;
   publishReady: boolean;
   inbox: number;
+  inboxItems: { id: number; url: string; status: 'new' | 'drafted' | 'failed'; title: string; at: string }[];
+  activity: { at: string; by: string; kind: 'save' | 'publish' | 'inbox'; text: string; link: string | null }[];
+};
+export type Health = {
+  pending: number | null;
+  pendingError: string | null;
+  workflows: { file: string; label: string; hint: string; available: boolean; status: string | null; conclusion: string | null; at: string | null; event: string | null; url: string }[];
 };
 export type InboxItem = {
   id: number; url: string; note: string; status: 'new' | 'drafted' | 'failed' | 'accepted' | 'picked' | 'dismissed';

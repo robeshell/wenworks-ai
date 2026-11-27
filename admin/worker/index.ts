@@ -13,6 +13,51 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 const STATUSES: Status[] = ['draft', 'active', 'archived'];
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
+/** One timeline from saves, publishes and inbox decisions, newest first. */
+async function activity(env: Env, entries: Entry[]) {
+  const title = new Map(entries.map((e) => [e.id, e.title]));
+  const [saves, publishes, inbox] = await Promise.all([
+    env.DB.prepare('SELECT entry_id, saved_at, saved_by FROM revisions ORDER BY id DESC LIMIT 20').all<{ entry_id: string; saved_at: string; saved_by: string }>(),
+    env.DB.prepare('SELECT id, published_at, published_by, message, files, commit_sha FROM publishes ORDER BY id DESC LIMIT 10').all<any>(),
+    env.DB.prepare("SELECT id, url, status, draft, updated_at, created_by FROM inbox WHERE status IN ('accepted', 'picked', 'dismissed', 'drafted') ORDER BY updated_at DESC LIMIT 10").all<any>(),
+  ]);
+  const VERB: Record<string, string> = { accepted: '收录了', picked: '放到首页：', dismissed: '丢弃了', drafted: 'AI 起草了' };
+  const items = [
+    ...saves.results.map((r) => ({ at: r.saved_at, by: r.saved_by, kind: 'save', text: r.entry_id === 'editorial' ? '修改了 Agent 导航的内容' : `修改了「${title.get(r.entry_id) ?? r.entry_id}」`, link: r.entry_id === 'editorial' ? '/agents/paths' : title.has(r.entry_id) ? `/content/${encodeURIComponent(r.entry_id)}` : null })),
+    ...publishes.results.map((r) => ({ at: r.published_at, by: r.published_by, kind: 'publish', text: `发布了 ${JSON.parse(r.files).length} 个文件${r.message ? `：${r.message}` : ''}`, link: '/publish' })),
+    ...inbox.results.map((r) => ({ at: r.updated_at, by: r.created_by, kind: 'inbox', text: `${VERB[r.status]}${(r.draft && JSON.parse(r.draft).title) || r.url}`, link: '/inbox' })),
+  ];
+  return items.sort((a, b) => String(b.at).localeCompare(String(a.at))).slice(0, 15);
+}
+
+const WORKFLOWS = [
+  { file: 'deploy.yml', label: '网站发布', hint: '合并到 main、后台发布、定时刷新热点时构建并上线' },
+  { file: 'refresh-models.yml', label: '模型数据刷新', hint: '每天两次，需要仓库 Secret AA_API_KEY' },
+  { file: 'update-agents.yml', label: 'Agent 文档索引', hint: '每天一次，比对各家官方文档目录' },
+  { file: 'weekly.yml', label: '每周动态', hint: '每周一生成上一周的动态' },
+];
+let healthCache: { at: number; workflows: unknown[] } | null = null;
+
+/** The latest run of each scheduled job and of the site deploy, from GitHub Actions. */
+async function workflowStatus(env: Env) {
+  if (healthCache && Date.now() - healthCache.at < 120_000) return healthCache.workflows;
+  const base = env.GITHUB_API || 'https://api.github.com';
+  const get = async (path: string) => {
+    const h: Record<string, string> = { 'user-agent': 'wenworks-admin', accept: 'application/vnd.github+json' };
+    let res = await fetch(`${base}/repos/${env.GITHUB_REPO}${path}`, { headers: env.GITHUB_TOKEN ? { ...h, authorization: `Bearer ${env.GITHUB_TOKEN}` } : h });
+    // The publish token may not be allowed to read Actions; the repository is public, so ask without it.
+    if (!res.ok && env.GITHUB_TOKEN) res = await fetch(`${base}/repos/${env.GITHUB_REPO}${path}`, { headers: h });
+    return res.ok ? res.json<any>() : null;
+  };
+  const workflows = await Promise.all(WORKFLOWS.map(async (w) => {
+    const body = await get(`/actions/workflows/${w.file}/runs?branch=${env.GITHUB_BRANCH}&per_page=1`).catch(() => null);
+    const run = body?.workflow_runs?.[0];
+    return { ...w, available: Boolean(body), status: run?.status ?? null, conclusion: run?.conclusion ?? null, at: run?.run_started_at ?? run?.created_at ?? null, event: run?.event ?? null, url: run?.html_url ?? `https://github.com/${env.GITHUB_REPO}/actions/workflows/${w.file}` };
+  }));
+  healthCache = { at: Date.now(), workflows };
+  return workflows;
+}
+
 async function getSettings(env: Env): Promise<Record<string, string>> {
   const { results } = await env.DB.prepare('SELECT key, value FROM settings').all<{ key: string; value: string }>();
   return Object.fromEntries(results.map((r) => [r.key, r.value]));
@@ -113,7 +158,22 @@ async function api(request: Request, env: Env, user: string, url: URL): Promise<
     const todo = entries.filter((e) => e.status !== 'archived').map(summary).filter((e) => e.issues.length).slice(0, 50);
     const recent = [...entries].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0, 8).map(summary);
     const inbox = await env.DB.prepare("SELECT COUNT(*) AS n FROM inbox WHERE status IN ('new', 'drafted', 'failed')").first<{ n: number }>();
-    return json({ counts, total: entries.length, todo, recent, lastPublish: last, editedSinceLastPublish: sinceLast, publishReady: Boolean(env.GITHUB_TOKEN), inbox: inbox?.n ?? 0 });
+    const inboxItems = (await env.DB.prepare("SELECT id, url, status, draft, updated_at FROM inbox WHERE status IN ('new', 'drafted', 'failed') ORDER BY (status = 'drafted') DESC, id DESC LIMIT 5").all<any>()).results
+      .map((r) => ({ id: r.id, url: r.url, status: r.status, title: r.draft ? JSON.parse(r.draft).title : '', at: r.updated_at }));
+    return json({ counts, total: entries.length, todo, recent, lastPublish: last, editedSinceLastPublish: sinceLast, publishReady: Boolean(env.GITHUB_TOKEN), inbox: inbox?.n ?? 0, inboxItems, activity: await activity(env, entries) });
+  }
+
+  if (pathname === '/api/health' && method === 'GET') {
+    let pending: number | null = null;
+    let pendingError: string | null = null;
+    if (env.GITHUB_TOKEN) {
+      try {
+        pending = (await publishPlan(env)).changes.length;
+      } catch (error) {
+        pendingError = error instanceof Error ? error.message : String(error);
+      }
+    }
+    return json({ pending, pendingError, workflows: await workflowStatus(env) });
   }
 
   if (pathname === '/api/taxonomy') {
