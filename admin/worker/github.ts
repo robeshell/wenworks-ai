@@ -5,7 +5,8 @@ import type { Env } from './env';
 
 export async function gh<T>(env: Env, path: string, init: RequestInit = {}): Promise<T> {
   if (!env.GITHUB_TOKEN) throw new HttpError(503, '还没有配置 GitHub 令牌（GITHUB_TOKEN），暂时不能发布。');
-  const res = await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}${path}`, {
+  // GITHUB_API only exists in local development (.dev.vars), to point at a stand-in.
+  const res = await fetch(`${env.GITHUB_API || 'https://api.github.com'}/repos/${env.GITHUB_REPO}${path}`, {
     ...init,
     headers: {
       authorization: `Bearer ${env.GITHUB_TOKEN}`,

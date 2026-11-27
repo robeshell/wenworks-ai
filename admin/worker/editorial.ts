@@ -21,7 +21,7 @@ function headers(env: Env, raw = false): Record<string, string> {
 
 /** The file on the branch: its blob id and text. */
 async function repoFile(env: Env, path: string): Promise<{ sha: string; text: string }> {
-  const res = await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/contents/${path}?ref=${env.GITHUB_BRANCH}`, { headers: headers(env) });
+  const res = await fetch(`${env.GITHUB_API || 'https://api.github.com'}/repos/${env.GITHUB_REPO}/contents/${path}?ref=${env.GITHUB_BRANCH}`, { headers: headers(env) });
   if (!res.ok) {
     // Without a token the API allows few requests; the raw file host has no such limit (it may lag by a few minutes).
     const raw = await fetch(`https://raw.githubusercontent.com/${env.GITHUB_REPO}/${env.GITHUB_BRANCH}/${path}`);

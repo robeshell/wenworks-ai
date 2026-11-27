@@ -4,3 +4,6 @@ DEV_USER=dev@localhost
 # GITHUB_TOKEN=
 # 想在本地试 AI 起草：填 OPENROUTER_API_KEY；或者用 OPENROUTER_URL 指向一个本地的模拟服务。
 # OPENROUTER_API_KEY=
+# 想在本地试发布和回退：用 scripts/fake-github.py 起一个模拟的 GitHub，再填：
+# GITHUB_TOKEN=local-test
+# GITHUB_API=http://127.0.0.1:8798

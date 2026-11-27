@@ -6,7 +6,7 @@
 - **收件箱**：贴链接，AI（经 OpenRouter）读网页按 `sites/tools/skills/curator-ingest/SKILL.md` 的口径起草；审核后收录成草稿，或放到首页讨论。
 - **Agent 导航**：推荐文章、学习路线和上手清单、对照表（基本情况、价格、功能对照），即 `sites/agents/data/editorial.json`。页面从各家的文档目录（`data/<agent>.txt`）里按标题挑。
 - **首页**：「值得看的讨论」那一栏（`sites/home/data/picks.json`）。
-- **发布**：把以上改动一次提交到仓库。
+- **发布**：把以上改动一次提交到仓库；发布记录里可以回退某一次发布。
 
 ## 怎么运转
 
@@ -23,6 +23,7 @@
 - 生成的文件和 Curator 导出的格式逐字相同：`sites/tools/data/tools.json`、`data/route-aliases.json`、`content/<板块>s/<地址名>.md`。`npm test` 会检查"从仓库导入再导出，文件一个字不变"。
 - 发布前会和仓库对比，只提交有变化的文件；如果预览后仓库又有了新提交，发布会被拒绝，刷新后再发。
 - 每次保存前的版本都存在修改记录里，可以在编辑页恢复。
+- **回退**：在发布记录里点某一次的「回退」，后台从仓库读出那次发布之前的文件，把后台里的内容恢复过去（每条留修改记录；那次新上线的条目退回草稿），然后照常发布，仓库里多一个"回退"提交，历史不改写。之后又有发布改过同样文件的，要先回退最近那次；涉及的文件有未发布改动时会拒绝，免得覆盖。
 
 ## 目录
 
@@ -45,6 +46,8 @@ npm run build && npx wrangler dev       # http://localhost:8787
 ```
 
 改界面时可以另开 `npm run dev`（http://localhost:5173，接口转给 8787）。
+
+想在本地试发布和回退：`scripts/fake-github.py` 用一个本地裸仓库模拟 GitHub 接口，用法写在文件开头；`.dev.vars` 里设 `GITHUB_API` 指向它。
 
 ## 部署
 
