@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { catalogCounts, frontHtml, modelsNow, newestArticles } from './lib/front.mjs';
+import { catalogCounts, frontHtml, modelsNow, newestArticles, withTranslations } from './lib/front.mjs';
 import { SITES, esc, issueFacts, issueHtml, issueSummary, issueTitle, issueUrl, thread } from './lib/render.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -53,13 +53,14 @@ function loadFront() {
       return null;
     }
   }).filter(Boolean);
+  const hot = readJson(path.join(ROOT, 'data', 'hot.json'));
   return {
     models: modelsNow(latestSnapshot ? readJson(path.join(historyDir, latestSnapshot)) : null, readJson(path.join(MODELS_DIR, 'data', 'tier-changes.json'))),
     docs,
     catalog: catalogCounts(readJson(TOOLS_CATALOG_FILE)),
-    hot: readJson(path.join(ROOT, 'data', 'hot.json')),
+    hot,
     picks: readJson(path.join(ROOT, 'data', 'picks.json'), []),
-    articles: newestArticles(readJson(path.join(AGENTS_DIR, 'data', 'articles.json'), [])),
+    articles: withTranslations(newestArticles(readJson(path.join(AGENTS_DIR, 'data', 'articles.json'), [])), hot),
   };
 }
 

@@ -541,9 +541,8 @@ a {
   line-height: 1.5;
 }
 .recent .line {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .recent a {
   text-decoration: underline;
@@ -607,13 +606,25 @@ a {
 }
 .hot .line {
   flex: 1;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+/* 项目简介在名字下面，最多两行 */
+.hot .desc {
+  display: -webkit-box;
+  margin-top: 0.25rem;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: var(--mute);
+  font-size: 0.875rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 .hot .side {
+  flex: none;
   color: var(--mute);
   font-size: 0.8125rem;
+  white-space: nowrap;
 }
 .hot li:first-child .side {
   color: var(--accent);
