@@ -512,31 +512,99 @@ a {
     flex: none;
   }
 }
+/* 首页：最近更新，一句话一行 */
+.recent {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.recent li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.375rem 0;
+  font-size: 0.9375rem;
+}
+.recent .num {
+  flex: none;
+  width: 4.5rem;
+  color: var(--mute);
+  font-size: 0.8125rem;
+}
+.recent b {
+  flex: none;
+  padding: 0 0.375rem;
+  border: 1px solid var(--line-strong);
+  color: var(--mute);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.recent .line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.recent a {
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 4px;
+}
+.recent a:hover {
+  text-decoration-color: currentColor;
+}
 /* 首页：热点分两栏，一条一行 */
 .front {
-  margin-top: 0.5rem;
-  border-top: 0;
+  margin-top: 3rem;
 }
 .front section {
-  padding: 1.5rem 0;
+  padding: 2.5rem 0 3rem;
 }
 .cols {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem 2.5rem;
+  gap: 2.5rem 3rem;
 }
-.cols h3 {
-  margin-top: 0;
+.issue .hot-col h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0 0 0.75rem;
+  letter-spacing: 0;
+}
+.hot-col h3 b {
+  padding: 0.125rem 0.5rem;
+  background: var(--ink);
+  color: #ffffff;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.hot {
+  counter-reset: hot;
+  border-top: 1px solid var(--ink);
 }
 .hot li {
   display: flex;
   align-items: baseline;
-  gap: 1rem;
-  padding: 0.5rem 0;
-  border-top: 1px solid var(--line);
-  font-size: 0.9375rem;
+  gap: 0.875rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--line);
+  counter-increment: hot;
 }
-.hot li > a,
+.hot li::before {
+  flex: none;
+  width: 1.25rem;
+  color: var(--mute);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  content: counter(hot, decimal-leading-zero);
+}
+.hot li:first-child::before {
+  color: var(--accent);
+  font-weight: 500;
+}
 .hot .line {
   flex: 1;
   overflow: hidden;
@@ -544,7 +612,14 @@ a {
   white-space: nowrap;
 }
 .hot .side {
+  color: var(--mute);
   font-size: 0.8125rem;
+}
+.hot li:first-child .side {
+  color: var(--accent);
+}
+.front .rows li {
+  padding: 0.875rem 0;
 }
 .front .count a {
   text-decoration: none;
@@ -555,6 +630,14 @@ a {
 @media (max-width: 64rem) {
   .cols {
     grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 46rem) {
+  .front section {
+    padding: 2rem 0 2.25rem;
+  }
+  .recent .num {
+    width: auto;
   }
 }
 /* 一期简报：左边栏目名，右边内容 */

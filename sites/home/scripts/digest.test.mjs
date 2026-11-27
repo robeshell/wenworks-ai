@@ -161,7 +161,7 @@ test('every line of the thread fits 140 Chinese characters', () => {
 });
 
 // ---- front page ----
-import { catalogCounts, day, frontHtml, modelsNow, newestArticles } from './lib/front.mjs';
+import { catalogCounts, day, frontHtml, modelsNow, newestArticles, recentLines } from './lib/front.mjs';
 import { aboutAi, pickRepos, pickStories } from './hot.mjs';
 
 test('hot: only AI stories are kept, most points first, with a discussion link', () => {
@@ -208,8 +208,19 @@ test('front: reads the board, the newest articles and the catalog', () => {
 test('front: a missing source leaves its block out and titles are escaped', () => {
   const bare = frontHtml({ models: null, docs: [], catalog: null, hot: null, issue: null });
   assert.ok(bare.includes('href="/models/"') && bare.includes('href="/agents/"') && bare.includes('href="/tools/"'));
-  assert.ok(!bare.includes('id="hot"') && !bare.includes('id="weekly"'));
+  assert.ok(!bare.includes('id="hot"') && !bare.includes('class="recent"'));
   const full = frontHtml({ models: null, docs: [], catalog: null, issue: null, hot: { updatedAt: '2026-11-27T00:00:00Z', hn: { items: [{ title: '<b>AI</b>', url: 'javascript:alert(1)', discussion: 'https://news.ycombinator.com/item?id=1', points: 1200, comments: 3 }] }, github: { items: [] } } });
   assert.ok(full.includes('&lt;b&gt;AI&lt;/b&gt;') && !full.includes('javascript:'));
   assert.ok(full.includes('1,200'));
+});
+
+test('front: recent lines are one sentence each, newest first', () => {
+  const lines = recentLines({
+    models: { updatedAt: '2026-11-24T22:12:35Z', leader: { family: 'A', score: 64.8 }, moves: 0 },
+    articles: [{ src: 'Blog', title: 'New', url: 'https://x/1', date: '2026-11-26' }, { src: 'Blog', title: 'Undated', url: 'https://x/2' }],
+    issue: { week: { endDate: '2026-11-22' }, tools: { items: [{ title: 'Tool', url: 'https://ai.wenworks.app/tools/', summary: '一句话' }] } },
+  });
+  assert.deepEqual(lines.map((l) => l.tag), ['文章', '模型', '工具']);
+  assert.ok(lines[1].html.includes('梯队没有变动'));
+  assert.deepEqual(recentLines({ models: null }), []);
 });

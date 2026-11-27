@@ -1,7 +1,7 @@
 // The front page: the three parts of the site with what is current in each,
 // then what is being talked about, then the newest official articles and the
 // latest weekly issue. All of it is put together from data at build time.
-import { TOOL_KIND, esc, issueSummary } from './render.mjs';
+import { TOOL_KIND, esc } from './render.mjs';
 
 const safeUrl = (url) => (/^(https?:\/\/|\/)/.test(String(url)) ? String(url) : '#');
 const link = (url, text, attrs = '') => `<a href="${esc(safeUrl(url))}"${attrs}>${esc(text)}</a>`;
@@ -52,12 +52,25 @@ const sec = (id, title, side, body) => `<section id="${id}"><div class="sec-head
 function hotHtml(hot, limit = 5) {
   const stories = (hot?.hn?.items ?? []).slice(0, limit);
   const repos = (hot?.github?.items ?? []).slice(0, limit);
+  const col = (tag, what, rows) => `<div class="hot-col"><h3><b>${tag}</b><span>${what}</span></h3>\n<ol class="hot">${rows.join('')}</ol></div>`;
   const cols = [];
-  if (stories.length) cols.push(`<div><h3>Hacker News</h3>
-<ol class="hot">${stories.map((s) => `<li>${link(s.url, s.title, ' rel="noopener"')}<span class="side quiet num">${count(s.points)}</span></li>`).join('')}</ol></div>`);
-  if (repos.length) cols.push(`<div><h3>GitHub 新项目</h3>
-<ol class="hot">${repos.map((r) => `<li><span class="line">${link(r.url, r.name, ' rel="noopener"')}${r.description ? `<span class="quiet"> ${esc(r.description)}</span>` : ''}</span><span class="side quiet num">★ ${count(r.stars)}</span></li>`).join('')}</ol></div>`);
+  if (stories.length) cols.push(col('Hacker News', '近三天的 AI 话题', stories.map((s) => `<li><span class="line">${link(s.url, s.title, ' rel="noopener"')}</span><span class="side num">${count(s.points)} 分</span></li>`)));
+  if (repos.length) cols.push(col('GitHub', '近两周的新项目', repos.map((r) => `<li><span class="line">${link(r.url, r.name, ' rel="noopener"')}${r.description ? `<span class="quiet"> ${esc(r.description)}</span>` : ''}</span><span class="side num">★ ${count(r.stars)}</span></li>`)));
   return cols.length ? `<div class="cols">${cols.join('\n')}</div>` : '';
+}
+
+/** What changed lately, one sentence a line, newest first. */
+export function recentLines({ models, articles = [], issue }) {
+  const lines = [];
+  if (models) lines.push({ date: models.updatedAt, tag: '模型', html: `梯队榜更新，榜首 ${link('/models/', models.leader.family)}${models.moves ? `，${models.moves} 项变动` : '，梯队没有变动'}` });
+  for (const a of articles.slice(0, 1)) if (a.date) lines.push({ date: a.date, tag: '文章', html: `${esc(a.src)}：${link(a.url, a.title, ' rel="noopener"')}` });
+  for (const t of (issue?.tools?.items ?? []).slice(0, 2)) lines.push({ date: issue.week.endDate, tag: '工具', html: `新收录 ${link(t.url, t.title)}${t.summary ? `，${esc(t.summary)}` : ''}` });
+  const key = (d) => (/^\d{4}-\d{2}-\d{2}$/.test(d) ? `${d}T12:00:00+08:00` : d);
+  return lines.sort((a, b) => new Date(key(b.date)) - new Date(key(a.date))).slice(0, 4);
+}
+
+function recentHtml(lines) {
+  return lines.length ? `<ul class="recent" aria-label="最近更新">${lines.map((l) => `<li><span class="num">${esc(day(l.date))}</span><b>${l.tag}</b><span class="line">${l.html}</span></li>`).join('')}</ul>` : '';
 }
 
 function picksHtml(picks) {
@@ -77,11 +90,11 @@ export function frontHtml({ models, docs, catalog, hot, picks = [], articles = [
   if (picks.length) parts.push(sec('picks', '值得看的讨论', `${picks.length} 条`, picksHtml(picks)));
   if (hotBody) parts.push(sec('hot', '热点', hot.updatedAt ? `${day(hot.updatedAt)}更新` : '', hotBody));
   if (articles.length) parts.push(sec('articles', '官方文章', link('/agents/articles/', '全部 →'), `<ul class="rows">${articles.map((a) => `<li><span>${link(a.url, a.title, ' rel="noopener"')}</span><span class="side quiet">${esc(a.src)}${a.date ? ` · <span class="num">${esc(day(a.date))}</span>` : ''}</span></li>`).join('')}</ul>`));
-  if (issue) parts.push(sec('weekly', '每周动态', link('/weekly/', '往期 →'), `<p>${link(`/weekly/${issue.number}/`, `第 ${issue.number} 期 · ${issue.week.label}`)}<br><span class="quiet">${esc(issueSummary(issue))}</span></p>`));
   return `<section class="hero front-hero">
 <h1>选模型、学 Agent、找工具</h1>
 </section>
 ${doors({ models, docs, catalog })}
+${recentHtml(recentLines({ models, articles, issue }))}
 <div class="issue front">
 ${parts.join('\n')}
 </div>`;
