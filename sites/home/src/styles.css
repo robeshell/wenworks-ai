@@ -643,7 +643,14 @@ a {
 .hot li:first-child .side {
   color: var(--accent);
 }
-/* 首页的官方文章：不画分隔线 */
+/* 首页的推荐文章：标题下面一句推荐理由 */
+.picks .why {
+  display: block;
+  margin-top: 0.125rem;
+  color: var(--mute);
+  font-size: 0.875rem;
+}
+/* 首页的文章列表：不画分隔线 */
 .front .rows li,
 .front .rows li:last-child {
   padding: 0.5rem 0;

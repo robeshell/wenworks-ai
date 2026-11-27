@@ -246,7 +246,8 @@ test('front: official article titles take their translation by url', () => {
   assert.equal(articles[0].titleZh, '你好');
   assert.equal(articles[1].titleZh, undefined);
   const html = frontHtml({ models: null, docs: [], catalog: null, issue: null, hot: null, articles });
-  assert.ok(html.includes('title="Hello">你好</a>') && html.includes('>Other</a>'));
+  const recent = recentLines({ articles });
+  assert.ok(recent[0].html.includes('title="Hello">你好</a>'));
   assert.deepEqual(withTranslations([{ title: 'A', url: 'https://x/3' }], null), [{ title: 'A', url: 'https://x/3' }]);
 });
 
@@ -255,4 +256,24 @@ test('hot: product names come back after translation', () => {
   assert.equal(fixNames('我们如何在产品中包含克劳德'), '我们如何在产品中包含 Claude');
   assert.equal(fixNames('“克劳德”'), '“Claude”');
   assert.equal(fixNames('人择 跌破 IPO 价格'), 'Anthropic 跌破 IPO 价格');
+});
+
+import { pickMust, readMust } from './lib/must.mjs';
+
+test('recommended: the hand-picked list is read from the agents template, agents in turn', () => {
+  const template = `<script>\nconst X=1;\nconst MUST=[\n {a:'claude',t:'C1',u:'https://a/1',w:'一'},\n {a:'claude',t:'C2',u:'https://a/2',w:'二'},\n {a:'codex',t:'X1',u:'https://b/1',w:'三'},\n {a:'grok',t:'bad',u:'javascript:x'},\n];\nconst START={};`;
+  const list = readMust(template);
+  assert.equal(list.length, 3);
+  assert.deepEqual(pickMust(list).map((m) => m.title), ['C1', 'X1', 'C2']);
+  assert.equal(pickMust(list)[1].src, 'Codex');
+  assert.deepEqual(readMust('no list here'), []);
+  assert.deepEqual(readMust('const MUST=[ broken(\n];'), []);
+  const html = frontHtml({ models: null, docs: [], catalog: null, hot: null, issue: null, recommended: [{ title: 'T', titleZh: '标题', url: 'https://a/1', why: '理由', src: 'Codex' }] });
+  assert.ok(html.includes('推荐文章') && html.includes('title="T">标题</a>') && html.includes('<span class="why">理由</span>'));
+});
+
+test('recommended: the real template still has a list to read', async () => {
+  const fs = await import('node:fs');
+  const list = readMust(fs.readFileSync(new URL('../../agents/src/template.html', import.meta.url), 'utf8'));
+  assert.ok(list.length >= 4);
 });
