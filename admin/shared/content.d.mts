@@ -51,3 +51,25 @@ export type Draft = {
 };
 export function normalizeDraft(raw: any, url: string): Draft;
 export function entryFromDraft(d: Draft): Entry;
+
+export const EDITORIAL_FILE: string;
+export type AgentId = 'claude' | 'codex' | 'antigravity' | 'grok';
+export const AGENT_IDS: AgentId[];
+export const AGENT_NAME: Record<AgentId, string>;
+export type Link = [string, string];
+export type Cell = string | number | Link;
+export type Editorial = {
+  agents: Record<AgentId, { name: string; maker: string; base: string; key: string; note: string; news?: Link[]; stages: { n: string; d: string; p: string[] }[] }>;
+  cmp2: Record<string, [Link | null, Link | null]>;
+  cmp: [string, string, string, string, string][];
+  must: { a: AgentId; t: string; u: string; w: string }[];
+  start: Record<AgentId, Link[]>;
+  pick: [string, Record<AgentId, Cell>][];
+  price: [string, Record<AgentId, Cell>][];
+};
+export type CompareRow = { label: string; cells: Record<AgentId, Link> };
+export function editorialFile(data: Editorial): string;
+export function comparisonRows(cmp: Editorial['cmp'], cmp2: Editorial['cmp2']): CompareRow[];
+export function comparisonData(rows: CompareRow[]): { cmp: Editorial['cmp']; cmp2: Editorial['cmp2'] };
+export type DocPage = { title: string; slug: string; group: string };
+export function docsIndex(text: string): DocPage[];

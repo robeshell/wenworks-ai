@@ -1,7 +1,8 @@
 // Wenworks AI admin API. Everything under /api/ needs a signed-in user; the rest
 // of the paths are the interface's static files (dist/).
-import { ASSET_PATH, KINDS, PICKS_FILE, assetRepoPath, entryFromDraft, entryIssues, normalizeDraft, picksFile, planPublishBySha, publicFiles, type Draft, type Entry, type Kind, type Pick, type Status } from '../shared/content.mjs';
+import { ASSET_PATH, EDITORIAL_FILE, KINDS, PICKS_FILE, assetRepoPath, entryFromDraft, entryIssues, normalizeDraft, picksFile, planPublishBySha, publicFiles, type Draft, type Entry, type Kind, type Pick, type Status } from '../shared/content.mjs';
 import { draftFor, listModels } from './ai';
+import { agentDocs, editorialForPublish, editorialPublished, getEditorial, reload as reloadEditorial, saveSections } from './editorial';
 import { currentUser } from './auth';
 import { aliasesForExport, allEntries, getEntry, saveStatements } from './db';
 import type { Env } from './env';
@@ -74,7 +75,13 @@ async function publishPlan(env: Env) {
     next[path] = new Uint8Array(a.data);
     if (path in repo.images) images[path] = repo.images[path];
   }
-  const changes = await planPublishBySha(next, { ...repo.files, ...images });
+  // The agents' editorial file goes only when it was edited here, and never over a change made outside.
+  const editorial = await editorialForPublish(env, repo.files[EDITORIAL_FILE]);
+  if (editorial.content) next[EDITORIAL_FILE] = editorial.content;
+  const current = { ...repo.files, ...images };
+  if (!editorial.content) delete current[EDITORIAL_FILE];
+  const changes = await planPublishBySha(next, current);
+  const conflicts = editorial.conflict ? [{ path: EDITORIAL_FILE, reason: editorial.conflict }] : [];
   // Which entries each changed file comes from, so the page can name them.
   const byPath = new Map<string, { id: string; title: string; kind: Kind }[]>();
   for (const e of entries) {
@@ -85,7 +92,8 @@ async function publishPlan(env: Env) {
     const img = e.payload[key];
     if (typeof img === 'string' && img) byPath.set(assetRepoPath(img), [...(byPath.get(assetRepoPath(img)) ?? []), { id: e.id, title: e.title, kind: e.kind }]);
   }
-  return { repo, changes, describe: (path: string) => byPath.get(path) ?? [] };
+  byPath.set(EDITORIAL_FILE, []);
+  return { repo, changes, conflicts, editorialContent: editorial.content, describe: (path: string) => byPath.get(path) ?? [] };
 }
 
 async function api(request: Request, env: Env, user: string, url: URL): Promise<Response> {
@@ -292,6 +300,19 @@ async function api(request: Request, env: Env, user: string, url: URL): Promise<
     return json({ saved: clean.length });
   }
 
+  // ---- agents' editorial content -------------------------------------------
+  if (pathname === '/api/editorial' && method === 'GET') return json(await getEditorial(env));
+  if (pathname === '/api/editorial' && method === 'PUT') {
+    const { sections } = await body<{ sections: Record<string, unknown> }>(request);
+    await saveSections(env, sections ?? {}, user, now);
+    return json(await getEditorial(env));
+  }
+  if (pathname === '/api/editorial/reload' && method === 'POST') {
+    await reloadEditorial(env);
+    return json(await getEditorial(env));
+  }
+  if (pathname === '/api/agents/docs' && method === 'GET') return json(await agentDocs(env));
+
   // ---- AI settings ---------------------------------------------------------
   if (pathname === '/api/settings/ai' && method === 'GET') {
     const s = await getSettings(env);
@@ -306,17 +327,18 @@ async function api(request: Request, env: Env, user: string, url: URL): Promise<
   if (pathname === '/api/models' && method === 'GET') return json(await listModels(env));
 
   if (pathname === '/api/publish' && method === 'GET') {
-    const { repo, changes, describe } = await publishPlan(env);
-    return json({ head: repo.head, changes: changes.map(({ path, change }) => ({ path, change, entries: describe(path) })) });
+    const { repo, changes, conflicts, describe } = await publishPlan(env);
+    return json({ head: repo.head, changes: changes.map(({ path, change }) => ({ path, change, entries: describe(path) })), conflicts });
   }
 
   if (pathname === '/api/publish' && method === 'POST') {
     const { message, head } = await body<{ message?: string; head?: string }>(request);
-    const { repo, changes } = await publishPlan(env);
+    const { repo, changes, editorialContent } = await publishPlan(env);
     if (!changes.length) throw new HttpError(409, '没有需要发布的改动。');
     if (head && head !== repo.head) throw new HttpError(409, '仓库在你预览之后有了新提交，请刷新后再发布。');
     const text = `content: ${String(message || '').trim() || `后台发布 ${changes.length} 个文件`}\n\n由 Wenworks AI 管理后台发布（${user}）。`;
     const sha = await commitChanges(env, repo.head, repo.tree, changes, text);
+    if (editorialContent && changes.some((c) => c.path === EDITORIAL_FILE)) await editorialPublished(env, editorialContent);
     await env.DB.prepare('INSERT INTO publishes (published_at, published_by, commit_sha, message, files) VALUES (?, ?, ?, ?, ?)')
       .bind(now, user, sha, String(message || ''), JSON.stringify(changes.map(({ path, change }) => ({ path, change }))))
       .run();
