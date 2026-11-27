@@ -44,8 +44,8 @@ export function Dashboard() {
 
       <SimpleGrid cols={{ base: 2, md: 4 }}>
         <Stat label="已发布" value={sum('active')} note={`共 ${data.total} 条，含草稿和归档`} accent />
-        <Stat label="草稿" value={sum('draft')} note="还没上线" />
-        <Stat label="待补充" value={data.todo.length} note="缺封面、缺分类、缺英文等" />
+        <Stat label="草稿" value={sum('draft')} note={`还没上线 · 待补充 ${data.todo.length} 条`} />
+        <Stat label="收件箱" value={data.inbox} note={data.inbox ? '有链接等着起草或审核' : '没有待处理的链接'} />
         <Stat label="上次发布" value={data.lastPublish ? when(data.lastPublish.published_at) : '—'} note={data.lastPublish ? `之后改过 ${data.editedSinceLastPublish} 条` : '后台还没有发布过'} />
       </SimpleGrid>
 

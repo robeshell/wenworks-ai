@@ -22,7 +22,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - `npm run curator:migrate`、`npm run curator:export`、`npm run curator:db:import`，以及它们带 `:check` 的版本
 - 任何带 `--write` 的 `scripts/curator-*.mjs`
 
-内容的增删改由站长在本地用 Curator 完成。在这个仓库里做的任务默认只改代码；除非站长明确要求，不要手改上面四个目录里的文件。
+内容的增删改现在在管理后台（admin.wenworks.app，代码在仓库的 `admin/`）完成，后台"发布"时把这四个目录里的文件提交到 `main`，格式和 Curator 导出的逐字相同。Curator 已经不再用来改内容：它的本地数据库不知道后台的修改，再用它导出会覆盖掉后台发布的内容。在这个仓库里做的任务默认只改代码；除非站长明确要求，不要手改上面四个目录里的文件。
 
 `npm test` 是安全的，测试都在临时目录里跑。
 

@@ -5,6 +5,10 @@ export interface Env {
   GITHUB_BRANCH: string;
   SITE_URL: string;
   GITHUB_TOKEN?: string;
+  /** OpenRouter key for AI drafting (Worker secret). */
+  OPENROUTER_API_KEY?: string;
+  /** Local development only: a stand-in for OpenRouter. */
+  OPENROUTER_URL?: string;
   ACCESS_TEAM_DOMAIN?: string;
   ACCESS_AUD?: string;
   /** Local development only (.dev.vars). */

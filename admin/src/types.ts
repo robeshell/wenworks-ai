@@ -9,7 +9,7 @@ export type Taxonomy = {
   categories: { id: string; blocks: string[]; label: { zh: string; en: string }; hint?: string }[];
   tags: { id: string; label: { zh: string; en: string }; hint?: string }[];
 };
-export type Status_ = { repo: string; branch: string; site: string; githubToken: boolean; access: boolean; dev: boolean };
+export type Status_ = { repo: string; branch: string; site: string; githubToken: boolean; openrouter: boolean; access: boolean; dev: boolean };
 export type Overview = {
   counts: Record<Kind, Record<Status, number>>;
   total: number;
@@ -18,4 +18,10 @@ export type Overview = {
   lastPublish: { published_at: string; published_by: string; commit_sha: string; message: string } | null;
   editedSinceLastPublish: number;
   publishReady: boolean;
+  inbox: number;
 };
+export type InboxItem = {
+  id: number; url: string; note: string; status: 'new' | 'drafted' | 'failed' | 'accepted' | 'picked' | 'dismissed';
+  draft: import('../shared/content.mjs').Draft | null; error: string; entry_id: string | null; created_at: string; updated_at: string;
+};
+export type Pick = { id?: number; url: string; title: string; author: string; note: string; date: string };

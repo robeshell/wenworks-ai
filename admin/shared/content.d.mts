@@ -17,7 +17,7 @@ export type Entry = {
   updatedBy?: string;
 };
 export type Alias = { blockType: string; slug: string; targetBlockType: string; targetSlug: string; targetId: string };
-export type Change = { path: string; change: 'added' | 'modified' | 'removed'; content?: string };
+export type Change = { path: string; change: 'added' | 'modified' | 'removed'; content?: string | Uint8Array };
 export type Issue = { code: string; label: string };
 
 export const KINDS: Kind[];
@@ -33,6 +33,21 @@ export function entryFromTool(tool: any, sortOrder: number): Entry;
 export function entryFromMarkdown(text: string, sortOrder: number): Entry;
 export function publicFiles(entries: Entry[], aliases?: Alias[]): Record<string, string>;
 export function planPublish(next: Record<string, string>, current: Record<string, string>): Change[];
-export function planPublishBySha(next: Record<string, string>, current: Record<string, string>): Promise<Change[]>;
+export function planPublishBySha(next: Record<string, string | Uint8Array>, current: Record<string, string>): Promise<Change[]>;
 export function entryIssues(entry: Pick<Entry, 'kind' | 'title' | 'slug' | 'category' | 'payload'>): Issue[];
-export function gitBlobSha(content: string): Promise<string>;
+export function gitBlobSha(content: string | Uint8Array): Promise<string>;
+export const PICKS_FILE: string;
+export const ASSET_PATH: RegExp;
+export function assetRepoPath(path: string): string;
+export function isOwnedFile(path: string): boolean;
+export type Pick = { id?: number; url: string; title?: string; author?: string; note?: string; date?: string; sort?: number };
+export function picksFile(picks: Pick[]): string;
+export type Draft = {
+  kind: Kind; title: string; slug: string; category: string; tags: string[]; url: string;
+  verdict: Localized; summary: Localized; description: Localized; body: Localized;
+  links: { label: string; url: string; kind: string }[]; prompt: string;
+  variables: { name: string; description: string; example?: string }[]; examples: { input: string; output: string }[];
+  logoUrl: string; rationale: string; confidence: number | null;
+};
+export function normalizeDraft(raw: any, url: string): Draft;
+export function entryFromDraft(d: Draft): Entry;

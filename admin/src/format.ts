@@ -24,10 +24,13 @@ export function liveUrl(site: string, kind: Kind, slug: string): string {
   return kind === 'tool' ? `${site}/tools/?kind=tool#resource-${slug}` : `${site}/tools/${kind}s/${slug}/`;
 }
 
-/** An image path from the catalog (/logos/x.png) as a full URL on the public site. */
-export function assetUrl(site: string, path?: string): string {
+/**
+ * An image path from the catalog (/logos/x.png) as something the admin can show:
+ * the admin serves images uploaded but not yet published, and sends the rest on to the site.
+ */
+export function assetUrl(_site: string, path?: string): string {
   if (!path) return '';
-  return /^https?:\/\//.test(path) ? path : `${site}/tools${path}`;
+  return /^https?:\/\//.test(path) ? path : `/api/assets${path}`;
 }
 
 export const slugify = (text: string) =>
